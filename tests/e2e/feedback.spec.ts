@@ -1,5 +1,29 @@
 import { expect, test } from '@playwright/test';
 
+test('feedback board keeps primary controls usable at every viewport', async ({
+  page,
+}, testInfo) => {
+  await page.goto('/feedback');
+  await expect(page.getByRole('heading', { name: 'Team feedback', exact: false })).toBeVisible();
+  await expect(page.getByLabel('Search feedback')).toBeVisible();
+
+  const filters = page.getByRole('button', { name: 'Filters', exact: false });
+  if (testInfo.project.name === 'mobile') {
+    await expect(filters).toBeVisible();
+    await expect(page.getByLabel('Filter by status')).toBeHidden();
+    await filters.click();
+    await expect(page.getByLabel('Filter by status')).toBeVisible();
+    await expect(filters).toHaveAttribute('aria-expanded', 'true');
+  } else {
+    await expect(filters).toBeHidden();
+    await expect(page.getByLabel('Filter by status')).toBeVisible();
+  }
+
+  const searchBox = await page.getByLabel('Search feedback').boundingBox();
+  expect(searchBox?.height).toBeGreaterThanOrEqual(44);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test('capture feedback, allow teammate replies and votes, and restrict edits to the creator', async ({
   page,
   browser,

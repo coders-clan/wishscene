@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   ArrowUp,
   CheckCircle2,
+  ChevronRight,
   Copy,
   Download,
   ExternalLink,
@@ -11,6 +12,7 @@ import {
   Github,
   MessageCircle,
   MessageSquarePlus,
+  Plus,
   RefreshCw,
   Search,
   SlidersHorizontal,
@@ -226,6 +228,11 @@ function FeedbackDetail({
               <span className={`feedback-chip priority-${item.priority}`}>{item.priority}</span>
               <span className="feedback-chip">{item.category}</span>
             </div>
+            <p className="feedback-permission-note">
+              {item.canEdit
+                ? 'You created this report. You can edit its status, priority, and assignee.'
+                : `You can vote and reply. Only ${item.author} can edit this report.`}
+            </p>
             <p className="feedback-description" dir="auto">
               {item.description}
             </p>
@@ -508,6 +515,7 @@ export function FeedbackBoard() {
   const [selected, setSelected] = useState<string | null>(null),
     [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [authLoaded, setAuthLoaded] = useState(false);
   const [authRequired, setAuthRequired] = useState(false);
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
@@ -556,6 +564,15 @@ export function FeedbackBoard() {
     setSelected(id);
     history.replaceState(null, '', id ? `/feedback?item=${id}` : '/feedback');
   }
+  const activeFilterCount = [status, category, priority].filter((value) => value !== 'all').length;
+  function clearFilters() {
+    setSearch('');
+    setStatus('all');
+    setCategory('all');
+    setPriority('all');
+    setSort('newest');
+    setOffset(0);
+  }
   return (
     <main className="feedback-board" id="main">
       <header className="feedback-board-header">
@@ -565,44 +582,37 @@ export function FeedbackBoard() {
         <div className="feedback-tools">
           {authLoaded && authUser ? (
             <button className="button" onClick={() => void signOut()}>
-              Sign out
+              <Github size={18} />
+              <span>Sign out @{authUser.login}</span>
             </button>
           ) : authLoaded && authRequired ? (
             <a className="button primary" href="/api/auth/github?next=%2Ffeedback">
               <Github size={18} />
-              Sign in with GitHub
+              <span>Sign in with GitHub</span>
             </a>
           ) : null}
           <a className="button" href="/">
             <ArrowLeft size={18} />
-            Back to studio
+            <span>Back to studio</span>
           </a>
         </div>
       </header>
-      <section className="feedback-board-hero">
+      <section className="feedback-board-intro">
         <div>
-          <p className="eyebrow">THE LITTLE DETAILS MAKE THE DIFFERENCE</p>
+          <p className="eyebrow">WISHSCENE · BUILD TOGETHER</p>
           <h1>
-            See it. Mark it.
-            <br />
-            <span>Make it better.</span>
+            Team feedback <span className="feedback-count">{list?.total ?? '…'}</span>
           </h1>
-          <p>One shared space for bugs, bright ideas, and the details worth fixing.</p>
+          <p>Report what you see, add context, and keep the conversation in one place.</p>
         </div>
-        <div className="feedback-hero-card">
-          <MessageSquarePlus size={30} />
-          <strong>Built together.</strong>
-          <span>Everyone can read. Sign in with GitHub to add feedback, reply and vote.</span>
-          <a className="button primary" href="/">
-            Open studio to mark an element
-          </a>
-        </div>
+        <a className="button primary feedback-new-button" href="/">
+          <Plus size={18} />
+          Add feedback in the studio
+        </a>
       </section>
       <div className="feedback-board-heading">
         <div>
-          <h2>
-            Team feedback <span className="feedback-count">{list?.total ?? '…'}</span>
-          </h2>
+          <h2>Reports</h2>
           <p>
             <span className="feedback-live-dot" />
             {error ? 'Connection needs attention' : 'Shared board · refreshes every 10 seconds'}
@@ -614,79 +624,104 @@ export function FeedbackBoard() {
         </button>
       </div>
       <section className="feedback-filters" aria-label="Filter feedback">
-        <label className="feedback-search">
-          <Search size={19} />
-          <input
-            aria-label="Search feedback"
-            placeholder="Search reports, people or elements…"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setOffset(0);
-            }}
-          />
-        </label>
-        <label>
-          <Filter size={15} />
-          Status
-          <select
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value);
-              setOffset(0);
-            }}
+        <div className="feedback-filter-top">
+          <label className="feedback-search">
+            <Search size={19} />
+            <input
+              aria-label="Search feedback"
+              placeholder="Search reports, people or elements…"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setOffset(0);
+              }}
+            />
+          </label>
+          <button
+            type="button"
+            className="button feedback-mobile-filter-button"
+            aria-expanded={filtersOpen}
+            aria-controls="feedback-filter-controls"
+            onClick={() => setFiltersOpen((value) => !value)}
           >
-            <option value="all">All statuses</option>
-            {feedbackStatuses.map((x) => (
-              <option key={x} value={x}>
-                {readable(x)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Type
-          <select
-            value={category}
-            onChange={(e) => {
-              setCategory(e.target.value);
-              setOffset(0);
-            }}
-          >
-            <option value="all">All types</option>
-            {feedbackCategories.map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Priority
-          <select
-            value={priority}
-            onChange={(e) => {
-              setPriority(e.target.value);
-              setOffset(0);
-            }}
-          >
-            <option value="all">All priorities</option>
-            {feedbackPriorities.map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Sort
-          <select
-            value={sort}
-            onChange={(e) => {
-              setSort(e.target.value);
-              setOffset(0);
-            }}
-          >
-            <option value="newest">Newest first</option>
-            <option value="votes">Most noticed</option>
-          </select>
-        </label>
+            <Filter size={17} />
+            Filters{activeFilterCount ? ` (${activeFilterCount})` : ''}
+          </button>
+        </div>
+        <div
+          id="feedback-filter-controls"
+          className={`feedback-filter-controls ${filtersOpen ? 'is-open' : ''}`}
+        >
+          <label>
+            Status
+            <select
+              aria-label="Filter by status"
+              value={status}
+              onChange={(e) => {
+                setStatus(e.target.value);
+                setOffset(0);
+              }}
+            >
+              <option value="all">All statuses</option>
+              {feedbackStatuses.map((x) => (
+                <option key={x} value={x}>
+                  {readable(x)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Type
+            <select
+              aria-label="Filter by type"
+              value={category}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                setOffset(0);
+              }}
+            >
+              <option value="all">All types</option>
+              {feedbackCategories.map((x) => (
+                <option key={x}>{x}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Priority
+            <select
+              aria-label="Filter by priority"
+              value={priority}
+              onChange={(e) => {
+                setPriority(e.target.value);
+                setOffset(0);
+              }}
+            >
+              <option value="all">All priorities</option>
+              {feedbackPriorities.map((x) => (
+                <option key={x}>{x}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Sort
+            <select
+              aria-label="Sort feedback"
+              value={sort}
+              onChange={(e) => {
+                setSort(e.target.value);
+                setOffset(0);
+              }}
+            >
+              <option value="newest">Newest first</option>
+              <option value="votes">Most noticed</option>
+            </select>
+          </label>
+          {(search || activeFilterCount || sort !== 'newest') && (
+            <button type="button" className="button feedback-clear-filters" onClick={clearFilters}>
+              Clear
+            </button>
+          )}
+        </div>
       </section>
       {error && (
         <p className="feedback-error" role="alert">
@@ -746,6 +781,7 @@ export function FeedbackBoard() {
                 {item.commentCount}
               </span>
               {item.hasScreenshot && <span className="feedback-image-badge">Screenshot</span>}
+              <ChevronRight className="feedback-list-chevron" aria-hidden="true" />
             </div>
           </button>
         ))}

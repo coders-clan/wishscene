@@ -212,24 +212,41 @@ export function FeedbackLauncher() {
       setBusy(false);
     }
   }
-  if (pathname === '/login' || !sessionLoaded) return null;
+  if (pathname === '/login' || pathname === '/feedback' || !sessionLoaded) return null;
   if (authRequired && !authUser)
     return (
       <div data-feedback-ui className="feedback-launcher">
         {menu && (
           <div className="feedback-launch-menu">
-            <strong>Make wishscene better</strong>
-            <span>Sign in before adding feedback, replying or voting.</span>
+            <div className="feedback-launch-menu-heading">
+              <div>
+                <strong>Make wishscene better</strong>
+                <span>Sign in before adding feedback, replying or voting.</span>
+              </div>
+              <button
+                className="icon-button"
+                aria-label="Close feedback menu"
+                onClick={() => setMenu(false)}
+              >
+                <X size={18} />
+              </button>
+            </div>
             <a
-              className="button primary"
+              className="button primary feedback-menu-action"
               href={`/api/auth/github?next=${encodeURIComponent(pathname)}`}
             >
               <Github size={18} />
-              Sign in with GitHub
+              <span>
+                <strong>Sign in with GitHub</strong>
+                <small>Use your verified identity</small>
+              </span>
             </a>
-            <a className="button" href="/feedback">
+            <a className="button feedback-menu-action" href="/feedback">
               <List />
-              View shared feedback
+              <span>
+                <strong>View shared feedback</strong>
+                <small>Read every report and reply</small>
+              </span>
             </a>
           </div>
         )}
@@ -249,30 +266,50 @@ export function FeedbackLauncher() {
         <div className="feedback-launcher">
           {menu && (
             <div className="feedback-launch-menu">
-              <strong>Make wishscene better</strong>
-              <span>Pick something. Tell the team.</span>
+              <div className="feedback-launch-menu-heading">
+                <div>
+                  <strong>Make wishscene better</strong>
+                  <span>Pick something. Tell the team.</span>
+                </div>
+                <button
+                  className="icon-button"
+                  aria-label="Close feedback menu"
+                  onClick={() => setMenu(false)}
+                >
+                  <X size={18} />
+                </button>
+              </div>
               <button
-                className="button"
+                className="button feedback-menu-action"
+                aria-label="Select an element"
                 onClick={() => {
                   setMode('element');
                   setMenu(false);
                 }}
               >
                 <MousePointer2 />
-                Select an element
+                <span>
+                  <strong>Select an element</strong>
+                  <small>Pin feedback to one control</small>
+                </span>
               </button>
               <button
-                className="button"
+                className="button feedback-menu-action"
+                aria-label="Capture a section"
                 onClick={() => {
                   setMode('region');
                   setMenu(false);
                 }}
               >
                 <Scan />
-                Capture a section
+                <span>
+                  <strong>Capture a section</strong>
+                  <small>Drag around an area</small>
+                </span>
               </button>
               <button
-                className="button"
+                className="button feedback-menu-action"
+                aria-label="Write a general note"
                 onClick={() => {
                   requestId.current = crypto.randomUUID();
                   setTarget(pageTarget());
@@ -280,14 +317,21 @@ export function FeedbackLauncher() {
                   setError('');
                 }}
               >
-                Write a general note
+                <MessageSquarePlus />
+                <span>
+                  <strong>Write a general note</strong>
+                  <small>Share an idea without a screenshot</small>
+                </span>
               </button>
-              <a className="button" href="/feedback">
+              <a className="button feedback-menu-action" href="/feedback">
                 <List />
-                View shared feedback
+                <span>
+                  <strong>View shared feedback</strong>
+                  <small>Read, vote, and reply</small>
+                </span>
               </a>
               {authUser && (
-                <button className="button" onClick={() => void signOut()}>
+                <button className="button feedback-sign-out" onClick={() => void signOut()}>
                   Sign out
                 </button>
               )}
@@ -388,6 +432,13 @@ export function FeedbackLauncher() {
           </p>
           <form ref={formRef} onSubmit={submit} className="feedback-report-form">
             <div className="feedback-capture-column">
+              <div className="feedback-form-section-heading">
+                <span>1</span>
+                <div>
+                  <strong>Review the context</strong>
+                  <small>Annotate the capture or remove it.</small>
+                </div>
+              </div>
               <div className="feedback-context">
                 <span className="feedback-chip">{target.kind}</span>
                 <strong>{target.label}</strong>
@@ -440,6 +491,13 @@ export function FeedbackLauncher() {
               )}
             </div>
             <div className="feedback-fields">
+              <div className="feedback-form-section-heading">
+                <span>2</span>
+                <div>
+                  <strong>Describe what you noticed</strong>
+                  <small>Give the team enough detail to act.</small>
+                </div>
+              </div>
               {authUser ? (
                 <p className="feedback-hint">Posting as @{authUser.login}</p>
               ) : (
@@ -506,21 +564,25 @@ export function FeedbackLauncher() {
                 </label>
               </div>
               <p className="feedback-hint">
-                Preview before sending. Use Hide area for anything private. Names are display names,
-                not verified accounts.
+                Preview before sending. Use Hide area for anything private.{' '}
+                {authUser
+                  ? 'Your GitHub identity will be shown with this report.'
+                  : 'Names are display names, not verified accounts.'}
               </p>
               {error && (
                 <p className="feedback-error" role="alert">
                   {error}
                 </p>
               )}
-              <button className="button primary" disabled={busy}>
-                <Send size={18} />
-                {busy ? 'Sending…' : 'Send to shared board'}
-              </button>
-              <button type="button" className="button" disabled={busy} onClick={close}>
-                Cancel
-              </button>
+              <div className="feedback-form-actions">
+                <button className="button primary" disabled={busy}>
+                  <Send size={18} />
+                  {busy ? 'Sending…' : 'Send to shared board'}
+                </button>
+                <button type="button" className="button" disabled={busy} onClick={close}>
+                  Cancel
+                </button>
+              </div>
             </div>
           </form>
         </FeedbackDialog>
