@@ -105,12 +105,12 @@
     ],
     "metrics": {
       "loc": 6,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_119ac09ba3",
@@ -185,6 +185,28 @@
     "last_changed": "commit:2273d4e"
   },
   {
+    "id": "sym_1faa11e08b",
+    "file": "apps/web/src/components/social-composer.tsx",
+    "name": "rememberRevision",
+    "kind": "function",
+    "signature_hash": "sha1:4031d3d9558",
+    "calls": [
+      "sym_98bdb963e8"
+    ],
+    "called_by": [
+      "sym_abea901a04",
+      "sym_fb861c5e52"
+    ],
+    "metrics": {
+      "loc": 5,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 1
+    },
+    "last_changed": "commit:26eb507"
+  },
+  {
     "id": "sym_214c53a83f",
     "file": "packages/contracts/src/index.ts",
     "name": "ExperienceInput",
@@ -250,12 +272,12 @@
     ],
     "metrics": {
       "loc": 11,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 4,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_308480ea2b",
@@ -303,16 +325,17 @@
     "signature_hash": "sha1:2bfe24db1a7",
     "calls": [],
     "called_by": [
-      "sym_abea901a04"
+      "sym_abea901a04",
+      "sym_98bdb963e8"
     ],
     "metrics": {
       "loc": 2,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
-      "fan_in": 1,
+      "fan_in": 2,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_36f63d6ae9",
@@ -329,12 +352,12 @@
     ],
     "metrics": {
       "loc": 8,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 2
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_371c013f11",
@@ -440,12 +463,12 @@
     ],
     "metrics": {
       "loc": 1,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_4d516f691e",
@@ -457,12 +480,12 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_4f6c55b70d",
@@ -532,12 +555,12 @@
     ],
     "metrics": {
       "loc": 35,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_596777fa81",
@@ -670,13 +693,13 @@
     ],
     "called_by": [],
     "metrics": {
-      "loc": 1071,
-      "churn_90d": 5,
+      "loc": 1076,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 9
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_66f8b427d0",
@@ -743,12 +766,12 @@
     ],
     "metrics": {
       "loc": 9,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_837814e880",
@@ -830,6 +853,28 @@
       "fan_out": 1
     },
     "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_98bdb963e8",
+    "file": "apps/web/src/components/social-composer.tsx",
+    "name": "isSceneDirty",
+    "kind": "function",
+    "signature_hash": "sha1:d0c45f50756",
+    "calls": [
+      "sym_3681195f5b"
+    ],
+    "called_by": [
+      "sym_abea901a04",
+      "sym_1faa11e08b"
+    ],
+    "metrics": {
+      "loc": 10,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 1
+    },
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_9a3ea12155",
@@ -976,12 +1021,12 @@
     "called_by": [],
     "metrics": {
       "loc": 16,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 3
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_aac96e5ae6",
@@ -1005,21 +1050,23 @@
     "file": "apps/web/src/components/social-composer.tsx",
     "name": "SocialComposer",
     "kind": "function",
-    "signature_hash": "sha1:2b1d62b8315",
+    "signature_hash": "sha1:a679cce4e4b",
     "calls": [
       "sym_3681195f5b",
+      "sym_98bdb963e8",
       "sym_f7bce30b9d",
+      "sym_1faa11e08b",
       "sym_fb861c5e52"
     ],
     "called_by": [],
     "metrics": {
-      "loc": 328,
-      "churn_90d": 1,
+      "loc": 358,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
-      "fan_out": 3
+      "fan_out": 5
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_afcdc27d56",
@@ -1153,12 +1200,12 @@
     "called_by": [],
     "metrics": {
       "loc": 15,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 2
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_c03f447942",
@@ -1176,12 +1223,12 @@
     ],
     "metrics": {
       "loc": 1,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 5,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_c49cd54e0c",
@@ -1250,12 +1297,12 @@
     ],
     "metrics": {
       "loc": 4,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_cf80ba8e55",
@@ -1267,12 +1314,12 @@
     "called_by": [],
     "metrics": {
       "loc": 59,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_d03415e3ba",
@@ -1330,12 +1377,12 @@
     "called_by": [],
     "metrics": {
       "loc": 44,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 1
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_e5522ad0b2",
@@ -1375,12 +1422,12 @@
     ],
     "metrics": {
       "loc": 13,
-      "churn_90d": 5,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 5,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_e752817097",
@@ -1392,12 +1439,12 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_e78fcbf9ca",
@@ -1491,31 +1538,31 @@
     "called_by": [],
     "metrics": {
       "loc": 7,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_f7bce30b9d",
     "file": "apps/web/src/components/social-composer.tsx",
     "name": "save",
     "kind": "function",
-    "signature_hash": "sha1:a57e5207572",
+    "signature_hash": "sha1:9fab3e9c566",
     "calls": [],
     "called_by": [
       "sym_abea901a04"
     ],
     "metrics": {
-      "loc": 24,
-      "churn_90d": 1,
+      "loc": 25,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_f91baca3ba",
@@ -1576,19 +1623,21 @@
     "file": "apps/web/src/components/social-composer.tsx",
     "name": "update",
     "kind": "function",
-    "signature_hash": "sha1:b28e4801b8a",
-    "calls": [],
+    "signature_hash": "sha1:cd7056644d2",
+    "calls": [
+      "sym_1faa11e08b"
+    ],
     "called_by": [
       "sym_abea901a04"
     ],
     "metrics": {
-      "loc": 4,
-      "churn_90d": 1,
+      "loc": 5,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 1,
-      "fan_out": 0
+      "fan_out": 1
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_fd92a4bd50",

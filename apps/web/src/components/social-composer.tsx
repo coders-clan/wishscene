@@ -240,8 +240,8 @@ export function SocialComposer({
               Demo templates. Replaces this platform’s caption and overlay.
             </span>
           </div>
-          <label htmlFor="post-caption">
-            Post text
+          <div className="composer-text-field">
+            <label htmlFor="post-caption">Post text</label>
             <textarea
               id="post-caption"
               dir="auto"
@@ -253,7 +253,7 @@ export function SocialComposer({
               aria-invalid={overBudget}
               onChange={(event) => update({ caption: event.target.value })}
             />
-          </label>
+          </div>
           <p
             id="post-budget"
             className={`caption-budget ${overBudget ? 'over-budget' : ''}`}
@@ -263,8 +263,9 @@ export function SocialComposer({
             {overBudget ? ' · Shorten the text to save.' : ''}
           </p>
           {preset.vertical && (
-            <label htmlFor="post-overlay">
-              Text on image <span className="fine-print">Optional · up to 80 characters</span>
+            <div className="composer-text-field">
+              <label htmlFor="post-overlay">Text on image</label>
+              <span className="fine-print">Optional · up to 80 characters</span>
               <textarea
                 id="post-overlay"
                 dir="auto"
@@ -274,7 +275,7 @@ export function SocialComposer({
                 disabled={saving}
                 onChange={(event) => update({ overlayText: event.target.value })}
               />
-            </label>
+            </div>
           )}
           {error && (
             <p className="modal-error" role="alert">

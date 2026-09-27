@@ -37,9 +37,6 @@ input,
 select,
 textarea {
   font: inherit;
-  font-size: var(--text-base);
-  min-height: 48px;
-  width: 100%;
 }
 button,
 a,
@@ -1083,9 +1080,11 @@ textarea {
   background: white;
   border-radius: 7px;
   padding: 11px 12px;
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   color: var(--ink);
   min-width: 0;
+  min-height: 48px;
+  width: 100%;
 }
 textarea {
   line-height: 1.8;
@@ -1591,6 +1590,11 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+.composer-text-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 .composer-preview-link {
   display: none;
