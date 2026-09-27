@@ -20,9 +20,10 @@ export const feedbackTargetSchema = z
     path: z
       .string()
       .max(500)
-      .regex(
-        /^\/(?!\/)[^?#\\\u0000-\u001f]*$/,
-        'Only a page path, without query parameters, is allowed.',
+      .regex(/^\/(?!\/)[^?#\\]*$/, 'Only a page path, without query parameters, is allowed.')
+      .refine(
+        (value) => [...value].every((char) => char.charCodeAt(0) >= 32),
+        'Invalid page path.',
       ),
     selector: z.string().max(500),
     label: z.string().max(120),

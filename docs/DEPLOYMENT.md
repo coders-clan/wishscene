@@ -5,7 +5,7 @@ This deploys the **developer demo**, including shared feedback. It does not enab
 ## Vercel setup
 
 1. Import `coders-clan/wishscene` into the intended Vercel account/team. Production branch: `main`. Use GitHub integration so PRs receive previews.
-2. Set **Root Directory: `apps/web`**, **Framework: Next.js**, **Node: 24.x**. Allow files outside the root directory (workspace packages are in `../../packages`). `apps/web/vercel.json` sets the install/build commands. Do not select a static export or set an output directory manually.
+2. Set **Root Directory: `apps/web`**, **Framework: Next.js**, **Node: 24.x**. Allow files outside the root directory (workspace packages are in `../../packages`). `apps/web/vercel.json` explicitly runs pnpm 11.25.0 through npx for install/build; it does not rely on Vercel’s older default pnpm detection. Do not select a static export or set an output directory manually.
 3. Create a dedicated **Neon Postgres project/database for wishscene** in a region close to the Vercel functions. Use the pooled connection string with TLS and certificate verification enabled. Keep credentials server-side.
 4. Add the following environment variables to the appropriate deployment environments:
 

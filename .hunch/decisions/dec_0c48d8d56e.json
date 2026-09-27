@@ -1,0 +1,33 @@
+{
+  "id": "dec_0c48d8d56e",
+  "title": "Feedback is shared across visitors and survives mock resets. SQLite provides zero-config local persistence; Postgres provides shared durable storage across deployed instances. Atomic revision checks protect concurrent edits.",
+  "topic": null,
+  "status": "accepted",
+  "context": "Captured from an inline hunch-why comment (apps/web/src/lib/feedback/store.ts:47).",
+  "decision": "Feedback is shared across visitors and survives mock resets. SQLite provides zero-config local persistence; Postgres provides shared durable storage across deployed instances. Atomic revision checks protect concurrent edits.",
+  "consequences": [],
+  "alternatives_rejected": [],
+  "rejected_tripwires": [],
+  "related_components": [],
+  "related_files": [
+    "apps/web/src/lib/feedback/store.ts"
+  ],
+  "supersedes": null,
+  "superseded_by": null,
+  "caused_by_bug": null,
+  "commit": null,
+  "valid_from": "2026-09-27T13:03:53.672Z",
+  "valid_to": null,
+  "retired": {
+    "symbols": [],
+    "deps": []
+  },
+  "provenance": {
+    "source": "human_confirmed",
+    "confidence": 0.9,
+    "evidence": [
+      "apps/web/src/lib/feedback/store.ts:47"
+    ]
+  },
+  "date": "2026-09-27T13:03:53.672Z"
+}
