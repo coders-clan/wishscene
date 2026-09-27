@@ -6,9 +6,11 @@ import type {
   GenerationInput,
   Job,
   Scene,
+  SocialUpdate,
   StoryUpdate,
   Workspace,
 } from '@wishscene/contracts';
+import { makeSceneSocial, socialPlatforms, socialUpdate } from '@wishscene/contracts';
 import { MockImageProvider, type ImageProvider } from '@wishscene/providers';
 
 export class DomainError extends Error {
@@ -75,6 +77,7 @@ export class MockStudio {
         status: 'draft',
         assets: [],
         approvedAssetId: null,
+        social: makeSceneSocial(input, { title }),
       })),
     };
   }
@@ -185,6 +188,27 @@ export class MockStudio {
   }
   caption(id: string, caption: string) {
     this.experience(id).caption = caption;
+  }
+  // hunch-why: Social drafts belong to each scene and platform. Saving one must preserve the others; version and revision checks reject stale writes without silently replacing edited copy.
+  updateSocial(experienceId: string, sceneId: string, raw: SocialUpdate) {
+    const input = socialUpdate.parse(raw);
+    const { experience, scene } = this.scene(experienceId, sceneId);
+    if (input.expectedVersion !== experience.bibleVersion)
+      throw new DomainError(
+        409,
+        'STALE_VERSION',
+        'The story changed. Refresh before saving this post.',
+      );
+    if (input.expectedRevision !== scene.social.revision)
+      throw new DomainError(
+        409,
+        'STALE_SOCIAL',
+        'This scene’s posts changed in another tab. Reload before saving.',
+      );
+    scene.social.platform = input.platform;
+    scene.social.drafts[input.platform] = structuredClone(input.draft);
+    scene.social.revision += 1;
+    return structuredClone(scene.social);
   }
   generate(experienceId: string, sceneId: string, input: GenerationInput): Job {
     this.settle();
@@ -315,6 +339,12 @@ export class MockStudio {
       return {
         ...asset,
         title: scene.title,
+        social: {
+          ...scene.social.drafts[scene.social.platform],
+          platform: scene.social.platform,
+          previewAspectRatio: socialPlatforms[scene.social.platform].ratioLabel,
+          previewOnly: true as const,
+        },
         filename: `${String(scene.ordinal + 1).padStart(2, '0')}-${scene.art}-variant-${asset.variant + 1}.${asset.media === 'photo' ? 'jpg' : 'svg'}`,
       };
     });

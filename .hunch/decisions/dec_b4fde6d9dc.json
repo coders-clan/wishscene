@@ -3,7 +3,7 @@
   "title": "Next can construct an internal URL with the bind address (0.0.0.0). Compare browser Origin against the request Host and protocol, or valid local mutations are incorrectly rejected. Do not trust forwarded-host headers here.",
   "topic": null,
   "status": "accepted",
-  "context": "Captured from an inline hunch-why comment (apps/web/src/lib/mock-api.ts:48).",
+  "context": "Captured from an inline hunch-why comment (apps/web/src/lib/mock-api.ts:54).",
   "decision": "Next can construct an internal URL with the bind address (0.0.0.0). Compare browser Origin against the request Host and protocol, or valid local mutations are incorrectly rejected. Do not trust forwarded-host headers here.",
   "consequences": [],
   "alternatives_rejected": [],
@@ -26,7 +26,7 @@
     "source": "human_confirmed",
     "confidence": 0.9,
     "evidence": [
-      "apps/web/src/lib/mock-api.ts:48"
+      "apps/web/src/lib/mock-api.ts:54"
     ]
   },
   "date": "2026-09-27T09:46:58.647Z"

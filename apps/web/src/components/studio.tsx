@@ -35,7 +35,14 @@ import type {
   Scene,
   Workspace,
 } from '@wishscene/contracts';
-import { demoPresets, demoPreview, hasPhotoPreset } from '@wishscene/contracts';
+import {
+  demoPresets,
+  demoPreview,
+  hasPhotoPreset,
+  socialPlatforms,
+  type SceneSocial,
+} from '@wishscene/contracts';
+import { SocialComposer } from './social-composer';
 
 async function api<T>(path: string, method = 'GET', payload?: unknown): Promise<T> {
   const response = await fetch(`/api/v1/${path}`, {
@@ -178,6 +185,9 @@ export default function Studio() {
   const [error, setError] = useState('');
   const [caption, setCaption] = useState('');
   const [captionDirty, setCaptionDirty] = useState(false);
+  const [socialDirty, setSocialDirty] = useState(false);
+  const [socialSceneId, setSocialSceneId] = useState<string | null>(null);
+  const [workspaceReset, setWorkspaceReset] = useState(0);
   const [newDestination, setNewDestination] = useState<ExperienceInput['destination']>('Tokyo');
   const mounted = useRef(true);
   const refreshing = useRef(false);
@@ -275,6 +285,11 @@ export default function Studio() {
           const response = await fetch(asset.image);
           if (!response.ok) throw new Error('Could not fetch a demo image.');
           zip.file(asset.filename, await response.arrayBuffer());
+          const stem = asset.filename.slice(0, asset.filename.lastIndexOf('.'));
+          zip.file(
+            `posts/${stem}-${asset.social.platform}.txt`,
+            `${socialPlatforms[asset.social.platform].label}\nScene: ${asset.title}\n\n${asset.social.caption}\n\n${asset.social.overlayText ? `Preview overlay: ${asset.social.overlayText}\n` : ''}AI-created fictional scene. Image crop and overlay are preview only.\n`,
+          );
         }),
       );
       const url = URL.createObjectURL(await zip.generateAsync({ type: 'blob' }));
@@ -287,6 +302,10 @@ export default function Studio() {
     });
   const submitExperience = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (socialDirty) {
+      setError('Save your post drafts before creating an experience or changing the story.');
+      return;
+    }
     const data = new FormData(e.currentTarget);
     void run(async () => {
       const created = await api<Experience>('experiences', 'POST', Object.fromEntries(data));
@@ -298,6 +317,10 @@ export default function Studio() {
   };
   const submitStory = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (socialDirty) {
+      setError('Save your post drafts before creating an experience or changing the story.');
+      return;
+    }
     const data = new FormData(e.currentTarget);
     void run(async () => {
       await api(`experiences/${experience!.id}/story`, 'PATCH', {
@@ -309,6 +332,10 @@ export default function Studio() {
     });
   };
   const selectExperience = (id: string) => {
+    if (socialDirty && id !== experienceId) {
+      setError('Save your post drafts before switching experiences.');
+      return;
+    }
     setExperienceId(id);
     setTab('storyboard');
     close();
@@ -686,6 +713,21 @@ export default function Studio() {
                                 </button>
                               )}
                             </div>
+                            <button
+                              className="scene-compose-button"
+                              aria-label={`Create post for ${item.title}`}
+                              onClick={() => {
+                                setSocialSceneId(item.id);
+                                setTab('social');
+                                requestAnimationFrame(() =>
+                                  document
+                                    .getElementById('panel-social')
+                                    ?.scrollIntoView({ block: 'start' }),
+                                );
+                              }}
+                            >
+                              <Layers3 size={18} /> Create post <ArrowRight size={16} />
+                            </button>
                           </div>
                         </article>
                       );
@@ -702,77 +744,69 @@ export default function Studio() {
                   </div>
                 </section>
               )}
-              {tab === 'social' && (
-                <section
-                  role="tabpanel"
-                  id="panel-social"
-                  aria-labelledby="tab-social"
-                  className="social-panel"
-                >
-                  <div>
-                    <p className="eyebrow">THE FINISHING TOUCH</p>
-                    <h3>A story worth putting together.</h3>
-                    <p>Your four scenes, an editable caption, and a versioned manifest.</p>
-                    <label htmlFor="caption">Your caption</label>
-                    <textarea
-                      id="caption"
-                      rows={6}
-                      maxLength={2200}
-                      value={caption}
-                      onChange={(e) => {
-                        setCaption(e.target.value);
-                        setCaptionDirty(true);
-                      }}
-                    />
-                    <div className="caption-actions">
-                      <span>{caption.length}/2200</span>
-                      <button
-                        className="button"
-                        disabled={busy || !captionDirty}
-                        onClick={() =>
-                          void run(async () => {
-                            await api(`experiences/${experience.id}/caption`, 'PATCH', { caption });
-                            setCaptionDirty(false);
-                            setNotice('Caption saved.');
-                          })
-                        }
-                      >
-                        Save caption
-                      </button>
-                    </div>
-                    <p className="fine-print">
-                      Demo export includes original JPG photos or SVG placeholders and text. Photo
-                      resizing, direct posting, and scheduling are future work.
-                    </p>
+              <section
+                hidden={tab !== 'social'}
+                role="tabpanel"
+                id="panel-social"
+                aria-labelledby="tab-social"
+              >
+                <SocialComposer
+                  key={`${experience.id}:${experience.bibleVersion}:${workspaceReset}`}
+                  experience={experience}
+                  selectedSceneId={socialSceneId}
+                  onSelectScene={setSocialSceneId}
+                  onDirtyChange={setSocialDirty}
+                  onSave={async (id, input) => {
+                    const result = await api<SceneSocial>(
+                      `experiences/${experience.id}/scenes/${id}/social`,
+                      'PATCH',
+                      input,
+                    );
+                    await refresh();
+                    return result;
+                  }}
+                />
+                <section className="pack-caption">
+                  <h3>
+                    Whole-pack caption <span>Optional</span>
+                  </h3>
+                  <p>
+                    One extra caption for the complete story. Your per-image posts keep their own
+                    text.
+                  </p>
+                  <label htmlFor="caption">Your caption</label>
+                  <textarea
+                    id="caption"
+                    rows={6}
+                    maxLength={2200}
+                    value={caption}
+                    onChange={(e) => {
+                      setCaption(e.target.value);
+                      setCaptionDirty(true);
+                    }}
+                  />
+                  <div className="caption-actions">
+                    <span>{caption.length}/2200</span>
+                    <button
+                      className="button"
+                      disabled={busy || !captionDirty}
+                      onClick={() =>
+                        void run(async () => {
+                          await api(`experiences/${experience.id}/caption`, 'PATCH', { caption });
+                          setCaptionDirty(false);
+                          setNotice('Caption saved.');
+                        })
+                      }
+                    >
+                      Save caption
+                    </button>
                   </div>
-                  <div className="post-preview">
-                    <div className="post-header">
-                      <span className="avatar">A</span>
-                      <strong>alex.imagines</strong>
-                      <span>✳</span>
-                    </div>
-                    <div className="post-images">
-                      {experience.scenes.map((item) => (
-                        <img
-                          key={item.id}
-                          src={
-                            item.assets.find((a) => a.id === item.approvedAssetId)?.image ??
-                            demoPreview(experience, item)
-                          }
-                          alt={`Mock carousel frame: ${item.title}`}
-                          width={600}
-                          height={800}
-                        />
-                      ))}
-                    </div>
-                    <p>{caption || 'Your caption goes here.'}</p>
-                    <span className="fine-print">
-                      FICTIONAL EXPERIENCE ·{' '}
-                      {photoPreset ? 'AI PHOTO PRESET' : 'ILLUSTRATED PLACEHOLDER'}
-                    </span>
-                  </div>
+                  <p className="fine-print">
+                    The ZIP includes original images, per-image post text, this caption, and a
+                    provenance manifest. Direct posting and rendered social layouts are future work.
+                  </p>
                 </section>
-              )}
+              </section>
               {tab === 'motion' && (
                 <section
                   role="tabpanel"
@@ -832,7 +866,7 @@ export default function Studio() {
                 </div>
                 <button
                   className="button primary"
-                  disabled={approved !== 4 || busy || captionDirty}
+                  disabled={approved !== 4 || busy || captionDirty || socialDirty}
                   onClick={() => void exportPack()}
                 >
                   <ArrowDownToLine size={16} />
@@ -840,6 +874,11 @@ export default function Studio() {
                 </button>
               </section>
               {captionDirty && <p className="fine-print">Save your caption before exporting.</p>}
+              {socialDirty && (
+                <p className="fine-print">
+                  Save your per-image post drafts in Social pack before exporting.
+                </p>
+              )}
               <footer className="page-footer">
                 <span>
                   wishscene <span className="footer-spark">✳</span> Imagine it. Make the scene.
@@ -1070,6 +1109,8 @@ export default function Studio() {
                     setExperienceId('tokyo-after-hours');
                     setScenario('success');
                     setCaptionDirty(false);
+                    setSocialDirty(false);
+                    setWorkspaceReset((value) => value + 1);
                     close();
                     setNotice('Fresh canvas. Demo workspace reset.');
                   })

@@ -2,7 +2,7 @@
 
 wishscene creates a coherent fictional experience starring a consenting user: photos, short video clips, a Reel or mini movie, Stories, carousel, cover, and editable captions. The product makes creative fantasy media, with clear AI provenance on exports.
 
-**Status:** working developer scaffold with a responsive studio, 16 photorealistic preset images of one fictional man, deterministic mock generation, scene review, versioned stories, and downloadable image packs. Public repository. Live AI generation, authentication, persistent storage, and video are planned next.
+**Status:** working developer scaffold with a responsive studio, 16 photorealistic preset images of one fictional man, deterministic mock generation, scene review, versioned stories, per-image platform/caption previews, and downloadable image packs. Public repository. Live AI generation, authentication, persistent storage, and video are planned next.
 
 ## Run the studio
 
@@ -17,6 +17,7 @@ pnpm dev
 Open **http://localhost:3000**. No API keys or database required. Start with Tokyo, try Failure/Slow scenarios in Developer tools, approve all scenes, and export a demo ZIP.
 
 - [Developer setup and mock walkthrough](docs/DEVELOPMENT.md)
+- [Per-image social composer: platforms, captions and previews](docs/SOCIAL_COMPOSER.md)
 - [Mock API contract](docs/MOCK_API.md)
 - [Hunch workflow](docs/HUNCH.md)
 

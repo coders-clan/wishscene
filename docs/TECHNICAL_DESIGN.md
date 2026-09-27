@@ -42,6 +42,7 @@ Request flow: validate -> authorize -> snapshot Story Bible and inputs -> comput
 `experiences(id, user_id, title, status, current_bible_version, created_at)`
 `story_bibles(id, experience_id, version, facts_json, parent_version, created_at)`
 `scenes(id, experience_id, ordinal, spec_json, bible_version, created_at)`
+`scene_social_drafts(id, scene_id, platform, caption, overlay_text, tone, revision, updated_at)` — unique `(scene_id, platform)`; scene stores its selected export platform. This is the planned persistent equivalent of the implemented mock `Scene.social` map.
 `assets(id, experience_id, scene_id?, type, status, object_key?, parent_asset_id?, bible_version, provider_job_id?, checks_json?, approved_at?, created_at)`
 `jobs(id, user_id, experience_id, kind, input_hash, state, attempts, lease_until?, provider, provider_job_id?, error_code?, cost_estimate?, cost_actual?, created_at)`
 `exports(id, experience_id, manifest_json, object_key, bible_version, created_at, expires_at)`
@@ -56,6 +57,7 @@ All tables have indexes on owner/experience/status. Composite owner checks in qu
 `POST /v1/experiences`; `GET /v1/experiences/:id`; `PATCH /v1/experiences/:id/bible` with expected version; `POST /v1/experiences/:id/scenes`.
 `POST /v1/scenes/:id/generations` with idempotency key; `POST /v1/assets/:id/approve`; `POST /v1/assets/:id/repair` with mask ID and parent version.
 `POST /v1/scenes/:id/clips`; `PUT /v1/experiences/:id/timeline`; `POST /v1/experiences/:id/exports`.
+`PATCH /v1/experiences/:id/scenes/:sceneId/social` with expected Story Bible version, expected social revision, platform and text draft; reject stale writes and preserve other platform drafts. Implemented mock path is under `/api/v1`; see [Social composer](SOCIAL_COMPOSER.md).
 `GET /v1/jobs/:id`; `POST /v1/jobs/:id/cancel`; `GET /v1/exports/:id/download` -> short-lived URL.
 `DELETE /v1/account` -> irreversible deletion workflow with confirmation in UI.
 
@@ -70,6 +72,8 @@ Facts are typed (person profile version, place anchors, location reference ID, o
 Select 2–5 reference images based on pose/angle, quality and diversity; include destination reference if exact place requested. Ask provider for modest candidate batches. Preserve face/body proportions, wardrobe, ambient light and scene composition. Do not rely on prompts alone for identity. Run face match against several user references as advisory score; detect faces/hands/text artifacts; use human/user review for final acceptance. Region repair takes mask, approved parent image and fixed context; prevent unintended edits outside mask via image difference gate. Store provider model/version, prompt template version and seed if available for reproducibility.
 
 ## 7. Video and assembly
+
+For still-image social output, the current browser composer previews platform crops and text while exporting original images plus per-image text/metadata. Production rendering must snapshot the approved asset ID, selected draft/revision, crop transform, overlay and provenance into an immutable export. A caption-provider adapter may suggest text, but must not overwrite user edits without an explicit action. See [P11 implementation and next delivery](SOCIAL_COMPOSER.md).
 
 Use approved image as start/keyframe, simple motion prompt and consistent scene references. Generate short clips asynchronously. Analyze sampled frames for face drift, extra limbs, temporal flicker and location continuity. For larger edits, regenerate only a clip; never mutate approved image. FFmpeg assembles clips, trims/transitions, burns optional captions, mixes licensed/user-owned audio, and outputs H.264 MP4 with browser-friendly settings. Separate narration/voice features require explicit consent and their own release gate.
 

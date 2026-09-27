@@ -46,6 +46,9 @@ MVP non-goals: actual travel verification, fake evidence or official documents, 
 | P08 | I generate short clips from approved keyframes | P1 | Video uses approved image anchor and simple motion; user can reject |
 | P09 | I assemble a Reel/mini movie | P1 | Shot order, trim, optional licensed audio, captions, cover, export |
 | P10 | I can control my likeness and data | P0 | Account deletion removes originals, derived profiles, generated assets and jobs under published retention policy |
+| P11 | I choose a platform and text for each image and preview the resulting post | P0 | Independent image/platform drafts; editable tone suggestions; live crop/caption/overlay preview; saved text paired with the correct approved image in export |
+
+**P11 demo status:** Instagram post/Story, TikTok photo, Facebook, LinkedIn and X previews are available through each image’s **Create post** action and **Social pack**. Session saving and original-image/text exports work. Rendered crops/overlays, live AI copywriting and publishing are future work. See [Social composer](SOCIAL_COMPOSER.md).
 
 ## 6. MVP scope and release gates
 

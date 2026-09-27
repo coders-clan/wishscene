@@ -19,6 +19,44 @@ const call = (path: string, method = 'GET', body?: unknown, cookie?: string, ori
   dispatch(req(path, method, body, cookie, origin), path.split('/'));
 
 describe('mock HTTP boundary', () => {
+  it('saves social drafts within the session and rejects invalid targets, stale revisions and cross-experience IDs', async () => {
+    const response = await call('workspace');
+    const cookie = response.headers.get('set-cookie')!.split(';')[0];
+    const path = 'experiences/tokyo-after-hours/scenes/tokyo-after-hours-scene-1/social';
+    const input = {
+      expectedVersion: 1,
+      expectedRevision: 0,
+      platform: 'linkedin',
+      draft: { caption: 'A creative study.', overlayText: '', tone: 'understated' },
+    };
+    expect((await call(path, 'PATCH', input, cookie)).status).toBe(200);
+    expect((await call(path, 'PATCH', input, cookie)).status).toBe(409);
+    expect((await call(path, 'PATCH', { ...input, platform: 'unknown' }, cookie)).status).toBe(400);
+    expect(
+      (
+        await call(
+          path,
+          'PATCH',
+          { ...input, platform: 'x', draft: { ...input.draft, caption: 'x'.repeat(241) } },
+          cookie,
+        )
+      ).status,
+    ).toBe(400);
+    expect(
+      (
+        await call(
+          path.replace('experiences/tokyo-after-hours/', 'experiences/amalfi-postcards/'),
+          'PATCH',
+          input,
+          cookie,
+        )
+      ).status,
+    ).toBe(404);
+    const own = await (await call('workspace', 'GET', undefined, cookie)).json();
+    const other = await (await call('workspace')).json();
+    expect(own.experiences[0].scenes[0].social.drafts.linkedin.caption).toBe('A creative study.');
+    expect(other.experiences[0].scenes[0].social.revision).toBe(0);
+  });
   it('accepts the browser Host even when Next uses a different internal bind URL', async () => {
     const request = new NextRequest('http://0.0.0.0:3000/api/v1/mock/reset', {
       method: 'POST',

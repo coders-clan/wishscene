@@ -13,6 +13,7 @@ Planning horizon is indicative, not a committed delivery date. Sequence is depen
 - Experience wizard, storyboard, versioned Story Bible, scene jobs, candidate review and approval.
 - Scoped repair and stale dependency handling.
 - Carousel, Stories, editable captions, export pack.
+- **P11 per-image composer:** demo includes six platform previews, independent text drafts, tone templates and per-image text export. Next: focal crops, rendered overlays/platform-sized downloads, durable drafts and caption-provider adapter. [Scope and acceptance](SOCIAL_COMPOSER.md).
 **Exit:** consenting test users finish the functional walkthrough; image release gates in PRD and evaluation plan pass.
 
 ## Phase 2 — Video and Reel (2–4 weeks)

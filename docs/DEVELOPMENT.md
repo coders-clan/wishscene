@@ -25,7 +25,7 @@ VS Code users can reopen this repo in the included dev container. It installs de
 | Generation | Simulated queued → running → ready/failed; 2.4-second normal and 12-second slow scenario |
 | Review | One fixed photo per scene for a matching preset; two illustrated grades for custom settings; previous candidates retained |
 | Retry/cancel | Idempotent request keys; one active job per scene; safe cancellation; previous choice retained |
-| Social pack | Editable caption; preview of four frames; ZIP with JPG photos or SVG fallbacks, caption, provenance, manifest |
+| Social pack | Per-image Instagram/Story, TikTok, Facebook, LinkedIn and X previews; editable tone templates, captions and overlays; saved drafts and per-image text files in ZIP |
 | Isolation | Random HttpOnly session cookie; separate in-memory workspace per browser |
 | Hunch | Pinned CLI/MCP configs, project memory, explicit task and verification workflow |
 
@@ -39,8 +39,8 @@ Real authentication/ownership, Postgres/Prisma, BullMQ/Redis workers, private ob
 
 1. Tokyo starts with two approved scenes, one review scene, one draft.
 2. Click **Generate remaining**. Review and approve a candidate for scenes 3 and 4.
-3. Open **Social pack**, edit and save the caption.
-4. **Export demo pack** downloads four JPGs for a matching photo preset (SVGs for custom settings), plus `manifest.json`, `caption.txt`, and `README.txt`.
+3. Click **Create post** on any image or open **Social pack**. Choose an image and platform, edit/suggest text, inspect the preview and save. Repeat per image. The optional whole-pack caption is below. [Complete walkthrough](SOCIAL_COMPOSER.md).
+4. **Export demo pack** downloads four JPGs for a matching photo preset (SVGs for custom settings), plus per-image `posts/*.txt`, `manifest.json`, `caption.txt`, and `README.txt`. Crop and overlay are preview only; originals are preserved.
 5. Change the look under **Story settings**. Version increments; every existing approval clears. Old candidates cannot be approved or exported against the new story.
 6. In **Developer tools**, choose Failure or Slow. Generate a scene, observe failure/retry or cancel the slow job. Scenario changes apply to subsequent requests.
 7. Create a new Kyoto experience. Selecting the destination fills its matching photo outfit and mood. Reloading preserves server state; the selected experience defaults to Tokyo after reload. Use the title picker to switch.
@@ -52,6 +52,8 @@ Real authentication/ownership, Postgres/Prisma, BullMQ/Redis workers, private ob
 | --- | --- |
 | `apps/web/src/app/` | Next.js page, layout, brand styles, HTTP route handler |
 | `apps/web/src/components/studio.tsx` | Interactive studio and dialogs |
+| `apps/web/src/components/social-composer.tsx` | Per-image platform, text and preview editor |
+| `packages/contracts/src/social.ts` | Social formats, draft schemas, types and copy templates |
 | `apps/web/src/lib/mock-api.ts` | JSON validation, session registry, HTTP errors |
 | `packages/contracts/src/` | Zod inputs and shared response types |
 | `packages/domain/src/` | Mock state machine, versioning, approvals, export readiness |

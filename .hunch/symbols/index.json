@@ -14,12 +14,12 @@
     ],
     "metrics": {
       "loc": 1,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 4,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_03b1eca43f",
@@ -62,17 +62,17 @@
     "file": "packages/domain/src/index.ts",
     "name": "MockStudio",
     "kind": "class",
-    "signature_hash": "sha1:1a70387fe64",
+    "signature_hash": "sha1:8ed3cabcc4d",
     "calls": [],
     "called_by": [],
     "metrics": {
-      "loc": 286,
-      "churn_90d": 2,
+      "loc": 314,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_0e797d939c",
@@ -84,12 +84,12 @@
     "called_by": [],
     "metrics": {
       "loc": 6,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_10711ce3ae",
@@ -105,12 +105,12 @@
     ],
     "metrics": {
       "loc": 6,
-      "churn_90d": 4,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_119ac09ba3",
@@ -141,12 +141,12 @@
     "called_by": [],
     "metrics": {
       "loc": 7,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_14441b1549_1",
@@ -160,12 +160,12 @@
     "called_by": [],
     "metrics": {
       "loc": 7,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 1
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_1f1b38ab6d",
@@ -177,12 +177,34 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_1faa11e08b",
+    "file": "apps/web/src/components/social-composer.tsx",
+    "name": "rememberRevision",
+    "kind": "function",
+    "signature_hash": "sha1:4031d3d9558",
+    "calls": [
+      "sym_98bdb963e8"
+    ],
+    "called_by": [
+      "sym_abea901a04",
+      "sym_fb861c5e52"
+    ],
+    "metrics": {
+      "loc": 5,
+      "churn_90d": 3,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 1
+    },
+    "last_changed": "commit:dc719e9"
   },
   {
     "id": "sym_214c53a83f",
@@ -194,12 +216,12 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_29cfb77969",
@@ -211,12 +233,12 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_2b22ce11fa",
@@ -250,12 +272,12 @@
     ],
     "metrics": {
       "loc": 11,
-      "churn_90d": 4,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 4,
       "fan_out": 0
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_308480ea2b",
@@ -279,7 +301,7 @@
     "file": "packages/domain/src/index.ts",
     "name": "export",
     "kind": "method",
-    "signature_hash": "sha1:3f3c14619cd",
+    "signature_hash": "sha1:a3d137aa0af",
     "calls": [
       "sym_e4658e7c42",
       "sym_e78fcbf9ca",
@@ -287,13 +309,33 @@
     ],
     "called_by": [],
     "metrics": {
-      "loc": 35,
-      "churn_90d": 2,
+      "loc": 41,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 3
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_3681195f5b",
+    "file": "apps/web/src/components/social-composer.tsx",
+    "name": "baseFor",
+    "kind": "function",
+    "signature_hash": "sha1:2bfe24db1a7",
+    "calls": [],
+    "called_by": [
+      "sym_abea901a04",
+      "sym_98bdb963e8"
+    ],
+    "metrics": {
+      "loc": 2,
+      "churn_90d": 3,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 0
+    },
+    "last_changed": "commit:dc719e9"
   },
   {
     "id": "sym_36f63d6ae9",
@@ -310,12 +352,12 @@
     ],
     "metrics": {
       "loc": 8,
-      "churn_90d": 4,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 2
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_371c013f11",
@@ -331,12 +373,12 @@
     ],
     "metrics": {
       "loc": 4,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_3e3509dde3",
@@ -351,12 +393,29 @@
     ],
     "metrics": {
       "loc": 9,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 2,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_3eb3620cd5",
+    "file": "packages/contracts/src/social.ts",
+    "name": "SocialUpdate",
+    "kind": "type",
+    "signature_hash": "sha1:a381a270a57",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_422ca6ef98",
@@ -376,6 +435,23 @@
     "last_changed": "commit:9706a33"
   },
   {
+    "id": "sym_42bea3d95b",
+    "file": "packages/contracts/src/social.ts",
+    "name": "SceneSocial",
+    "kind": "interface",
+    "signature_hash": "sha1:57adbea1f1d",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 5,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:2273d4e"
+  },
+  {
     "id": "sym_477765f8d2",
     "file": "apps/web/src/components/studio.tsx",
     "name": "activeJob",
@@ -387,12 +463,12 @@
     ],
     "metrics": {
       "loc": 1,
-      "churn_90d": 4,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_4d516f691e",
@@ -404,12 +480,12 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 4,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_4f6c55b70d",
@@ -441,19 +517,36 @@
     "called_by": [],
     "metrics": {
       "loc": 11,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 2
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_50ff3c39cf",
+    "file": "packages/contracts/src/social.ts",
+    "name": "SocialPlatform",
+    "kind": "type",
+    "signature_hash": "sha1:cb181283903",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_565d8d37ff",
     "file": "apps/web/src/components/studio.tsx",
     "name": "exportPack",
     "kind": "function",
-    "signature_hash": "sha1:87351b58ade",
+    "signature_hash": "sha1:322429dc34f",
     "calls": [
       "sym_e5701c0afb"
     ],
@@ -461,13 +554,13 @@
       "sym_639b4d5e5c"
     ],
     "metrics": {
-      "loc": 30,
-      "churn_90d": 4,
+      "loc": 35,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_596777fa81",
@@ -479,12 +572,12 @@
     "called_by": [],
     "metrics": {
       "loc": 9,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_5a3be9886a",
@@ -498,6 +591,7 @@
       "sym_837814e880",
       "sym_4fa89a4963",
       "sym_9b46929566",
+      "sym_b3bd9e1a7d",
       "sym_b57b703a1f",
       "sym_b52416f60e",
       "sym_e5522ad0b2",
@@ -505,12 +599,12 @@
     ],
     "metrics": {
       "loc": 9,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
-      "fan_in": 8,
+      "fan_in": 9,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_5b4b5c701d",
@@ -522,29 +616,29 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_5e7171df4b",
     "file": "packages/contracts/src/index.ts",
     "name": "Scene",
     "kind": "interface",
-    "signature_hash": "sha1:773be06e7c1",
+    "signature_hash": "sha1:879f1f735da",
     "calls": [],
     "called_by": [],
     "metrics": {
-      "loc": 11,
-      "churn_90d": 2,
+      "loc": 12,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_619b7b92f7",
@@ -556,12 +650,12 @@
     "called_by": [],
     "metrics": {
       "loc": 11,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_61e0035362",
@@ -585,7 +679,7 @@
     "file": "apps/web/src/components/studio.tsx",
     "name": "Studio",
     "kind": "function",
-    "signature_hash": "sha1:dc8201dc726",
+    "signature_hash": "sha1:b9594394239",
     "calls": [
       "sym_477765f8d2",
       "sym_c03f447942",
@@ -599,13 +693,13 @@
     ],
     "called_by": [],
     "metrics": {
-      "loc": 1042,
-      "churn_90d": 4,
+      "loc": 1076,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 9
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_66f8b427d0",
@@ -663,7 +757,7 @@
     "file": "apps/web/src/components/studio.tsx",
     "name": "selectExperience",
     "kind": "function",
-    "signature_hash": "sha1:34c53de0306",
+    "signature_hash": "sha1:fdfd9ac4a8f",
     "calls": [
       "sym_c03f447942"
     ],
@@ -671,13 +765,13 @@
       "sym_639b4d5e5c"
     ],
     "metrics": {
-      "loc": 5,
-      "churn_90d": 4,
+      "loc": 9,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_837814e880",
@@ -690,6 +784,7 @@
       "sym_5a3be9886a"
     ],
     "called_by": [
+      "sym_b3bd9e1a7d",
       "sym_b57b703a1f",
       "sym_b52416f60e",
       "sym_e4658e7c42",
@@ -697,12 +792,12 @@
     ],
     "metrics": {
       "loc": 6,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
-      "fan_in": 4,
+      "fan_in": 5,
       "fan_out": 2
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_8839d47266",
@@ -716,12 +811,12 @@
     ],
     "metrics": {
       "loc": 23,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:c6f6d2e"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_94c182e073",
@@ -733,29 +828,70 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_96458c5ec7",
+    "file": "packages/contracts/src/social.ts",
+    "name": "makeSceneSocial",
+    "kind": "function",
+    "signature_hash": "sha1:3b104eab36e",
+    "calls": [
+      "sym_c6e0167e7a"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 12,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_98bdb963e8",
+    "file": "apps/web/src/components/social-composer.tsx",
+    "name": "isSceneDirty",
+    "kind": "function",
+    "signature_hash": "sha1:d0c45f50756",
+    "calls": [
+      "sym_3681195f5b"
+    ],
+    "called_by": [
+      "sym_abea901a04",
+      "sym_1faa11e08b"
+    ],
+    "metrics": {
+      "loc": 10,
+      "churn_90d": 3,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 1
+    },
+    "last_changed": "commit:dc719e9"
   },
   {
     "id": "sym_9a3ea12155",
     "file": ".github/workflows/ci.yml",
     "name": "ci.yml",
     "kind": "file",
-    "signature_hash": "sha1:39b6e2de83c",
+    "signature_hash": "sha1:141b7896f89",
     "calls": [],
     "called_by": [],
     "metrics": {
-      "loc": 36,
-      "churn_90d": 1,
+      "loc": 44,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:dc719e9"
   },
   {
     "id": "sym_9b46929566",
@@ -772,12 +908,29 @@
     "called_by": [],
     "metrics": {
       "loc": 21,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 4
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_9fefdd8334",
+    "file": "packages/contracts/src/social.ts",
+    "name": "SocialTone",
+    "kind": "type",
+    "signature_hash": "sha1:cbae9266f0b",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_a3fec7dd86",
@@ -847,19 +1000,19 @@
     "called_by": [],
     "metrics": {
       "loc": 2,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 2
     },
-    "last_changed": "commit:c6f6d2e"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_a938904079",
     "file": "apps/web/src/components/studio.tsx",
     "name": "submitStory",
     "kind": "function",
-    "signature_hash": "sha1:1777b34f575",
+    "signature_hash": "sha1:f1ca8cd0268",
     "calls": [
       "sym_e5701c0afb",
       "sym_2bb1d9d5f2",
@@ -867,13 +1020,13 @@
     ],
     "called_by": [],
     "metrics": {
-      "loc": 12,
-      "churn_90d": 4,
+      "loc": 16,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 3
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_aac96e5ae6",
@@ -893,6 +1046,46 @@
     "last_changed": "commit:9706a33"
   },
   {
+    "id": "sym_abea901a04",
+    "file": "apps/web/src/components/social-composer.tsx",
+    "name": "SocialComposer",
+    "kind": "function",
+    "signature_hash": "sha1:a679cce4e4b",
+    "calls": [
+      "sym_3681195f5b",
+      "sym_98bdb963e8",
+      "sym_f7bce30b9d",
+      "sym_1faa11e08b",
+      "sym_fb861c5e52"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 359,
+      "churn_90d": 3,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 5
+    },
+    "last_changed": "commit:dc719e9"
+  },
+  {
+    "id": "sym_afcdc27d56",
+    "file": "packages/contracts/src/social.ts",
+    "name": "SocialExport",
+    "kind": "interface",
+    "signature_hash": "sha1:40cb923f6c8",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 5,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:2273d4e"
+  },
+  {
     "id": "sym_b02f511909",
     "file": "packages/domain/src/index.ts",
     "name": "reset",
@@ -905,12 +1098,32 @@
     "called_by": [],
     "metrics": {
       "loc": 4,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 2
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_b3bd9e1a7d",
+    "file": "packages/domain/src/index.ts",
+    "name": "updateSocial",
+    "kind": "method",
+    "signature_hash": "sha1:39ef2bdc45e",
+    "calls": [
+      "sym_837814e880",
+      "sym_5a3be9886a"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 20,
+      "churn_90d": 3,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 2
+    },
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_b4a28f6741",
@@ -922,12 +1135,12 @@
     "called_by": [],
     "metrics": {
       "loc": 12,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_b52416f60e",
@@ -945,12 +1158,12 @@
     "called_by": [],
     "metrics": {
       "loc": 10,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 5
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_b57b703a1f",
@@ -967,32 +1180,32 @@
     "called_by": [],
     "metrics": {
       "loc": 38,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 4
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_bc087f2197",
     "file": "apps/web/src/components/studio.tsx",
     "name": "submitExperience",
     "kind": "function",
-    "signature_hash": "sha1:b7d067e7d76",
+    "signature_hash": "sha1:53a71c33510",
     "calls": [
       "sym_e5701c0afb",
       "sym_c03f447942"
     ],
     "called_by": [],
     "metrics": {
-      "loc": 11,
-      "churn_90d": 4,
+      "loc": 15,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 2
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_c03f447942",
@@ -1010,12 +1223,12 @@
     ],
     "metrics": {
       "loc": 1,
-      "churn_90d": 4,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 5,
       "fan_out": 0
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_c49cd54e0c",
@@ -1029,12 +1242,31 @@
     ],
     "metrics": {
       "loc": 13,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:c6f6d2e"
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_c6e0167e7a",
+    "file": "packages/contracts/src/social.ts",
+    "name": "suggestSocialCopy",
+    "kind": "function",
+    "signature_hash": "sha1:2853e1236a8",
+    "calls": [],
+    "called_by": [
+      "sym_96458c5ec7"
+    ],
+    "metrics": {
+      "loc": 28,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_c83ec5eb7e",
@@ -1065,12 +1297,12 @@
     ],
     "metrics": {
       "loc": 4,
-      "churn_90d": 4,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_cf80ba8e55",
@@ -1082,29 +1314,29 @@
     "called_by": [],
     "metrics": {
       "loc": 59,
-      "churn_90d": 4,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_d03415e3ba",
     "file": "packages/contracts/src/index.ts",
     "name": "ExportManifest",
     "kind": "interface",
-    "signature_hash": "sha1:5aaf5af114e",
+    "signature_hash": "sha1:e04a93af772",
     "calls": [],
     "called_by": [],
     "metrics": {
       "loc": 13,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_e4658e7c42",
@@ -1126,12 +1358,12 @@
     ],
     "metrics": {
       "loc": 33,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 6,
       "fan_out": 2
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_e4e31d7b4b",
@@ -1145,12 +1377,12 @@
     "called_by": [],
     "metrics": {
       "loc": 44,
-      "churn_90d": 4,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 1
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
   },
   {
     "id": "sym_e5522ad0b2",
@@ -1167,12 +1399,12 @@
     "called_by": [],
     "metrics": {
       "loc": 23,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 4
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_e5701c0afb",
@@ -1190,12 +1422,29 @@
     ],
     "metrics": {
       "loc": 13,
-      "churn_90d": 4,
+      "churn_90d": 6,
       "bug_count": 0,
       "fan_in": 5,
       "fan_out": 0
     },
-    "last_changed": "commit:3f0611e"
+    "last_changed": "commit:26eb507"
+  },
+  {
+    "id": "sym_e752817097",
+    "file": "apps/web/src/components/social-composer.tsx",
+    "name": "warn",
+    "kind": "function",
+    "signature_hash": "sha1:1fadae872eb",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 3,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:dc719e9"
   },
   {
     "id": "sym_e78fcbf9ca",
@@ -1214,12 +1463,12 @@
     ],
     "metrics": {
       "loc": 5,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 4,
       "fan_out": 1
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_ecfa41841d",
@@ -1236,12 +1485,12 @@
     ],
     "metrics": {
       "loc": 53,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 2,
       "fan_out": 1
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_f038625ea6",
@@ -1272,32 +1521,85 @@
     "called_by": [],
     "metrics": {
       "loc": 3,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 1
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_f561b4a2eb",
+    "file": "apps/web/src/components/social-composer.tsx",
+    "name": "Props",
+    "kind": "interface",
+    "signature_hash": "sha1:82254839d05",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 7,
+      "churn_90d": 3,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:dc719e9"
+  },
+  {
+    "id": "sym_f7bce30b9d",
+    "file": "apps/web/src/components/social-composer.tsx",
+    "name": "save",
+    "kind": "function",
+    "signature_hash": "sha1:9fab3e9c566",
+    "calls": [],
+    "called_by": [
+      "sym_abea901a04"
+    ],
+    "metrics": {
+      "loc": 25,
+      "churn_90d": 3,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:dc719e9"
   },
   {
     "id": "sym_f91baca3ba",
     "file": "packages/domain/src/index.ts",
     "name": "makeExperience",
     "kind": "method",
-    "signature_hash": "sha1:05d7177e506",
+    "signature_hash": "sha1:bf073b966dd",
     "calls": [],
     "called_by": [
       "sym_ecfa41841d",
       "sym_4fa89a4963"
     ],
     "metrics": {
-      "loc": 20,
-      "churn_90d": 2,
+      "loc": 21,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 2,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_fa327b71bf",
+    "file": "packages/contracts/src/social.ts",
+    "name": "SocialDraft",
+    "kind": "type",
+    "signature_hash": "sha1:1d0c51eb3ae",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:2273d4e"
   },
   {
     "id": "sym_fa3f25e7d1",
@@ -1309,19 +1611,40 @@
     "called_by": [],
     "metrics": {
       "loc": 7,
-      "churn_90d": 2,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_fb861c5e52",
+    "file": "apps/web/src/components/social-composer.tsx",
+    "name": "update",
+    "kind": "function",
+    "signature_hash": "sha1:cd7056644d2",
+    "calls": [
+      "sym_1faa11e08b"
+    ],
+    "called_by": [
+      "sym_abea901a04"
+    ],
+    "metrics": {
+      "loc": 5,
+      "churn_90d": 3,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:dc719e9"
   },
   {
     "id": "sym_fd92a4bd50",
     "file": "apps/web/src/lib/mock-api.ts",
     "name": "dispatch",
     "kind": "function",
-    "signature_hash": "sha1:6942c9a7f72",
+    "signature_hash": "sha1:882547f41b6",
     "calls": [
       "sym_8839d47266"
     ],
@@ -1329,12 +1652,29 @@
       "sym_a900a28d3a"
     ],
     "metrics": {
-      "loc": 130,
-      "churn_90d": 2,
+      "loc": 138,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:c6f6d2e"
+    "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_ffa5fe612e",
+    "file": "tests/social.test.ts",
+    "name": "input",
+    "kind": "function",
+    "signature_hash": "sha1:e548fb75aaa",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 11,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:2273d4e"
   }
 ]

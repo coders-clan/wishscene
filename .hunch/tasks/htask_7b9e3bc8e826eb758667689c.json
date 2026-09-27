@@ -1,0 +1,136 @@
+{
+  "id": "htask_7b9e3bc8e826eb758667689c",
+  "title": "Improve studio readability and control sizes",
+  "state": "completed",
+  "started_at": "2026-09-27T11:54:07.662Z",
+  "finished_at": "2026-09-27T12:29:12.497Z",
+  "coverage": "delivered",
+  "lessons": [
+    {
+      "kind": "constraints",
+      "record_id": "con_480efb317d",
+      "content_hash": "sha256:baf5c7ae2343825874fe77bd2e2be74c25fd501221411af03142bd5563b5e41a",
+      "title": "A Story Bible edit must invalidate previous approvals and cancel active jobs before a newer version can be exported."
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_d7095985f1",
+      "content_hash": "sha256:29520b57b092cac438bde01d9bbe033bcb46924890cfbb9195847434d1e5feba",
+      "title": "Keep mock state behind the domain boundary intended for persistence. Each browser gets its own workspace, with no identity uploads or provider calls."
+    },
+    {
+      "kind": "constraints",
+      "record_id": "con_480efb317d",
+      "content_hash": "sha256:404a8c7d9e80a375375a91b9b90ad893d89d89edebbee050abf22d35d5473dc6",
+      "title": "A Story Bible edit must invalidate previous approvals and cancel active jobs before a newer version can be exported."
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_c1b5aa1fec",
+      "content_hash": "sha256:5cf532bc8682079944d93e0e97bf6bb7b0f2f06e9577f9a019b5c622b0a16051",
+      "title": "Social drafts belong to each scene and platform. Saving one must preserve the others; version and revision checks reject stale writes without silently replacing edited copy."
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_d7095985f1",
+      "content_hash": "sha256:6ada187bd3ad9a4b82a93851bb5bcfbc673414c473a02613cdd7e995148257bc",
+      "title": "Keep mock state behind the domain boundary intended for persistence. Each browser gets its own workspace, with no identity uploads or provider calls."
+    }
+  ],
+  "applied": [],
+  "saved": [],
+  "checks": [
+    {
+      "label": "Readability and social composer checks",
+      "state": "failed",
+      "exit_code": 1
+    },
+    {
+      "label": "Readability and social composer checks",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Social HTTP smoke",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Readability and social composer checks",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Readability and social composer checks",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Social HTTP smoke",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Browser test types",
+      "state": "failed",
+      "exit_code": 2
+    },
+    {
+      "label": "Browser test types",
+      "state": "passed",
+      "exit_code": 0
+    }
+  ],
+  "conformance": [
+    {
+      "kind": "constraints",
+      "record_id": "con_480efb317d",
+      "content_hash": "sha256:baf5c7ae2343825874fe77bd2e2be74c25fd501221411af03142bd5563b5e41a",
+      "outcome": "unavailable"
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_d7095985f1",
+      "content_hash": "sha256:29520b57b092cac438bde01d9bbe033bcb46924890cfbb9195847434d1e5feba",
+      "outcome": "unavailable"
+    },
+    {
+      "kind": "constraints",
+      "record_id": "con_480efb317d",
+      "content_hash": "sha256:404a8c7d9e80a375375a91b9b90ad893d89d89edebbee050abf22d35d5473dc6",
+      "outcome": "unavailable"
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_c1b5aa1fec",
+      "content_hash": "sha256:5cf532bc8682079944d93e0e97bf6bb7b0f2f06e9577f9a019b5c622b0a16051",
+      "outcome": "unavailable"
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_d7095985f1",
+      "content_hash": "sha256:6ada187bd3ad9a4b82a93851bb5bcfbc673414c473a02613cdd7e995148257bc",
+      "outcome": "unavailable"
+    }
+  ],
+  "refusals": 0,
+  "files": [
+    "apps/web/src/app/globals.css",
+    "apps/web/src/components/studio.tsx",
+    "packages/domain/src/index.ts"
+  ],
+  "supersedes": [
+    "htask_009d211207ca04e3d113cf91",
+    "htask_e3d8f29d5c6ed9f1fde6fbcf"
+  ],
+  "source_snapshot": "sha256:82d4df9cd54d5cb6d3b2eae80b5501f675d37b760ec0635bb640d57a5f4c741a",
+  "report_hash": "sha256:478f72141d0c23f8645ee647ed430d093b91605c5748fd90cd75b6ed16077c3c",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_7b9e3bc8e826eb758667689c"
+    ],
+    "last_verified": "2026-09-27T12:29:12.497Z"
+  }
+}
