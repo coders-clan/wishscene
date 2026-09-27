@@ -1,0 +1,128 @@
+{
+  "id": "htask_e3d8f29d5c6ed9f1fde6fbcf",
+  "title": "Build wishscene mock studio scaffold",
+  "state": "completed",
+  "started_at": "2026-09-27T09:14:33.865Z",
+  "finished_at": "2026-09-27T09:52:59.802Z",
+  "coverage": "delivered",
+  "lessons": [
+    {
+      "kind": "constraints",
+      "record_id": "con_480efb317d",
+      "content_hash": "sha256:9e21022a7358c9e2f3e5c253b2e3c6bcf92ae98a9f7b1a2be29cd4ccfbe731c5",
+      "title": "A Story Bible edit must invalidate previous approvals and cancel active jobs before a newer version can be exported."
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_d7095985f1",
+      "content_hash": "sha256:29520b57b092cac438bde01d9bbe033bcb46924890cfbb9195847434d1e5feba",
+      "title": "Keep mock state behind the domain boundary intended for persistence. Each browser gets its own workspace, with no identity uploads or provider calls."
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_b4fde6d9dc",
+      "content_hash": "sha256:433ebb6a167af8174f6823d4e776d5238532d33fcea37ff7684d8d0bdf1c5a9e",
+      "title": "Next can construct an internal URL with the bind address (0.0.0.0). Compare browser Origin against the request Host and protocol, or valid local mutations are incorrectly rejected. Do not trust forwar"
+    }
+  ],
+  "applied": [],
+  "saved": [],
+  "checks": [
+    {
+      "label": "Scaffold quality checks",
+      "state": "failed",
+      "exit_code": 1
+    },
+    {
+      "label": "Scaffold quality checks after fixes",
+      "state": "failed",
+      "exit_code": 1
+    },
+    {
+      "label": "Full scaffold checks",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Built Next.js HTTP journey",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Final source checks",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Final committed scaffold checks",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Final committed HTTP flow",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Origin regression before fix",
+      "state": "failed",
+      "exit_code": 1
+    },
+    {
+      "label": "Browser-origin fix checks",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Browser-origin HTTP flow",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Final PR tree verification",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Final PR tree HTTP verification",
+      "state": "passed",
+      "exit_code": 0
+    }
+  ],
+  "conformance": [
+    {
+      "kind": "constraints",
+      "record_id": "con_480efb317d",
+      "content_hash": "sha256:9e21022a7358c9e2f3e5c253b2e3c6bcf92ae98a9f7b1a2be29cd4ccfbe731c5",
+      "outcome": "unavailable"
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_d7095985f1",
+      "content_hash": "sha256:29520b57b092cac438bde01d9bbe033bcb46924890cfbb9195847434d1e5feba",
+      "outcome": "unavailable"
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_b4fde6d9dc",
+      "content_hash": "sha256:433ebb6a167af8174f6823d4e776d5238532d33fcea37ff7684d8d0bdf1c5a9e",
+      "outcome": "unavailable"
+    }
+  ],
+  "refusals": 0,
+  "files": [
+    "apps/web/src/lib/mock-api.ts",
+    "packages/domain/src/index.ts"
+  ],
+  "supersedes": [],
+  "source_snapshot": "sha256:e01b288eaf3359fedf4bbd87e5d781cc129b6e76e3cb4498ae5c27a6afb4d41d",
+  "report_hash": "sha256:09ac4e6f0f0d2c51fb23a1f5dbac8f3d0c074921e64a6c92de70d9cd3c8b2d9b",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_e3d8f29d5c6ed9f1fde6fbcf"
+    ],
+    "last_verified": "2026-09-27T09:52:59.802Z"
+  }
+}
