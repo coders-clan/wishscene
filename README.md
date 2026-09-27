@@ -23,6 +23,12 @@ Open **http://localhost:3000**. No API keys or database required. Start with Tok
 
 The four destination presets use pre-generated AI photos of the same fictional Alex, with matching outfit and mood settings. Custom settings fall back to labeled SVG illustrations; they do not alter the photos. No live model calls or automated likeness verification run in this demo. See [photo presets and provenance](docs/DEMO_PHOTOS.md). State is isolated by browser cookie and lives in the server process.
 
+## Shared developer feedback
+
+Use the floating **Feedback** button to select an element, capture a section, annotate it, and send a report. Everyone can read, reply, vote and triage on `/feedback`. [Feedback guide](docs/FEEDBACK.md) · [Neon + Vercel deployment](docs/DEPLOYMENT.md).
+
+With `DATABASE_URL`, demo workspaces and feedback persist in Postgres across instances/deployments. Without it, local workspaces stay in memory and feedback uses a SQLite file.
+
 ## Start here
 
 1. Read [PRD](docs/PRD.md) for audience, scope, success criteria, and decisions.

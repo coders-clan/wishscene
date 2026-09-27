@@ -51,3 +51,9 @@ flowchart TD
 - Tests cover a genuine failure mode, not implementation mirroring.
 - Cost, retention and provider behavior documented when affected.
 - Docs and API contract updated; issue linked; reviewer can run a deterministic demo.
+
+## Developer feedback and deployment slice
+
+Implemented: shared board, element/section capture, annotation and area hiding, discussion, triage, votes, links/exports, SQLite local persistence, Postgres shared storage, and transactional durable demo workspaces. Neon/Vercel configuration and deployment runbook are provided. Live connection/deployment must be verified separately.
+
+Next: authenticated team roles and moderation/deletion, storage-backed capture attachments for larger boards, indexed server-side search, and optional GitHub issue linking. Product authentication, private face uploads and generation workers remain their existing roadmap work.

@@ -3,7 +3,7 @@
   "title": "Social drafts belong to each scene and platform. Saving one must preserve the others; version and revision checks reject stale writes without silently replacing edited copy.",
   "topic": null,
   "status": "accepted",
-  "context": "Captured from an inline hunch-why comment (packages/domain/src/index.ts:192).",
+  "context": "Captured from an inline hunch-why comment (packages/domain/src/index.ts:197).",
   "decision": "Social drafts belong to each scene and platform. Saving one must preserve the others; version and revision checks reject stale writes without silently replacing edited copy.",
   "consequences": [],
   "alternatives_rejected": [],
@@ -26,7 +26,7 @@
     "source": "human_confirmed",
     "confidence": 0.9,
     "evidence": [
-      "packages/domain/src/index.ts:192"
+      "packages/domain/src/index.ts:197"
     ]
   },
   "date": "2026-09-27T12:10:35.651Z"

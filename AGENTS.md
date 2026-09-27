@@ -27,5 +27,5 @@ _Records carry provenance and confidence; treat low-confidence items as advisory
 - Keep mock mode usable without provider keys, identity uploads, or database services.
 - Business state/version rules live in `packages/domain`; API inputs live in `packages/contracts`.
 - Run `pnpm check`. Run `pnpm test:smoke` and `pnpm test:e2e` for flow changes.
-- Current persistence is per-session memory. Do not describe it as durable storage, real auth, or real AI generation.
+- Without a database URL, studio state is per-session memory and feedback is SQLite. With Postgres, demo workspaces and feedback are durable. Neither mode is real auth or real AI generation.
 - Push feature branches and open PRs. Never push directly to `main` or bypass its rules.

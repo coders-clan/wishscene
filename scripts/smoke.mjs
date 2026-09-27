@@ -4,7 +4,11 @@ import assert from 'node:assert/strict';
 import { setTimeout as delay } from 'node:timers/promises';
 const base = 'http://127.0.0.1:3101';
 const child = spawn('pnpm', ['--filter', '@wishscene/web', 'start', '--port', '3101'], {
-  env: { ...process.env, WISHSCENE_MOCK: '1' },
+  env: {
+    ...process.env,
+    WISHSCENE_MOCK: '1',
+    DATABASE_URL: process.env.WISHSCENE_TEST_PG_URL || process.env.DATABASE_URL || '',
+  },
   stdio: ['ignore', 'pipe', 'pipe'],
   detached: true,
 });

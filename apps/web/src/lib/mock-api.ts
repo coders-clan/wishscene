@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import {
@@ -8,14 +7,10 @@ import {
   storyUpdate,
   socialUpdate,
 } from '@wishscene/contracts';
-import { DomainError, MockStudio } from '@wishscene/domain';
+import { DomainError, type MockStudio } from '@wishscene/domain';
+import { withWorkspace } from './workspace-store';
 
-const TTL = 60 * 60 * 1000;
 const COOKIE = 'wishscene-demo';
-const registry = globalThis as typeof globalThis & {
-  wishsceneSessions?: Map<string, { studio: MockStudio; seen: number }>;
-};
-const sessions = (registry.wishsceneSessions ??= new Map());
 async function body(request: NextRequest) {
   if (!request.headers.get('content-type')?.includes('application/json'))
     throw new DomainError(415, 'JSON_REQUIRED', 'Send application/json.');
@@ -58,21 +53,36 @@ export async function dispatch(request: NextRequest, path: string[]) {
       { error: { code: 'ORIGIN', message: 'Cross-origin writes are disabled.' } },
       { status: 403 },
     );
-  const now = Date.now();
-  for (const [id, session] of sessions) if (now - session.seen > TTL) sessions.delete(id);
-  let sessionId = request.cookies.get(COOKIE)?.value;
-  if (!sessionId || !sessions.has(sessionId)) {
-    if (sessions.size >= 100)
-      return NextResponse.json(
-        { error: { code: 'CAPACITY', message: 'The demo is at capacity. Try again later.' } },
-        { status: 503 },
-      );
-    sessionId = randomUUID();
-    sessions.set(sessionId, { studio: new MockStudio(), seen: now });
+  try {
+    const saved = await withWorkspace(request.cookies.get(COOKIE)?.value, (studio) =>
+      route(request, path, studio),
+    );
+    const response = NextResponse.json(saved.value.result, {
+      status: saved.value.status,
+      headers: { 'Cache-Control': 'no-store', 'X-Wishscene-Mode': 'mock' },
+    });
+    response.cookies.set(COOKIE, saved.sessionId, {
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: request.nextUrl.protocol === 'https:',
+      path: '/',
+      maxAge: saved.maxAge,
+    });
+    return response;
+  } catch (error) {
+    const status = error instanceof DomainError ? error.status : 503;
+    const code = error instanceof DomainError ? error.code : 'STORAGE';
+    const message =
+      error instanceof DomainError
+        ? error.message
+        : 'Workspace storage is unavailable. Please try again.';
+    return NextResponse.json(
+      { error: { code, message } },
+      { status, headers: { 'Cache-Control': 'no-store' } },
+    );
   }
-  const session = sessions.get(sessionId)!;
-  session.seen = now;
-  const studio = session.studio;
+}
+async function route(request: NextRequest, path: string[], studio: MockStudio) {
   let result: unknown;
   let status = 200;
   try {
@@ -164,16 +174,5 @@ export async function dispatch(request: NextRequest, path: string[]) {
       console.error(error);
     }
   }
-  const response = NextResponse.json(result, {
-    status,
-    headers: { 'Cache-Control': 'no-store', 'X-Wishscene-Mode': 'mock' },
-  });
-  response.cookies.set(COOKIE, sessionId, {
-    httpOnly: true,
-    sameSite: 'strict',
-    secure: request.nextUrl.protocol === 'https:',
-    path: '/',
-    maxAge: TTL / 1000,
-  });
-  return response;
+  return { result, status };
 }

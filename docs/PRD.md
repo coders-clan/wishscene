@@ -47,6 +47,7 @@ MVP non-goals: actual travel verification, fake evidence or official documents, 
 | P09 | I assemble a Reel/mini movie | P1 | Shot order, trim, optional licensed audio, captions, cover, export |
 | P10 | I can control my likeness and data | P0 | Account deletion removes originals, derived profiles, generated assets and jobs under published retention policy |
 | P11 | I choose a platform and text for each image and preview the resulting post | P0 | Independent image/platform drafts; editable tone suggestions; live crop/caption/overlay preview; saved text paired with the correct approved image in export |
+| P12 | Developers mark an element or section, annotate it and discuss it together | P0 | Shared feedback list; capture and markup; comments; filters, votes, assignee and status history; persistence independent of demo reset |
 
 **P11 demo status:** Instagram post/Story, TikTok photo, Facebook, LinkedIn and X previews are available through each image’s **Create post** action and **Social pack**. Session saving and original-image/text exports work. Rendered crops/overlays, live AI copywriting and publishing are future work. See [Social composer](SOCIAL_COMPOSER.md).
 
@@ -75,3 +76,7 @@ Image and video APIs, licenses for music and destination reference images, provi
 ## 10. Open decisions
 
 D1 Select provider(s) using the evaluation suite. D2 Decide whether destination references are licensed catalog assets, user uploads, or both. D3 Define paid tiers after measuring cost/session. D4 Decide retention period and cloud region before beta. D5 Validate brand/name with users. Owners record decisions in ADRs, not silently in code.
+
+## Developer collaboration implementation
+
+P12 is implemented in the developer sandbox. See [FEEDBACK.md](FEEDBACK.md). A shared Postgres adapter supports Neon/Vercel; anonymous studio workspaces are persisted separately. Local use still needs no services. This does not constitute real product authentication or generation.

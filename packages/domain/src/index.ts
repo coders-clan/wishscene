@@ -60,6 +60,11 @@ export class MockStudio {
   ) {
     this.state = this.seed();
   }
+  static restore(snapshot: Workspace): MockStudio {
+    const studio = new MockStudio();
+    studio.state = structuredClone(snapshot);
+    return studio;
+  }
   private makeExperience(input: ExperienceInput, id = this.id()): Experience {
     return {
       ...input,
@@ -365,3 +370,4 @@ export class MockStudio {
     };
   }
 }
+export * from './feedback';
