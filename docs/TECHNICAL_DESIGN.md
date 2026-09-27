@@ -1,18 +1,18 @@
 # Technical design
 
-Version 0.1 · Proposed architecture, subject to benchmark and security review
+Version 0.2 · Architecture companion to the authoritative [stack decision](STACK.md). When an implementation choice differs, STACK.md controls.
 
 ## 1. Stack and boundaries
 
-- Web: Next.js + TypeScript, responsive editor, server-side auth, accessible components.
-- API: typed HTTP contract, Zod validation, per-user authorization on every object. Start as a modular Next.js API or separate Node service if workers require independent scaling.
+- Web: Next.js 16 App Router + TypeScript, responsive editor, Better Auth, accessible components.
+- API: Next.js Route Handlers with Zod contracts and per-user authorization on every object. Workers scale separately; no second API service in MVP.
 - DB: Postgres + Prisma migrations. Object storage for originals, normalized inputs, candidates and exports; bucket private, encryption at rest, short-lived scoped URLs.
-- Queue: Redis-backed durable jobs or equivalent managed queue; dedicated workers for image, evaluation, video and render. Web requests never wait for model jobs.
+- Queue: Redis + BullMQ durable jobs; dedicated workers for image, evaluation, video and render. Web requests never wait for model jobs.
 - Render: FFmpeg worker for crops, sequence, captions, audio normalization and ZIP. Pin versions/container images.
-- Auth: managed OAuth/email provider with verified account; no biometric authentication claim.
+- Auth: Better Auth with Prisma adapter and email sign-in initially; no biometric authentication claim.
 - Observability: traces by job ID, structured errors, provider latency/cost counters, redacted logs.
 
-Boundary rule: core domain depends on `ImageProvider`, `VideoProvider`, `TextProvider`, `AssetStore` interfaces, never vendor-specific response types. Choose providers only after a blinded test. FLUX.2 multi-reference editing, Veo image-to-video, and Runway image-to-video are candidate capabilities, not a procurement decision. See [evaluation](EVALUATION.md).
+Boundary rule: core domain depends on `ImageProvider`, `VideoProvider`, `TextProvider`, `AssetStore` interfaces, never vendor-specific response types. Start with FLUX.2 [pro] for image experiments and Runway image-to-video in Phase 2, both behind replaceable adapters. Issue #5 validates image quality before release; provider terms and region remain an ADR. See [evaluation](EVALUATION.md).
 
 ## 2. Logical pipeline
 

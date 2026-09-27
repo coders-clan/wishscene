@@ -8,12 +8,13 @@ wishscene creates a coherent fictional experience starring a consenting user: ph
 
 1. Read [PRD](docs/PRD.md) for audience, scope, success criteria, and decisions.
 2. Read [Functional specification](docs/FUNCTIONAL_SPEC.md) for screens, flows, states, and acceptance criteria.
-3. Read [Technical design](docs/TECHNICAL_DESIGN.md) for architecture, data model, pipeline, API, security, and cost controls.
-4. Read [Roadmap](docs/ROADMAP.md) and the [GitHub issues](../../issues) for prioritized work.
-5. Read [Engineering handoff](docs/ENGINEERING_HANDOFF.md) before implementing a vertical slice.
-6. Use [Evaluation plan](docs/EVALUATION.md) to measure actual likeness and session consistency.
+3. Read the [chosen tech stack](docs/STACK.md) for exact implementation choices.
+4. Read [Technical design](docs/TECHNICAL_DESIGN.md) for architecture, data model, pipeline, API, security, and cost controls.
+5. Read [Roadmap](docs/ROADMAP.md) and the [GitHub issues](../../issues) for prioritized work.
+6. Read [Engineering handoff](docs/ENGINEERING_HANDOFF.md) before implementing a vertical slice.
+7. Use [Evaluation plan](docs/EVALUATION.md) to measure actual likeness and session consistency.
 
-7. Read the [brand strategy](docs/brand/BRAND_STRATEGY.md), [visual identity](docs/brand/VISUAL_IDENTITY.md), [voice and copy](docs/brand/VOICE_AND_COPY.md), and [applications](docs/brand/APPLICATIONS.md) before designing product or marketing surfaces.
+8. Read the [brand strategy](docs/brand/BRAND_STRATEGY.md), [visual identity](docs/brand/VISUAL_IDENTITY.md), [voice and copy](docs/brand/VOICE_AND_COPY.md), and [applications](docs/brand/APPLICATIONS.md) before designing product or marketing surfaces.
 
 ## Product rule
 
