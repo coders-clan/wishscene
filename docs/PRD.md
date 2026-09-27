@@ -4,7 +4,7 @@ Version 0.1 · 27 September 2026 · Owner: Coders Clan · Status: implementation
 
 ## 1. Vision and problem
 
-People want to imagine themselves in places and scenes they have never visited, and share that imagination in the formats they already use. Existing one-shot generators can make an attractive image, but often change the person's face, outfit, or setting between assets. Cheaters creates a coherent **fictional experience** and packages it for social use.
+People want to imagine themselves in places and scenes they have never visited, and share that imagination in the formats they already use. Existing one-shot generators can make an attractive image, but often change the person's face, outfit, or setting between assets. Storywhere creates a coherent **fictional experience** and packages it for social use.
 
 **Promise:** "Imagine an experience. Create the whole story starring you." The result should be visually credible as creative media while remaining explicitly AI-created. The name is a working title, not a commitment to market positioning.
 
