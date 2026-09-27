@@ -1,9 +1,16 @@
-import type { Asset, Scene } from '@wishscene/contracts';
+import {
+  demoPreview,
+  hasPhotoPreset,
+  type Asset,
+  type Scene,
+  type ExperienceInput,
+} from '@wishscene/contracts';
 
 export interface ImageProvider {
   candidates(input: {
     jobId: string;
     scene: Scene;
+    story: Pick<ExperienceInput, 'destination' | 'outfit' | 'mood'>;
     bibleVersion: number;
     createdAt: string;
   }): Asset[];
@@ -14,15 +21,18 @@ export class MockImageProvider implements ImageProvider {
   candidates({
     jobId,
     scene,
+    story,
     bibleVersion,
     createdAt,
   }: Parameters<ImageProvider['candidates']>[0]): Asset[] {
-    return [0, 1].map((variant) => ({
+    const photo = hasPhotoPreset(story);
+    return (photo ? [0] : [0, 1]).map((variant) => ({
       id: `${jobId}-candidate-${variant}`,
       sceneId: scene.id,
       bibleVersion,
       createdAt,
-      image: `/demo/${scene.art}${variant ? '-warm' : ''}.svg`,
+      image: photo ? demoPreview(story, scene) : `/demo/${scene.art}${variant ? '-warm' : ''}.svg`,
+      media: photo ? 'photo' : 'illustration',
       variant,
     }));
   }

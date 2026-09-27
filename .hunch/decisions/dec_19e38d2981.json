@@ -1,0 +1,33 @@
+{
+  "id": "dec_19e38d2981",
+  "title": "Photo fixtures only represent their recorded destination, outfit and mood. Custom inputs must fall back to labeled illustrations instead of claiming the same photos follow arbitrary settings.",
+  "topic": null,
+  "status": "accepted",
+  "context": "Captured from an inline hunch-why comment (packages/contracts/src/demo.ts:36).",
+  "decision": "Photo fixtures only represent their recorded destination, outfit and mood. Custom inputs must fall back to labeled illustrations instead of claiming the same photos follow arbitrary settings.",
+  "consequences": [],
+  "alternatives_rejected": [],
+  "rejected_tripwires": [],
+  "related_components": [],
+  "related_files": [
+    "packages/contracts/src/demo.ts"
+  ],
+  "supersedes": null,
+  "superseded_by": null,
+  "caused_by_bug": null,
+  "commit": null,
+  "valid_from": "2026-09-27T11:29:20.548Z",
+  "valid_to": null,
+  "retired": {
+    "symbols": [],
+    "deps": []
+  },
+  "provenance": {
+    "source": "human_confirmed",
+    "confidence": 0.9,
+    "evidence": [
+      "packages/contracts/src/demo.ts:36"
+    ]
+  },
+  "date": "2026-09-27T11:29:20.548Z"
+}

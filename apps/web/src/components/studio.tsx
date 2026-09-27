@@ -35,6 +35,7 @@ import type {
   Scene,
   Workspace,
 } from '@wishscene/contracts';
+import { demoPresets, demoPreview, hasPhotoPreset } from '@wishscene/contracts';
 
 async function api<T>(path: string, method = 'GET', payload?: unknown): Promise<T> {
   const response = await fetch(`/api/v1/${path}`, {
@@ -59,6 +60,66 @@ const statusLabels = {
 };
 const activeJob = (status: string) => status === 'queued' || status === 'running';
 type Modal = 'new' | 'story' | 'developer' | 'identity' | 'library' | 'help' | 'review' | null;
+
+function DemoLookFields({
+  destination,
+  initial,
+}: {
+  destination: ExperienceInput['destination'];
+  initial?: Pick<ExperienceInput, 'outfit' | 'mood'>;
+}) {
+  const preset = demoPresets[destination];
+  const [outfit, setOutfit] = useState(initial?.outfit ?? preset.outfit);
+  const [mood, setMood] = useState<ExperienceInput['mood']>(initial?.mood ?? preset.mood);
+  const matched = hasPhotoPreset({ destination, outfit, mood });
+  return (
+    <>
+      <label>
+        Your look
+        <input
+          name="outfit"
+          value={outfit}
+          onChange={(event) => setOutfit(event.target.value)}
+          minLength={3}
+          maxLength={100}
+          required
+        />
+      </label>
+      <label>
+        The feeling
+        <select
+          name="mood"
+          value={mood}
+          onChange={(event) => setMood(event.target.value as ExperienceInput['mood'])}
+        >
+          {moods.map((value) => (
+            <option key={value}>{value}</option>
+          ))}
+        </select>
+      </label>
+      <div className="preset-note" aria-live="polite">
+        <strong>{matched ? 'Photo preset matched' : 'Custom developer settings'}</strong>
+        <p>
+          {matched
+            ? `Four pre-generated ${destination} photos share this look and the same fictional man. Regenerating reuses these photos.`
+            : 'Custom settings use illustrated placeholders; they do not change the person’s clothes or lighting. Live AI generation is a future feature.'}
+        </p>
+        {!matched && (
+          <button
+            type="button"
+            className="button"
+            onClick={() => {
+              setOutfit(preset.outfit);
+              setMood(preset.mood);
+            }}
+          >
+            Use {destination} photo preset
+          </button>
+        )}
+      </div>
+    </>
+  );
+}
 
 function ModalFrame({
   title,
@@ -117,6 +178,7 @@ export default function Studio() {
   const [error, setError] = useState('');
   const [caption, setCaption] = useState('');
   const [captionDirty, setCaptionDirty] = useState(false);
+  const [newDestination, setNewDestination] = useState<ExperienceInput['destination']>('Tokyo');
   const mounted = useRef(true);
   const refreshing = useRef(false);
   const refresh = useCallback(async () => {
@@ -152,6 +214,7 @@ export default function Studio() {
   const experience =
     workspace?.experiences.find((item) => item.id === experienceId) ?? workspace?.experiences[0];
   const scene = experience?.scenes.find((item) => item.id === sceneId);
+  const photoPreset = experience ? hasPhotoPreset(experience) : false;
   useEffect(() => {
     setCaption(experience?.caption ?? '');
     setCaptionDirty(false);
@@ -205,13 +268,13 @@ export default function Studio() {
       zip.file('caption.txt', manifest.caption);
       zip.file(
         'README.txt',
-        `${manifest.provenance}\n\nThese SVG illustrations are developer fixtures, not generated photos.\nThe manifest records the approved candidate and Story Bible version.\n`,
+        `${manifest.provenance}\n\nThese are bundled demo fixtures, not newly generated images.\nThe manifest records each approved asset, media type and Story Bible version.\n`,
       );
       await Promise.all(
         manifest.assets.map(async (asset) => {
           const response = await fetch(asset.image);
-          if (!response.ok) throw new Error('Could not fetch a demo illustration.');
-          zip.file(asset.filename, await response.text());
+          if (!response.ok) throw new Error('Could not fetch a demo image.');
+          zip.file(asset.filename, await response.arrayBuffer());
         }),
       );
       const url = URL.createObjectURL(await zip.generateAsync({ type: 'blob' }));
@@ -220,7 +283,7 @@ export default function Studio() {
       link.download = `wishscene-${manifest.destination.toLowerCase()}-demo.zip`;
       link.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-      setNotice('Your illustrated demo pack is ready.');
+      setNotice('Your demo image pack is ready.');
     });
   const submitExperience = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -410,6 +473,19 @@ export default function Studio() {
                   One story, all scenes
                 </span>
               </div>
+              <div className={`demo-photo-note ${photoPreset ? '' : 'custom'}`}>
+                <ImageIcon size={15} />
+                <span>
+                  {photoPreset
+                    ? 'Photo preset · Same fictional Alex, matching look · Pre-generated AI images'
+                    : 'Custom settings · Illustrated placeholders do not render your outfit or mood'}
+                </span>
+                {!photoPreset && (
+                  <button type="button" onClick={() => setModal('story')}>
+                    Choose photo preset
+                  </button>
+                )}
+              </div>
               <div className="section-tabs">
                 <div
                   role="tablist"
@@ -507,9 +583,12 @@ export default function Studio() {
                   </div>
                   <div className="scene-grid">
                     {experience.scenes.map((item, i) => {
+                      const currentAssets = item.assets.filter(
+                        (asset) => asset.bibleVersion === experience.bibleVersion,
+                      );
                       const cover =
-                        item.assets.find((a) => a.id === item.approvedAssetId) ??
-                        item.assets.at(-2);
+                        currentAssets.find((a) => a.id === item.approvedAssetId) ??
+                        currentAssets.at(photoPreset ? -1 : -2);
                       const job = jobs.find((j) => j.sceneId === item.id);
                       return (
                         <article className={`scene-card ${item.status}`} key={item.id}>
@@ -518,10 +597,10 @@ export default function Studio() {
                             onClick={() => openScene(item)}
                             aria-label={`Review ${item.title}`}
                           >
-                            {/* Bundled SVG artwork keeps the mock preview deterministic and offline. */}
+                            {/* Bundled photo presets and labeled illustration fallbacks work offline. */}
                             <img
-                              src={cover?.image ?? `/demo/${item.art}.svg`}
-                              alt={`Illustrated ${item.shot.toLowerCase()} in ${experience.destination}`}
+                              src={cover?.image ?? demoPreview(experience, item)}
+                              alt={`${photoPreset ? 'AI-created photo of fictional Alex' : 'Illustrated placeholder'}: ${item.title} in ${experience.destination}`}
                               width={600}
                               height={800}
                             />
@@ -571,12 +650,8 @@ export default function Studio() {
                             <p>{item.shot}</p>
                             <div className="scene-actions">
                               <span>
-                                {
-                                  item.assets.filter(
-                                    (a) => a.bibleVersion === experience.bibleVersion,
-                                  ).length
-                                }{' '}
-                                candidates
+                                {currentAssets.length}{' '}
+                                {currentAssets.length === 1 ? 'candidate' : 'candidates'}
                               </span>
                               {job ? (
                                 <button
@@ -619,7 +694,9 @@ export default function Studio() {
                   <div className="board-footer">
                     <span>
                       <span className="mock-dot" />
-                      Illustrated mock previews · no AI credits used
+                      {photoPreset
+                        ? 'Pre-generated photo presets · no live AI calls'
+                        : 'Illustrated developer fixtures · custom settings are not rendered'}
                     </span>
                     <span>Made for your imagination.</span>
                   </div>
@@ -664,8 +741,8 @@ export default function Studio() {
                       </button>
                     </div>
                     <p className="fine-print">
-                      Demo export includes SVG illustrations and text. Photo resizing, direct
-                      posting, and scheduling are future work.
+                      Demo export includes original JPG photos or SVG placeholders and text. Photo
+                      resizing, direct posting, and scheduling are future work.
                     </p>
                   </div>
                   <div className="post-preview">
@@ -680,7 +757,7 @@ export default function Studio() {
                           key={item.id}
                           src={
                             item.assets.find((a) => a.id === item.approvedAssetId)?.image ??
-                            `/demo/${item.art}.svg`
+                            demoPreview(experience, item)
                           }
                           alt={`Mock carousel frame: ${item.title}`}
                           width={600}
@@ -689,7 +766,10 @@ export default function Studio() {
                       ))}
                     </div>
                     <p>{caption || 'Your caption goes here.'}</p>
-                    <span className="fine-print">FICTIONAL EXPERIENCE · ILLUSTRATED PREVIEW</span>
+                    <span className="fine-print">
+                      FICTIONAL EXPERIENCE ·{' '}
+                      {photoPreset ? 'AI PHOTO PRESET' : 'ILLUSTRATED PLACEHOLDER'}
+                    </span>
                   </div>
                 </section>
               )}
@@ -817,7 +897,10 @@ export default function Studio() {
           )}
           {modal === 'new' && (
             <form onSubmit={submitExperience} className="form-stack">
-              <p>A place, a feeling, a version of you. We’ll start with four illustrated scenes.</p>
+              <p>
+                Choose a destination to load four realistic photos of the same fictional Alex. Each
+                destination has a matching outfit and mood preset.
+              </p>
               <label>
                 Experience name
                 <input
@@ -831,30 +914,20 @@ export default function Studio() {
               </label>
               <label>
                 <span id="destination-label">Destination</span>
-                <select name="destination" aria-labelledby="destination-label">
+                <select
+                  name="destination"
+                  aria-labelledby="destination-label"
+                  value={newDestination}
+                  onChange={(event) =>
+                    setNewDestination(event.target.value as ExperienceInput['destination'])
+                  }
+                >
                   {destinations.map((x) => (
                     <option key={x}>{x}</option>
                   ))}
                 </select>
               </label>
-              <label>
-                Your look
-                <input
-                  name="outfit"
-                  defaultValue="Ivory jacket · charcoal trousers"
-                  minLength={3}
-                  maxLength={100}
-                  required
-                />
-              </label>
-              <label>
-                The feeling
-                <select name="mood">
-                  {moods.map((x) => (
-                    <option key={x}>{x}</option>
-                  ))}
-                </select>
-              </label>
+              <DemoLookFields key={newDestination} destination={newDestination} />
               <button className="button primary" disabled={busy}>
                 Create experience <ArrowRight size={16} />
               </button>
@@ -866,24 +939,11 @@ export default function Studio() {
                 These details stay shared across every scene. Changing them creates a new story
                 version and clears previous approvals.
               </p>
-              <label>
-                Your look
-                <input
-                  name="outfit"
-                  defaultValue={experience.outfit}
-                  minLength={3}
-                  maxLength={100}
-                  required
-                />
-              </label>
-              <label>
-                The feeling
-                <select name="mood" defaultValue={experience.mood}>
-                  {moods.map((x) => (
-                    <option key={x}>{x}</option>
-                  ))}
-                </select>
-              </label>
+              <DemoLookFields
+                key={`${experience.id}-${experience.bibleVersion}`}
+                destination={experience.destination}
+                initial={experience}
+              />
               <div className="info-box">
                 <BookOpen size={19} />
                 <p>
@@ -905,8 +965,8 @@ export default function Studio() {
                   onClick={() => selectExperience(item.id)}
                 >
                   <img
-                    src={`/demo/${item.scenes[0].art}.svg`}
-                    alt={`Illustrated ${item.destination}`}
+                    src={demoPreview(item, item.scenes[0])}
+                    alt={`Fictional Alex in ${item.destination}`}
                     width={600}
                     height={800}
                   />
@@ -927,22 +987,23 @@ export default function Studio() {
             <div className="identity-content">
               <div className="identity-portrait">
                 <img
-                  src="/demo/rooftop.svg"
-                  alt="Illustrated fictional demo character"
+                  src="/demo/photos/tokyo-neon.jpg"
+                  alt="AI-created portrait of fictional Alex, the reference character for the demo photos"
                   width={600}
                   height={800}
                 />
               </div>
               <h3>Alex Morgan</h3>
               <p>
-                A fictional character for a very real development workflow. All artwork is bundled
-                with the repo.
+                One fictional man, four destinations. These 16 AI-created photos were made using the
+                same character reference and bundled with the demo. Visual consistency was reviewed;
+                automated likeness verification is not implemented.
               </p>
               <div className="info-box">
                 <Layers3 size={22} />
                 <p>
-                  No reference photos are uploaded or stored. Identity consent, private storage, and
-                  likeness verification belong to the next implementation phase.
+                  No personal photos are uploaded. Identity consent, private storage, and likeness
+                  verification belong to the next implementation phase.
                 </p>
               </div>
               <a
@@ -974,7 +1035,7 @@ export default function Studio() {
               </label>
               <div className="developer-facts">
                 <span>
-                  Provider <strong>Bundled SVG fixtures</strong>
+                  Provider <strong>Bundled photo presets + SVG fallbacks</strong>
                 </span>
                 <span>
                   Database <strong>Per-session memory</strong>
@@ -1032,7 +1093,7 @@ export default function Studio() {
                 ],
                 [
                   'Make the moments',
-                  'Generate candidates, compare original and warm grades, then approve your favorite.',
+                  'Load the photo preset for each scene and approve it. Custom developer settings use illustrated placeholders.',
                 ],
                 [
                   'Keep the story together',
@@ -1040,7 +1101,7 @@ export default function Studio() {
                 ],
                 [
                   'Take it with you',
-                  'Approve all four scenes and export the illustrated pack with a caption and manifest.',
+                  'Approve all four scenes and export the photo pack with a caption and provenance manifest.',
                 ],
               ].map(([title, copy], i) => (
                 <div key={title}>
@@ -1077,17 +1138,27 @@ export default function Studio() {
               <div className="candidate-grid">
                 {scene.assets
                   .filter((a) => a.bibleVersion === experience.bibleVersion)
-                  .slice(-2)
+                  .slice(photoPreset ? -1 : -2)
                   .map((asset) => (
                     <div className="candidate" key={asset.id}>
                       <img
                         src={asset.image}
-                        alt={`${asset.variant ? 'Warm' : 'Original'} illustrated candidate for ${scene.title}`}
+                        alt={
+                          asset.media === 'photo'
+                            ? `AI-created photo of fictional Alex: ${scene.title}`
+                            : `${asset.variant ? 'Warm' : 'Original'} illustrated candidate for ${scene.title}`
+                        }
                         width={600}
                         height={800}
                       />
                       <div>
-                        <span>{asset.variant ? '02 · Warm grade' : '01 · Original grade'}</span>
+                        <span>
+                          {asset.media === 'photo'
+                            ? '01 · Photo preset'
+                            : asset.variant
+                              ? '02 · Warm illustration'
+                              : '01 · Original illustration'}
+                        </span>
                         <button
                           className={`button ${scene.approvedAssetId === asset.id ? 'approved-button' : 'primary'}`}
                           disabled={busy || scene.status === 'generating'}
@@ -1108,12 +1179,18 @@ export default function Studio() {
                       ? 'Your scene is on its way.'
                       : 'A fresh scene starts here.'}
                   </h3>
-                  <p>Generate two illustrated candidates to compare.</p>
+                  <p>
+                    {photoPreset
+                      ? 'Load the pre-generated photo for this scene.'
+                      : 'Generate two illustrated placeholders to test the review flow.'}
+                  </p>
                 </div>
               )}
               <div className="review-footer">
                 <span className="fine-print">
-                  Illustrated mock variations · not an AI likeness preview
+                  {photoPreset
+                    ? 'Fixed photo preset · regenerating returns the same photo'
+                    : 'Illustrated placeholders · custom look not rendered'}
                 </span>
                 <button
                   className="button"

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+export { demoPresets, hasPhotoPreset, demoPreview } from './demo';
 
 export const destinationSchema = z.enum(['Tokyo', 'Kyoto', 'Amalfi', 'Iceland']);
 export const experienceInput = z
@@ -35,6 +36,7 @@ export interface Asset {
   sceneId: string;
   bibleVersion: number;
   image: string;
+  media: 'photo' | 'illustration';
   variant: number;
   createdAt: string;
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DomainError, MockStudio } from '@wishscene/domain';
-import { experienceInput } from '@wishscene/contracts';
+import { experienceInput, demoPresets } from '@wishscene/contracts';
 
 function fixture() {
   let time = Date.parse('2026-01-01T12:00:00Z');
@@ -46,8 +46,9 @@ describe('mock studio lifecycle', () => {
     advance();
     const result = studio.snapshot().experiences[0].scenes[3];
     expect(result.status).toBe('review');
-    expect(result.assets).toHaveLength(2);
-    expect(result.assets[0].image).not.toBe(result.assets[1].image);
+    expect(result.assets).toHaveLength(1);
+    expect(result.assets[0].media).toBe('photo');
+    expect(result.assets[0].image).toBe('/demo/photos/tokyo-walk.jpg');
   });
   it('makes retries idempotent and rejects reuse with different input', () => {
     const { studio, exp, scene } = fixture();
@@ -122,6 +123,8 @@ describe('mock studio lifecycle', () => {
     expect(manifest.assets).toHaveLength(4);
     expect(manifest.caption).toBe('Custom caption');
     expect(manifest.assets.every((x) => x.bibleVersion === 1)).toBe(true);
+    expect(manifest.assets.every((x) => x.filename.endsWith('.jpg'))).toBe(true);
+    expect(manifest.provenance).toContain('Pre-generated AI photo fixtures');
     expect(new Set(manifest.assets.map((x) => x.filename)).size).toBe(4);
     studio.updateStory(exp, { expectedVersion: 1, outfit: 'Blue suit', mood: 'Slow living' });
     expect(() => studio.export(exp)).toThrow('Approve every scene');
@@ -141,6 +144,28 @@ describe('mock studio lifecycle', () => {
     );
     studio.reset();
     expect(studio.snapshot().experiences).toHaveLength(3);
+  });
+  it('does not misrepresent custom settings as matching photos, and restores the preset safely', () => {
+    const { studio, exp, scene, advance } = fixture();
+    studio.updateStory(exp, { expectedVersion: 1, outfit: 'Blue linen suit', mood: 'Adventure' });
+    studio.generate(exp, scene, request());
+    advance();
+    const custom = studio.snapshot().experiences[0].scenes[3].assets;
+    expect(custom).toHaveLength(2);
+    expect(
+      custom.every((asset) => asset.media === 'illustration' && asset.image.endsWith('.svg')),
+    ).toBe(true);
+    studio.updateStory(exp, {
+      expectedVersion: 2,
+      outfit: demoPresets.Tokyo.outfit,
+      mood: demoPresets.Tokyo.mood,
+    });
+    expect(() => studio.approve(exp, scene, custom[0].id, 3)).toThrow('older story');
+    studio.generate(exp, scene, request('preset-restored-003'));
+    advance();
+    const restored = studio.snapshot().experiences[0].scenes[3].assets.at(-1)!;
+    expect(restored.media).toBe('photo');
+    expect(restored.bibleVersion).toBe(3);
   });
   it('rejects unsupported destination, extra properties and unbounded text at the contract', () => {
     expect(

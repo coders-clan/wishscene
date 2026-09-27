@@ -1,4 +1,6 @@
 import { expect, test } from '@playwright/test';
+import JSZip from 'jszip';
+import { readFile } from 'node:fs/promises';
 
 test('complete an experience, download it, then invalidate old approvals', async ({
   page,
@@ -25,6 +27,11 @@ test('complete an experience, download it, then invalidate old approvals', async
   });
   for (const title of ['Above the ordinary', 'The long way home']) {
     await page.getByRole('button', { name: `Review ${title}`, exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Approve', exact: true }).first()).toBeInViewport(
+      { ratio: 1 },
+    );
+    if (title === 'Above the ordinary')
+      await page.screenshot({ path: testInfo.outputPath('photo-review.png'), fullPage: true });
     await page.getByRole('button', { name: 'Approve', exact: true }).first().click();
     await expect(page.getByRole('button', { name: 'Approved', exact: true }).first()).toBeVisible();
     await page.getByRole('button', { name: 'Close dialog' }).click();
@@ -32,23 +39,45 @@ test('complete an experience, download it, then invalidate old approvals', async
   await expect(page.getByRole('button', { name: 'Export demo pack' })).toBeEnabled();
   const downloadEvent = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export demo pack' }).click();
-  expect((await downloadEvent).suggestedFilename()).toBe('wishscene-tokyo-demo.zip');
+  const download = await downloadEvent;
+  expect(download.suggestedFilename()).toBe('wishscene-tokyo-demo.zip');
+  const zip = await JSZip.loadAsync(await readFile((await download.path())!));
+  const photos = Object.values(zip.files).filter((file) => file.name.endsWith('.jpg'));
+  expect(photos).toHaveLength(4);
+  for (const photo of photos) {
+    const bytes = await photo.async('nodebuffer');
+    expect(bytes.subarray(0, 3).toString('hex')).toBe('ffd8ff');
+    expect(bytes.subarray(-2).toString('hex')).toBe('ffd9');
+  }
   await page.getByRole('button', { name: 'Story settings' }).click();
   await page.getByLabel('Your look').fill('Blue linen suit');
+  await expect(page.getByText('Custom developer settings', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Save story' }).click();
   await expect(page.getByText('v2', { exact: true })).toBeVisible();
   await expect(page.getByText('Story updated', { exact: true })).toHaveCount(4);
   await expect(page.getByRole('button', { name: 'Export demo pack' })).toBeDisabled();
+  await page.getByRole('button', { name: 'Story settings' }).click();
+  await page.getByRole('button', { name: 'Use Tokyo photo preset' }).click();
+  await expect(page.getByLabel('Your look')).toHaveValue('Ivory jacket · charcoal trousers');
+  await page.getByRole('button', { name: 'Save story' }).click();
+  await expect(page.getByText('v3', { exact: true })).toBeVisible();
 });
 
-test('create a fresh experience and edit the social caption', async ({ page }) => {
+test('create a fresh experience and edit the social caption', async ({ page }, testInfo) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Tokyo, after hours' })).toBeVisible();
   await page.getByRole('button', { name: 'New experience', exact: true }).click();
   await page.getByLabel('Experience name').fill('Kyoto at first light');
   await page.getByLabel('Destination', { exact: true }).selectOption('Kyoto');
+  await expect(page.getByLabel('Your look')).toHaveValue('Sage overshirt · sand chinos');
+  await expect(page.getByLabel('The feeling')).toHaveValue('Slow living');
+  await page.screenshot({ path: testInfo.outputPath('photo-preset-form.png'), fullPage: true });
   await page.getByRole('button', { name: 'Create experience' }).click();
   await expect(page.getByRole('heading', { name: 'Kyoto at first light' })).toBeVisible();
+  await expect(page.locator('.scene-image-button img').first()).toHaveAttribute(
+    'src',
+    '/demo/photos/kyoto-garden.jpg',
+  );
   await page.getByRole('tab', { name: 'Social pack' }).click();
   await page.getByLabel('Your caption').fill('A fictional daydream. #wishscene');
   await page.getByRole('button', { name: 'Save caption' }).click();
