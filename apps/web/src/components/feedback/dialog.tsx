@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { X } from 'lucide-react';
 export function FeedbackDialog({
   title,
@@ -13,12 +13,17 @@ export function FeedbackDialog({
   wide?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
   useEffect(() => {
     const dialog = ref.current!;
     const previous = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
     dialog.showModal();
+    requestAnimationFrame(() => dialog.querySelector<HTMLElement>('[data-dialog-close]')?.focus());
     return () => {
       dialog.close();
+      document.documentElement.style.overflow = previousOverflow;
       previous?.focus();
     };
   }, []);
@@ -31,16 +36,17 @@ export function FeedbackDialog({
         e.preventDefault();
         onClose();
       }}
-      aria-label={title}
+      aria-labelledby={titleId}
     >
       <div className="feedback-dialog-heading">
         <div>
           <p className="eyebrow">WISHSCENE · BUILD TOGETHER</p>
-          <h2>{title}</h2>
+          <h2 id={titleId}>{title}</h2>
         </div>
         <button
           type="button"
           className="icon-button"
+          data-dialog-close
           onClick={onClose}
           aria-label="Close feedback dialog"
         >
