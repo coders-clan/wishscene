@@ -235,6 +235,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_08fa07c521",
+    "from": "sym_abea901a04",
+    "to": "sym_3681195f5b",
+    "type": "calls",
+    "reason": "SocialComposer calls baseFor",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_09c0b90ba1",
     "from": "sym_14441b1549_1",
     "to": "ext_86bf21d2d7",
@@ -433,6 +451,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_122f44dad9",
+    "from": "sym_f561b4a2eb",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_12610828ff",
     "from": "sym_f91baca3ba",
     "to": "ext_69d9e36af2",
@@ -559,6 +595,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_187e6305b8",
+    "from": "sym_e752817097",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_1918731c7f",
     "from": "sym_14441b1549_1",
     "to": "sym_ecfa41841d",
@@ -642,6 +696,24 @@
       "confidence": 1,
       "evidence": [
         "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_1e449e882a",
+    "from": "sym_f7bce30b9d",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:@wishscene/contracts"
       ]
     },
     "environment": null,
@@ -847,6 +919,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_30023040b2",
+    "from": "sym_3681195f5b",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_3039f72888",
     "from": "sym_b02f511909",
     "to": "ext_69d9e36af2",
@@ -858,6 +948,24 @@
       "confidence": 1,
       "evidence": [
         "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_30b6411737",
+    "from": "sym_c6e0167e7a",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/social.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/social.ts:imports:zod"
       ]
     },
     "environment": null,
@@ -894,6 +1002,24 @@
       "confidence": 1,
       "evidence": [
         "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_368832c503",
+    "from": "sym_3eb3620cd5",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/social.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/social.ts:imports:zod"
       ]
     },
     "environment": null,
@@ -966,6 +1092,24 @@
       "confidence": 0.8,
       "evidence": [
         "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_39b377fd3c",
+    "from": "sym_b3bd9e1a7d",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
       ]
     },
     "environment": null,
@@ -1092,6 +1236,60 @@
       "confidence": 0.8,
       "evidence": [
         "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_4001dc80b1",
+    "from": "sym_e752817097",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_45938c1f88",
+    "from": "sym_96458c5ec7",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/social.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/social.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_45eea10002",
+    "from": "sym_f561b4a2eb",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:lucide-react"
       ]
     },
     "environment": null,
@@ -1549,6 +1747,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_639a604aac",
+    "from": "sym_f561b4a2eb",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_63f390dba6",
     "from": "sym_b02f511909",
     "to": "ext_c7dfc512fc",
@@ -1783,6 +1999,42 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_6fa2f1c02e",
+    "from": "sym_96458c5ec7",
+    "to": "sym_c6e0167e7a",
+    "type": "calls",
+    "reason": "makeSceneSocial calls suggestSocialCopy",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/contracts/src/social.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_724efce1c8",
+    "from": "sym_3681195f5b",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_72e094b15e",
     "from": "sym_0b7658d5c7",
     "to": "ext_86bf21d2d7",
@@ -1920,6 +2172,24 @@
       "confidence": 1,
       "evidence": [
         "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_7b6e29b679",
+    "from": "sym_b3bd9e1a7d",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
       ]
     },
     "environment": null,
@@ -2179,6 +2449,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_8736a7d2f9",
+    "from": "sym_9fefdd8334",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/social.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/social.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_87772c584f",
     "from": "sym_b57b703a1f",
     "to": "ext_c7dfc512fc",
@@ -2341,6 +2629,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_93d8e048e0",
+    "from": "sym_abea901a04",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_96fcffc88b",
     "from": "sym_639b4d5e5c",
     "to": "sym_c03f447942",
@@ -2442,6 +2748,24 @@
       "confidence": 1,
       "evidence": [
         "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_9db6db641a",
+    "from": "sym_3681195f5b",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:lucide-react"
       ]
     },
     "environment": null,
@@ -2575,6 +2899,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_a42a897e03",
+    "from": "sym_e752817097",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_a7ec2c63ba",
     "from": "sym_8839d47266",
     "to": "ext_18a6883d87",
@@ -2586,6 +2928,60 @@
       "confidence": 1,
       "evidence": [
         "apps/web/src/lib/mock-api.ts:imports:@wishscene/domain"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_a97cdc6cbb",
+    "from": "sym_f7bce30b9d",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_a9a3513ac6",
+    "from": "sym_b3bd9e1a7d",
+    "to": "sym_5a3be9886a",
+    "type": "calls",
+    "reason": "updateSocial calls DomainError",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_a9ce31e42d",
+    "from": "sym_ffa5fe612e",
+    "to": "ext_18a6883d87",
+    "type": "imports",
+    "reason": "tests/social.test.ts imports external package @wishscene/domain",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "tests/social.test.ts:imports:@wishscene/domain"
       ]
     },
     "environment": null,
@@ -2665,6 +3061,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_aff052eb96",
+    "from": "sym_42bea3d95b",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/social.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/social.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_b1535ed57a",
     "from": "sym_b52416f60e",
     "to": "ext_69d9e36af2",
@@ -2676,6 +3090,24 @@
       "confidence": 1,
       "evidence": [
         "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_b32fbfacf2",
+    "from": "sym_abea901a04",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:@wishscene/contracts"
       ]
     },
     "environment": null,
@@ -2784,6 +3216,24 @@
       "confidence": 1,
       "evidence": [
         "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_b88a4d6ba6",
+    "from": "sym_f7bce30b9d",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:react"
       ]
     },
     "environment": null,
@@ -2917,6 +3367,42 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_bf8f9408af",
+    "from": "sym_fb861c5e52",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_c451515262",
+    "from": "sym_50ff3c39cf",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/social.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/social.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_c5f1a866ca",
     "from": "sym_e5701c0afb",
     "to": "ext_6b810c90aa",
@@ -3018,6 +3504,24 @@
       "confidence": 1,
       "evidence": [
         "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_cc53de148b",
+    "from": "sym_abea901a04",
+    "to": "sym_f7bce30b9d",
+    "type": "calls",
+    "reason": "SocialComposer calls save",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx"
       ]
     },
     "environment": null,
@@ -3151,6 +3655,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_d5756c56a2",
+    "from": "sym_fb861c5e52",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_d6434f2cf4",
     "from": "sym_29cfb77969",
     "to": "ext_370c9d479d",
@@ -3162,6 +3684,24 @@
       "confidence": 1,
       "evidence": [
         "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_d6cc6ccd74",
+    "from": "sym_b3bd9e1a7d",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
       ]
     },
     "environment": null,
@@ -3306,6 +3846,24 @@
       "confidence": 1,
       "evidence": [
         "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_dfd04a504b",
+    "from": "sym_ffa5fe612e",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "tests/social.test.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "tests/social.test.ts:imports:@wishscene/contracts"
       ]
     },
     "environment": null,
@@ -3619,6 +4177,60 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_ef675ee64a",
+    "from": "sym_b3bd9e1a7d",
+    "to": "sym_837814e880",
+    "type": "calls",
+    "reason": "updateSocial calls scene",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_efc71c2c6b",
+    "from": "sym_ffa5fe612e",
+    "to": "ext_4c9cfa1330",
+    "type": "imports",
+    "reason": "tests/social.test.ts imports external package vitest",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "tests/social.test.ts:imports:vitest"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_f10799875c",
+    "from": "sym_fa327b71bf",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/social.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/social.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_f15e22a715",
     "from": "sym_e78fcbf9ca",
     "to": "ext_c7dfc512fc",
@@ -3673,6 +4285,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_f610c7e3ec",
+    "from": "sym_abea901a04",
+    "to": "sym_fb861c5e52",
+    "type": "calls",
+    "reason": "SocialComposer calls update",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_f795f8abb7",
     "from": "sym_a900a28d3a",
     "to": "ext_edee9402d1",
@@ -3691,6 +4321,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_f95d9bcced",
+    "from": "sym_abea901a04",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_fb57392b33",
     "from": "sym_371c013f11",
     "to": "ext_69d9e36af2",
@@ -3702,6 +4350,24 @@
       "confidence": 1,
       "evidence": [
         "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_fb7e8b6027",
+    "from": "sym_fb861c5e52",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/social-composer.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/social-composer.tsx:imports:lucide-react"
       ]
     },
     "environment": null,
@@ -3738,6 +4404,24 @@
       "confidence": 0.8,
       "evidence": [
         "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_fd1fa7a4ef",
+    "from": "sym_afcdc27d56",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/social.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/social.ts:imports:zod"
       ]
     },
     "environment": null,
