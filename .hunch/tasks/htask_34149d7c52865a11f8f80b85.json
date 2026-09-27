@@ -1,0 +1,106 @@
+{
+  "id": "htask_34149d7c52865a11f8f80b85",
+  "title": "Shared developer feedback with element capture and annotations",
+  "state": "completed",
+  "started_at": "2026-09-27T12:40:04.061Z",
+  "finished_at": "2026-09-27T13:14:26.560Z",
+  "coverage": "delivered",
+  "lessons": [
+    {
+      "kind": "constraints",
+      "record_id": "con_480efb317d",
+      "content_hash": "sha256:404a8c7d9e80a375375a91b9b90ad893d89d89edebbee050abf22d35d5473dc6",
+      "title": "A Story Bible edit must invalidate previous approvals and cancel active jobs before a newer version can be exported."
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_c1b5aa1fec",
+      "content_hash": "sha256:5cf532bc8682079944d93e0e97bf6bb7b0f2f06e9577f9a019b5c622b0a16051",
+      "title": "Social drafts belong to each scene and platform. Saving one must preserve the others; version and revision checks reject stale writes without silently replacing edited copy."
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_d7095985f1",
+      "content_hash": "sha256:6ada187bd3ad9a4b82a93851bb5bcfbc673414c473a02613cdd7e995148257bc",
+      "title": "Keep mock state behind the domain boundary intended for persistence. Each browser gets its own workspace, with no identity uploads or provider calls."
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_d28ca0f611",
+      "content_hash": "sha256:61ecc03dcc5ea0d3af93ec7151defb29e1da03ae8c85ad7fa6969abfff0c2b87",
+      "title": "Deployed demo workspaces use a Postgres row lock per browser session. Hydrate, apply domain rules, and save in one transaction so Vercel instances cannot lose approvals, social drafts, or generation u"
+    }
+  ],
+  "applied": [],
+  "saved": [],
+  "checks": [
+    {
+      "label": "Feedback and workspace quality checks",
+      "state": "failed",
+      "exit_code": 1
+    },
+    {
+      "label": "Feedback and workspace quality checks",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "HTTP smoke",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Final source quality checks",
+      "state": "passed",
+      "exit_code": 0
+    }
+  ],
+  "conformance": [
+    {
+      "kind": "constraints",
+      "record_id": "con_480efb317d",
+      "content_hash": "sha256:404a8c7d9e80a375375a91b9b90ad893d89d89edebbee050abf22d35d5473dc6",
+      "outcome": "unavailable"
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_c1b5aa1fec",
+      "content_hash": "sha256:5cf532bc8682079944d93e0e97bf6bb7b0f2f06e9577f9a019b5c622b0a16051",
+      "outcome": "unavailable"
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_d7095985f1",
+      "content_hash": "sha256:6ada187bd3ad9a4b82a93851bb5bcfbc673414c473a02613cdd7e995148257bc",
+      "outcome": "unavailable"
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_d28ca0f611",
+      "content_hash": "sha256:61ecc03dcc5ea0d3af93ec7151defb29e1da03ae8c85ad7fa6969abfff0c2b87",
+      "outcome": "unavailable"
+    }
+  ],
+  "refusals": 0,
+  "files": [
+    "apps/web/src/lib/workspace-store.ts",
+    "packages/domain/src/index.ts",
+    "docs/DEVELOPMENT.md",
+    "docs/SOCIAL_COMPOSER.md"
+  ],
+  "supersedes": [
+    "htask_009d211207ca04e3d113cf91",
+    "htask_7b9e3bc8e826eb758667689c",
+    "htask_e3d8f29d5c6ed9f1fde6fbcf"
+  ],
+  "source_snapshot": "sha256:d530a364b98cba9f9f91a18426bd735b85e4d34adc7fdd1c05ac210b49bde6bf",
+  "report_hash": "sha256:89796b29845503097cd4adb79e3bb271ca27bb727b7edd3b604e00d6ec12ae6a",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_34149d7c52865a11f8f80b85"
+    ],
+    "last_verified": "2026-09-27T13:14:26.560Z"
+  }
+}
