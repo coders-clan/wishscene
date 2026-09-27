@@ -1,6 +1,6 @@
-# Storywhere — an AI experience studio
+# wishSCENE — an AI experience studio
 
-Storywhere creates a coherent fictional experience starring a consenting user: photos, short video clips, a Reel or mini movie, Stories, carousel, cover, and editable captions. The product makes creative fantasy media, with clear AI provenance on exports.
+wishSCENE creates a coherent fictional experience starring a consenting user: photos, short video clips, a Reel or mini movie, Stories, carousel, cover, and editable captions. The product makes creative fantasy media, with clear AI provenance on exports.
 
 **Status:** product definition / pre-implementation. No working application is claimed. Repository is private while the team validates the concept.
 
