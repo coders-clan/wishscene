@@ -104,6 +104,6 @@ Pick an unassigned issue and make a feature branch. Keep mock flows usable while
 
 ## Shared feedback and durable previews
 
-Use **Team feedback** or the floating **Feedback** button to capture/annotate elements and sections. The list is shared across visitors, with replies, triage and votes. Local feedback is saved in `apps/web/.data/`; never commit it. With `DATABASE_URL`, feedback and cookie-isolated studio workspaces use Postgres, supporting Neon + Vercel. Feedback survives mock resets; durable workspace expiry is 30 inactive days. See [FEEDBACK.md](FEEDBACK.md) and [DEPLOYMENT.md](DEPLOYMENT.md).
+Use **Team feedback** or the floating **Feedback** button to capture/annotate elements and sections. The list is shared across visitors, with replies and votes; only a report's creator can edit its status, priority or assignee. Local feedback is saved in `apps/web/.data/`; never commit it. With `DATABASE_URL`, feedback and cookie-isolated studio workspaces use Postgres, supporting Neon + Vercel. Feedback survives mock resets; durable workspace expiry is 30 inactive days. See [FEEDBACK.md](FEEDBACK.md) and [DEPLOYMENT.md](DEPLOYMENT.md).
 
 CI starts a real Postgres service for persistence/HTTP tests and browser journeys. Set `WISHSCENE_TEST_PG_URL` locally to include these integration tests; otherwise the Postgres-specific tests are explicitly skipped while SQLite/API/domain checks still run.

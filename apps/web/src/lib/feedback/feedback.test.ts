@@ -192,20 +192,22 @@ describe('feedback with GitHub sign-in required', () => {
     vi.unstubAllEnvs();
   });
   function stubAuth() {
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'client');
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', 'secret');
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'c'.repeat(20));
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', 'b'.repeat(40));
     vi.stubEnv('WISHSCENE_SESSION_SECRET', SECRET);
   }
-  function sessionCookie() {
+  function sessionCookie(id = 42, login = 'octocat') {
+    const now = Date.now();
     const token = seal(
       {
         v: 1,
         kind: 'session',
-        id: 42,
-        login: 'octocat',
+        id,
+        login,
         name: null,
         avatarUrl: 'https://x/a.png',
-        exp: Date.now() + 60000,
+        iat: now,
+        exp: now + 60000,
       },
       SECRET,
     );
@@ -253,6 +255,7 @@ describe('feedback with GitHub sign-in required', () => {
     expect(response.status).toBe(201);
     let report = await response.json();
     expect(report.author).toBe('octocat');
+    expect(report.canEdit).toBe(true);
     const cookie = sessionCookie();
     const patchResponse = await feedbackDispatch(
       new NextRequest(`http://localhost:3000/api/feedback/${report.id}`, {
@@ -307,6 +310,90 @@ describe('feedback with GitHub sign-in required', () => {
       [report.id, 'vote'],
       store,
     );
+    expect((await voteResponse.json()).voted).toBe(true);
+  });
+  it('allows another signed-in user to reply and vote but not edit creator-owned fields', async () => {
+    stubAuth();
+    const createResponse = await feedbackDispatch(
+      new NextRequest('http://localhost:3000/api/feedback/', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          origin: 'http://localhost:3000',
+          cookie: sessionCookie(),
+        },
+        body: JSON.stringify(input()),
+      }),
+      [],
+      store,
+    );
+    const report = await createResponse.json();
+    const teammateCookie = sessionCookie(43, 'teammate');
+    const readResponse = await feedbackDispatch(
+      new NextRequest(`http://localhost:3000/api/feedback/${report.id}`, {
+        headers: { cookie: teammateCookie },
+      }),
+      [report.id],
+      store,
+    );
+    expect((await readResponse.json()).canEdit).toBe(false);
+
+    const patchResponse = await feedbackDispatch(
+      new NextRequest(`http://localhost:3000/api/feedback/${report.id}`, {
+        method: 'PATCH',
+        headers: {
+          'content-type': 'application/json',
+          origin: 'http://localhost:3000',
+          cookie: teammateCookie,
+        },
+        body: JSON.stringify({
+          expectedRevision: report.revision,
+          author: 'teammate',
+          status: 'resolved',
+          priority: 'high',
+          assignee: 'teammate',
+        }),
+      }),
+      [report.id],
+      store,
+    );
+    expect(patchResponse.status).toBe(403);
+    expect((await patchResponse.json()).error.code).toBe('NOT_CREATOR');
+
+    const replyResponse = await feedbackDispatch(
+      new NextRequest(`http://localhost:3000/api/feedback/${report.id}/comments`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          origin: 'http://localhost:3000',
+          cookie: teammateCookie,
+        },
+        body: JSON.stringify({
+          requestId: randomUUID(),
+          author: 'ignored',
+          text: 'I can reproduce this.',
+        }),
+      }),
+      [report.id, 'comments'],
+      store,
+    );
+    expect(replyResponse.status).toBe(200);
+    expect((await replyResponse.json()).comments.at(-1).author).toBe('teammate');
+
+    const voteResponse = await feedbackDispatch(
+      new NextRequest(`http://localhost:3000/api/feedback/${report.id}/vote`, {
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/json',
+          origin: 'http://localhost:3000',
+          cookie: teammateCookie,
+        },
+        body: JSON.stringify({ voted: true }),
+      }),
+      [report.id, 'vote'],
+      store,
+    );
+    expect(voteResponse.status).toBe(200);
     expect((await voteResponse.json()).voted).toBe(true);
   });
 });

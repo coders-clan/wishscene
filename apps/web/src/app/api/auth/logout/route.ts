@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { clearSessionCookie } from '@/lib/auth/session';
+import { isSameOriginWrite, noStore } from '@/lib/request-security';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
-  const origin = request.headers.get('origin');
-  const expected = `${request.nextUrl.protocol}//${request.headers.get('host') ?? request.nextUrl.host}`;
-  if ((origin && origin !== expected) || request.headers.get('sec-fetch-site') === 'cross-site')
+  if (!isSameOriginWrite(request))
     return NextResponse.json(
       { error: { code: 'ORIGIN', message: 'Cross-origin requests are disabled.' } },
-      { status: 403 },
+      { status: 403, headers: { 'Cache-Control': 'no-store' } },
     );
-  const response = NextResponse.json({ ok: true });
+  const response = noStore(NextResponse.json({ ok: true }));
   clearSessionCookie(response);
   return response;
 }

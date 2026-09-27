@@ -97,6 +97,12 @@ describe('mock HTTP boundary', () => {
       (await call('experiences/tokyo-after-hours/caption', 'PATCH', { caption: 'x'.repeat(17000) }))
         .status,
     ).toBe(413);
+    const crossSite = new NextRequest('http://localhost:3000/api/v1/experiences', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'sec-fetch-site': 'cross-site' },
+      body: '{}',
+    });
+    expect((await dispatch(crossSite, ['experiences'])).status).toBe(403);
   });
   it('reports malformed JSON without exposing an internal exception', async () => {
     const request = new NextRequest('http://localhost:3000/api/v1/experiences', {

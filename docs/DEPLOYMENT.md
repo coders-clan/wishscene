@@ -22,11 +22,11 @@ This deploys the **developer demo**, including shared feedback. GitHub sign-in i
 
 5. Use a separate Neon branch/database for preview deployments so PR testing does not mutate production demo data. Configure its URL in Preview, and the main Neon branch URL in Production. Do not share a production database with untrusted PR code.
 6. Deploy. The application creates the three additive tables at first use: `wishscene_demo_workspaces`, `wishscene_feedback`, `wishscene_feedback_limits`. The role needs CREATE for initial setup; provision tables ahead of time if your database policy requires a restricted runtime role.
-7. Verify: load the studio without signing in; edit and save a social caption; reload; open the feedback board signed out; then sign in with GitHub, submit feedback, reply, vote and triage. Confirm a signed-out browser can read the shared result but cannot write. Redeploy and confirm the saved caption and feedback remain. Inspect Vercel build/runtime logs if the API reports a storage setup error.
+7. Verify: load the studio without signing in; edit and save a social caption; reload; open the feedback board signed out; then sign in with GitHub, submit feedback, reply and vote. Confirm only the creating account can edit that report's status, priority or assignee, while another signed-in account can still reply and vote. Confirm a signed-out browser can read the shared result but cannot write. Redeploy and confirm the saved caption and feedback remain. Inspect Vercel build/runtime logs if the API reports a storage setup error.
 
 ## GitHub sign-in
 
-The studio and feedback board remain publicly readable. Adding feedback, replying, voting and triaging require GitHub sign-in. Any GitHub account may sign in — this proves identity, not team membership; it is not an org or allowlist check and it does not make anonymous demo workspaces into cross-device accounts.
+The studio and feedback board remain publicly readable. Adding feedback, replying and voting require GitHub sign-in. Only the report creator can change status, priority or assignee. Any GitHub account may sign in — this proves identity, not team membership; it is not an org or allowlist check and it does not make anonymous demo workspaces into cross-device accounts.
 
 1. Create a GitHub OAuth App: GitHub → Settings → Developer settings → OAuth Apps (or the org's own settings, if this deployment should only be usable by an org's members using their GitHub accounts).
 2. Homepage URL: `https://project-rxuus.vercel.app`. Authorization callback URL: `https://project-rxuus.vercel.app/api/auth/github/callback`.
@@ -55,7 +55,7 @@ Alternatively, Render can retain only feedback on an attached persistent disk wi
 - This change is additive and table names are scoped to wishscene. Future workspace/report schema changes require a reviewed forward migration and compatible rollback strategy.
 - Set database backups/retention through the chosen Neon plan; connection success is not proof of backup coverage.
 - App-level caps: 1,000 durable demo sessions; 1,000 feedback reports. Review database size and close/archive old reports through a deliberate maintenance change; do not silently purge feedback.
-- The board has shared triage. On Vercel/Render, author names are GitHub logins and votes are per GitHub account. Local keyless development retains display names for convenience. Put confidential developer work behind deployment access controls either way — GitHub sign-in proves identity, not roles, and signed-out visitors can read the board.
+- On Vercel/Render, author names are GitHub logins, votes are per GitHub account, and creator ownership is bound to the immutable numeric GitHub account ID. Local keyless development retains display names and a per-browser creator identity for convenience. Put confidential developer work behind deployment access controls either way — GitHub sign-in proves identity, not team membership, and signed-out visitors can read the board.
 - Future generation/video workers stay separate from Next.js request handlers. This deployment does not change that boundary.
 
 ## References

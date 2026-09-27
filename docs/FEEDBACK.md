@@ -14,14 +14,14 @@ Implemented in the wishscene developer sandbox. Open **Team feedback** in the st
 
 ## Work together
 
-Everyone on the same deployment can read the same reports. On Vercel/Render, GitHub sign-in is required to create reports, reply, vote or update status/priority; the server binds the GitHub login and numeric account ID instead of trusting submitted names. Local keyless development retains display names and per-browser votes for convenience. Only share captures you intend all visitors to see. Deploy behind your team's access controls if the board contains private work.
+Everyone on the same deployment can read the same reports. On Vercel/Render, GitHub sign-in is required to create reports, reply or vote. Only the report creator can update status, priority or assignee; the server enforces ownership using the immutable numeric GitHub account ID instead of trusting submitted names. Local keyless development retains display names and a per-browser creator identity for convenience. Only share captures you intend all visitors to see. Deploy behind your team's access controls if the board contains private work.
 
 - Search titles, descriptions, names and element labels. Filter by status, type and priority; sort newest or most noticed. Lists are paginated in groups of 30.
 - Open a report for the screenshot, viewport dimensions, element selector, page path, discussion and status history.
 - **Open page context** returns to the page and highlights the element when its selector still resolves. A different demo experience or changed layout may require the screenshot instead.
 - **Copy link**, **Export report** (JSON) and **Download image** make reports portable.
 - The board and open threads refresh every 10 seconds while visible. A failed request preserves the report/reply draft. Unsaved reports warn before leaving the page.
-- Triage uses an expected revision. If another developer updates the report, reload the latest status and reapply your change. Replies and votes retry safe atomic writes; repeated submissions with the same request ID are idempotent.
+- Creator edits use an expected revision. If a newer update exists, reload the latest status and reapply your change. Replies and votes use safe atomic writes; repeated replies with the same request ID are idempotent.
 - Statuses: open, in progress, resolved, closed. Changes are recorded in the activity thread. Closed items remain available through filters.
 
 ## Storage and hosting
@@ -50,11 +50,11 @@ All routes use `Cache-Control: no-store` except immutable screenshots (private o
 | POST   | `/api/feedback`                                                              | Create report with UUID request ID, title, description, type, priority, target, optional JPEG and annotation metadata; deployed author is server-bound to GitHub login |
 | GET    | `/api/feedback/:id`                                                          | Full report and activity; excludes private voter/creator tokens                                                                                                        |
 | GET    | `/api/feedback/:id/image`                                                    | Flattened JPEG, never the original capture                                                                                                                             |
-| PATCH  | `/api/feedback/:id`                                                          | `{expectedRevision, author, status, priority, assignee}`; deployed author is server-bound                                                                              |
+| PATCH  | `/api/feedback/:id`                                                          | Creator only: `{expectedRevision, author, status, priority, assignee}`; deployed ownership and author are server-bound                                                 |
 | POST   | `/api/feedback/:id/comments`                                                 | `{requestId, author, text}`; deployed author is server-bound                                                                                                           |
 | PUT    | `/api/feedback/:id/vote`                                                     | `{voted: boolean}`; idempotent for the GitHub account or local browser cookie                                                                                          |
 
-Errors include validation (400), unauthenticated write (401), origin rejection (403), missing item (404), revision/capacity conflict (409), body too large (413), content type (415), rate limit (429, Retry-After 60), unavailable storage/config (503). Target paths exclude query strings and full URLs. Inputs are strict Zod contracts; comments render as text, including Hebrew and HTML-looking content.
+Errors include validation (400), unauthenticated write (401), origin or non-creator edit rejection (403), missing item (404), revision/capacity conflict (409), body too large (413), content type (415), rate limit (429, Retry-After 60), unavailable storage/config (503). Target paths exclude query strings and full URLs. Inputs are strict Zod contracts; comments render as text, including Hebrew and HTML-looking content.
 
 Limits: 1.8 MB request body, 1.5 million characters for a JPEG data URI (roughly 1.1 MB decoded), 50 marks, 500 points/mark, 4,000-character report, 2,000-character reply, 200 discussion/activity entries per item, 2,000 voters per item, board capacity 1,000 reports, 30 writes per contributor per minute. These are developer-board limits, not protection against determined abuse. Use deployment access controls for a private team; authenticated roles and stronger rate limits remain a follow-up.
 

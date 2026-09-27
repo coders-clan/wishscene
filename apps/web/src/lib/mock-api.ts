@@ -9,10 +9,11 @@ import {
 } from '@wishscene/contracts';
 import { DomainError, type MockStudio } from '@wishscene/domain';
 import { withWorkspace } from './workspace-store';
+import { isJsonRequest, isSameOriginWrite } from './request-security';
 
 const COOKIE = 'wishscene-demo';
 async function body(request: NextRequest) {
-  if (!request.headers.get('content-type')?.includes('application/json'))
+  if (!isJsonRequest(request))
     throw new DomainError(415, 'JSON_REQUIRED', 'Send application/json.');
   const reader = request.body?.getReader();
   if (!reader) throw new DomainError(400, 'INVALID_JSON', 'A JSON body is required.');
@@ -45,10 +46,8 @@ export async function dispatch(request: NextRequest, path: string[]) {
       },
       { status: 503 },
     );
-  const origin = request.headers.get('origin');
   // hunch-why: Next can construct an internal URL with the bind address (0.0.0.0). Compare browser Origin against the request Host and protocol, or valid local mutations are incorrectly rejected. Do not trust forwarded-host headers here.
-  const requestOrigin = `${request.nextUrl.protocol}//${request.headers.get('host') ?? request.nextUrl.host}`;
-  if (request.method !== 'GET' && origin && origin !== requestOrigin)
+  if (request.method !== 'GET' && !isSameOriginWrite(request))
     return NextResponse.json(
       { error: { code: 'ORIGIN', message: 'Cross-origin writes are disabled.' } },
       { status: 403 },

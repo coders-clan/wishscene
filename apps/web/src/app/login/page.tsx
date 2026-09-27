@@ -29,7 +29,10 @@ export default async function LoginPage({
         <span className="wordmark">
           wishscene<span className="brand-dot">.</span>
         </span>
-        <p>Sign in with your GitHub account to add feedback, reply, vote and help triage.</p>
+        <p>
+          Sign in with your GitHub account to add feedback, reply and vote. Only a report's creator
+          can edit its status, priority or assignee.
+        </p>
         {message && (
           <p className="login-error" role="alert">
             {message}
