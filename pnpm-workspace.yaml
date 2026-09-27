@@ -1,0 +1,15 @@
+packages:
+  - apps/*
+  - packages/*
+allowBuilds:
+  sharp: true
+  esbuild: true
+  tree-sitter: true
+  tree-sitter-go: true
+  tree-sitter-javascript: true
+  tree-sitter-php: true
+  tree-sitter-python: true
+  tree-sitter-typescript: true
+  '@tree-sitter-grammars/tree-sitter-yaml': true
+minimumReleaseAgeExclude:
+  - '@davesheffer/hunch@1.42.0'

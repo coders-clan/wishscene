@@ -1,0 +1,39 @@
+# Mock API v1
+
+Base: `/api/v1`. All responses are JSON; all request bodies use `Content-Type: application/json`. A random `wishscene-demo` HttpOnly, SameSite=Strict cookie identifies an in-memory demo workspace. This is not authentication. Cookie is Secure when accessed over HTTPS. Responses use `Cache-Control: no-store` and `X-Wishscene-Mode: mock`.
+
+| Method | Path | Input | Response |
+| --- | --- | --- | --- |
+| GET | `/workspace` | — | `Workspace`; settles pending mock jobs |
+| POST | `/experiences` | title, destination, outfit, mood | 201 `Experience` with four draft scenes |
+| PATCH | `/experiences/:id/story` | expectedVersion, outfit, mood | updated Experience; conflicting version is 409 |
+| PATCH | `/experiences/:id/caption` | caption | `{ saved: true }` |
+| POST | `/experiences/:id/scenes/:sceneId/generations` | requestKey, scenario | 202 `Job` |
+| POST | `/experiences/:id/scenes/:sceneId/approval` | assetId, expectedVersion | `{ approved: true }` |
+| POST | `/jobs/:id/cancel` | `{}` | `{ cancelled: true }` |
+| POST | `/experiences/:id/exports` | `{}` | `ExportManifest` when every scene is approved at the current version |
+| POST | `/mock/reset` | `{}` | reseeded Workspace for the current cookie |
+
+Input schemas are exported by `@wishscene/contracts`; extra input properties are rejected on typed mutations. Maximum JSON body: 16 KiB. Supported destinations: Tokyo, Kyoto, Amalfi, Iceland. Moods: After hours, Slow living, Golden hour, Adventure. Caption: up to 2,200 characters. Scenarios: success (default), slow, failure. Request keys: 8–128 characters, unique per session. Repeating the same key and parameters returns the same job, including its terminal result. Changing its parameters/version returns `KEY_REUSED` (409).
+
+Generation does not clear a previous approved selection. An active/new review/failed generation blocks export until a candidate is explicitly approved again. Cancellation restores the previous usable state. Story edits cancel jobs, increment the version and clear approvals; a no-op edit preserves everything. Export checks every approved asset's version. Unknown experience/scene/asset IDs are scoped to the cookie's workspace and return 404.
+
+Errors are `{ "error": { "code": "...", "message": "..." } }`:
+
+- 400 `VALIDATION` or `INVALID_JSON`
+- 403 `ORIGIN` for cross-origin mutations when an Origin header is present
+- 404 `NOT_FOUND`
+- 409 `STALE_VERSION`, `KEY_REUSED`, `ALREADY_RUNNING`, `NOT_READY`, `LIMIT`
+- 413 `BODY_TOO_LARGE`, 415 `JSON_REQUIRED`
+- 503 `MOCK_DISABLED` in production unless `WISHSCENE_MOCK=1`; `CAPACITY` after 100 active sessions
+
+```sh
+curl -c /tmp/wishscene.cookies http://localhost:3000/api/v1/workspace
+curl -b /tmp/wishscene.cookies -H 'Content-Type: application/json' \
+  -d '{"requestKey":"example-request-001","scenario":"success"}' \
+  http://localhost:3000/api/v1/experiences/tokyo-after-hours/scenes/tokyo-after-hours-scene-4/generations
+# Poll the workspace after about 2.4 seconds, then approve a returned candidate.
+curl -b /tmp/wishscene.cookies http://localhost:3000/api/v1/workspace
+```
+
+The UI builds the ZIP from the returned manifest and same-origin SVG assets. No export record is persisted and there is no real queue, storage integration, or provider invocation. Production endpoints must add authentication, owner checks, transactional persistence, rate limits and proper deployment origin configuration.

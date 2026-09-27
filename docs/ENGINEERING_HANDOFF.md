@@ -1,5 +1,9 @@
 # Engineering handoff
 
+## Current implementation
+
+The developer scaffold is runnable now: see [DEVELOPMENT.md](DEVELOPMENT.md) and [MOCK_API.md](MOCK_API.md). It uses session-isolated memory and a fixture provider; durable auth/storage/queue work remains open.
+
 ## First development session
 
 1. Read PRD, functional spec, [chosen stack](STACK.md), technical design, roadmap and evaluation plan.
@@ -21,9 +25,9 @@ docs/                     # source of product truth and ADRs
 tests/fixtures/           # synthetic or consent-cleared fixtures only
 ```
 
-This is the selected structure in STACK.md, not an existing codebase.
+The web, domain, contracts and mock provider packages now exist. Worker, UI package and Prisma entries above remain the target structure.
 
-## Initial vertical slice
+## Next durable vertical slice
 
 Create a synthetic demo account -> select a preset destination -> generate a four-scene Story Bible -> fake provider returns deterministic placeholder assets -> approve one candidate per scene -> export a manifest and four mock images. Persist all state in Postgres. Implement ownership, version conflicts and job idempotency in this slice. Only then wire a paid image provider.
 

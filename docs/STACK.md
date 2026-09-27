@@ -58,7 +58,7 @@ The worker checks owner, identity profile version, scene version and deletion to
 
 Required secrets/config: `DATABASE_URL`, `REDIS_URL`, `AUTH_SECRET`, email provider credentials, S3 endpoint/bucket/access credentials, `IMAGE_PROVIDER_KEY` (only when enabled), `VIDEO_PROVIDER_KEY` (Phase 2). Provide `.env.example` with names and safe placeholders, never values.
 
-`pnpm dev` starts web and worker after `docker compose up -d` starts local dependencies. `pnpm test` and `pnpm typecheck` must run with fake providers. CI and preview deploys use synthetic fixtures, no paid calls. Production runs web and worker as separately scalable containers, with HTTPS, private network connections to Postgres/Redis, restricted bucket IAM, encrypted backups and deletion jobs. The deployment ADR selects provider/region/retention before real faces enter beta.
+**Current scaffold:** `pnpm dev` starts the web app with an isolated in-memory mock service; it needs no Docker or credentials. See [DEVELOPMENT.md](DEVELOPMENT.md). **Target durable environment:** web and worker will run after Docker Compose starts local dependencies; that integration is not implemented yet. `pnpm test` and `pnpm typecheck` must run with fake providers. CI and preview deploys use synthetic fixtures, no paid calls. Production runs web and worker as separately scalable containers, with HTTPS, private network connections to Postgres/Redis, restricted bucket IAM, encrypted backups and deletion jobs. The deployment ADR selects provider/region/retention before real faces enter beta.
 
 ## 5. Decisions to avoid re-opening during MVP
 

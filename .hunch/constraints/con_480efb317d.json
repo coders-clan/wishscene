@@ -1,0 +1,25 @@
+{
+  "id": "con_480efb317d",
+  "type": "correctness",
+  "statement": "A Story Bible edit must invalidate previous approvals and cancel active jobs before a newer version can be exported.",
+  "scope": [
+    "packages/domain/src/index.ts"
+  ],
+  "severity": "warning",
+  "enforcement": "advisory_v1",
+  "match": null,
+  "forbids": null,
+  "rationale": "Captured from an inline hunch-rule comment (packages/domain/src/index.ts:162).",
+  "source_decision": null,
+  "violations": [],
+  "status": "active",
+  "valid_from": "2026-09-27T09:37:17.635Z",
+  "valid_to": null,
+  "provenance": {
+    "source": "human_confirmed",
+    "confidence": 0.9,
+    "evidence": [
+      "packages/domain/src/index.ts:162"
+    ]
+  }
+}

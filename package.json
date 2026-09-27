@@ -1,0 +1,39 @@
+{
+  "name": "wishscene",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @wishscene/web dev",
+    "build": "pnpm --filter @wishscene/web build",
+    "start": "pnpm --filter @wishscene/web start",
+    "lint": "eslint apps packages tests",
+    "typecheck": "pnpm -r typecheck && tsc -p tsconfig.tests.json",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "hunch": "hunch",
+    "format": "prettier --write apps packages tests scripts *.json *.ts *.mjs *.yaml",
+    "format:check": "prettier --check apps packages tests scripts *.json *.ts *.mjs *.yaml",
+    "demo:art": "node scripts/generate-demo-art.mjs",
+    "test:smoke": "node scripts/smoke.mjs"
+  },
+  "devDependencies": {
+    "@davesheffer/hunch": "1.42.0",
+    "@eslint/js": "9.39.1",
+    "@playwright/test": "1.58.2",
+    "@types/node": "24.10.1",
+    "@wishscene/contracts": "workspace:*",
+    "@wishscene/domain": "workspace:*",
+    "eslint": "9.39.1",
+    "fast-xml-parser": "5.11.1",
+    "prettier": "3.6.2",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.48.0",
+    "vitest": "4.0.18",
+    "@wishscene/providers": "workspace:*"
+  }
+}

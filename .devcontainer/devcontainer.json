@@ -1,0 +1,9 @@
+{
+  "name": "wishscene studio",
+  "build": { "dockerfile": "Dockerfile" },
+  "forwardPorts": [3000],
+  "portsAttributes": { "3000": { "label": "wishscene", "onAutoForward": "notify" } },
+  "postCreateCommand": "pnpm install --frozen-lockfile",
+  "customizations": { "vscode": { "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode", "bradlc.vscode-tailwindcss"] } },
+  "remoteUser": "node"
+}

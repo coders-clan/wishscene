@@ -2,7 +2,25 @@
 
 wishscene creates a coherent fictional experience starring a consenting user: photos, short video clips, a Reel or mini movie, Stories, carousel, cover, and editable captions. The product makes creative fantasy media, with clear AI provenance on exports.
 
-**Status:** product definition / pre-implementation. No working application is claimed. Repository is private while the team validates the concept.
+**Status:** working developer scaffold with a responsive studio, deterministic mock generation, scene review, versioned stories, and downloadable illustrated packs. Public repository. Real AI generation, authentication, persistent storage, and video are planned next.
+
+## Run the studio
+
+Use Node 24, then run:
+
+```sh
+npm install -g pnpm@11.25.0
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+Open **http://localhost:3000**. No API keys or database required. Start with Tokyo, try Failure/Slow scenarios in Developer tools, approve all scenes, and export a demo ZIP.
+
+- [Developer setup and mock walkthrough](docs/DEVELOPMENT.md)
+- [Mock API contract](docs/MOCK_API.md)
+- [Hunch workflow](docs/HUNCH.md)
+
+All bundled artwork is original SVG illustration. The mock does not generate photorealistic media or verify identity. State is isolated by browser cookie and lives in the server process.
 
 ## Start here
 
