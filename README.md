@@ -13,6 +13,8 @@ wishscene creates a coherent fictional experience starring a consenting user: ph
 5. Read [Engineering handoff](docs/ENGINEERING_HANDOFF.md) before implementing a vertical slice.
 6. Use [Evaluation plan](docs/EVALUATION.md) to measure actual likeness and session consistency.
 
+7. Read the [brand strategy](docs/brand/BRAND_STRATEGY.md), [visual identity](docs/brand/VISUAL_IDENTITY.md), [voice and copy](docs/brand/VOICE_AND_COPY.md), and [applications](docs/brand/APPLICATIONS.md) before designing product or marketing surfaces.
+
 ## Product rule
 
 One **Experience** owns a versioned Story Bible: person, place, timeline, wardrobe, lighting, and content tone. Photos, video, and social assets derive from the same version. Edits invalidate affected descendants, never silently overwrite approved outputs.
