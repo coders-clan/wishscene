@@ -20,7 +20,7 @@ test('complete an experience, download it, then invalidate old approvals', async
         ),
     )
     .toBe(true);
-  await page.screenshot({ path: testInfo.outputPath('studio.png'), fullPage: true });
+  await page.screenshot({ path: testInfo.outputPath('studio.png'), fullPage: true, scale: 'css' });
   await page.getByRole('button', { name: 'Generate remaining' }).click();
   await expect(page.getByText('Creating your scene', { exact: true })).toHaveCount(0, {
     timeout: 15000,
@@ -31,7 +31,11 @@ test('complete an experience, download it, then invalidate old approvals', async
       { ratio: 1 },
     );
     if (title === 'Above the ordinary')
-      await page.screenshot({ path: testInfo.outputPath('photo-review.png'), fullPage: true });
+      await page.screenshot({
+        path: testInfo.outputPath('photo-review.png'),
+        fullPage: true,
+        scale: 'css',
+      });
     await page.getByRole('button', { name: 'Approve', exact: true }).first().click();
     await expect(page.getByRole('button', { name: 'Approved', exact: true }).first()).toBeVisible();
     await page.getByRole('button', { name: 'Close dialog' }).click();
@@ -150,7 +154,11 @@ test('preview platforms, retain per-image drafts, and reload saved text', async 
     'An imagined evening in Tokyo.',
   );
   await expect(page.getByLabel('Text on image')).toHaveValue('לילה של דמיון');
-  await page.screenshot({ path: testInfo.outputPath('social-story-composer.png'), fullPage: true });
+  await page.screenshot({
+    path: testInfo.outputPath('social-story-composer.png'),
+    fullPage: true,
+    scale: 'css',
+  });
   await page.getByRole('button', { name: 'Compose post for A table for daydreams' }).click();
   await expect(page.getByLabel('Post text', { exact: true })).toHaveValue(
     'A separate visual concept for image two.',
@@ -158,7 +166,11 @@ test('preview platforms, retain per-image drafts, and reload saved text', async 
   await expect(page.getByRole('article', { name: 'LinkedIn post preview' })).toContainText(
     'A separate visual concept for image two.',
   );
-  await page.screenshot({ path: testInfo.outputPath('social-feed-composer.png'), fullPage: true });
+  await page.screenshot({
+    path: testInfo.outputPath('social-feed-composer.png'),
+    fullPage: true,
+    scale: 'css',
+  });
   if (testInfo.project.name === 'mobile') await page.setViewportSize({ width: 320, height: 700 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
@@ -188,7 +200,9 @@ test('preview platforms, retain per-image drafts, and reload saved text', async 
   await page.getByRole('button', { name: 'Save caption', exact: true }).click();
   await expect(page.getByText('Caption saved.', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Save post', exact: true }).click();
-  await expect(page.getByRole('alert')).toContainText('changed in another tab');
+  await expect(
+    page.getByRole('region', { name: 'Per-image social composer' }).getByRole('alert'),
+  ).toContainText('changed in another tab');
   await expect(page.getByLabel('Post text', { exact: true })).toHaveValue('Unsaved local copy.');
 });
 
@@ -200,7 +214,11 @@ test('create a fresh experience and edit the social caption', async ({ page }, t
   await page.getByLabel('Destination', { exact: true }).selectOption('Kyoto');
   await expect(page.getByLabel('Your look')).toHaveValue('Sage overshirt · sand chinos');
   await expect(page.getByLabel('The feeling')).toHaveValue('Slow living');
-  await page.screenshot({ path: testInfo.outputPath('photo-preset-form.png'), fullPage: true });
+  await page.screenshot({
+    path: testInfo.outputPath('photo-preset-form.png'),
+    fullPage: true,
+    scale: 'css',
+  });
   await page.getByRole('button', { name: 'Create experience' }).click();
   await expect(page.getByRole('heading', { name: 'Kyoto at first light' })).toBeVisible();
   await expect(page.locator('.scene-image-button img').first()).toHaveAttribute(
