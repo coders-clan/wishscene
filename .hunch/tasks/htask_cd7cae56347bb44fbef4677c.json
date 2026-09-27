@@ -1,0 +1,48 @@
+{
+  "id": "htask_cd7cae56347bb44fbef4677c",
+  "title": "Finish Vercel + Neon deployment",
+  "state": "interrupted",
+  "started_at": "2026-09-27T13:46:05.096Z",
+  "finished_at": "2026-09-27T14:16:36.399Z",
+  "coverage": "delivered",
+  "lessons": [
+    {
+      "kind": "decisions",
+      "record_id": "dec_d28ca0f611",
+      "content_hash": "sha256:61ecc03dcc5ea0d3af93ec7151defb29e1da03ae8c85ad7fa6969abfff0c2b87",
+      "title": "Deployed demo workspaces use a Postgres row lock per browser session. Hydrate, apply domain rules, and save in one transaction so Vercel instances cannot lose approvals, social drafts, or generation u"
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_0c48d8d56e",
+      "content_hash": "sha256:c650a52cb392dd7b7de36b7eec04ebe6686c4268055e48186c1ce31d9851cd2b",
+      "title": "Feedback is shared across visitors and survives mock resets. SQLite provides zero-config local persistence; Postgres provides shared durable storage across deployed instances. Atomic revision checks p"
+    }
+  ],
+  "applied": [],
+  "saved": [
+    {
+      "kind": "findings",
+      "record_id": "fnd_72465c5d9d",
+      "content_hash": "sha256:aca26c2b27c2214275ef0e886af7538d3502615ff81d0ae7d50631f21bb4e00f",
+      "home": "public",
+      "operation": "created",
+      "durability": "committed"
+    }
+  ],
+  "checks": [],
+  "conformance": [],
+  "refusals": 0,
+  "files": [],
+  "supersedes": [],
+  "source_snapshot": null,
+  "report_hash": "sha256:3b8a816c297f43d0141c7a3a981cd83e8ea0b6e1d53f3a9c26cbe851b006c54f",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_cd7cae56347bb44fbef4677c"
+    ],
+    "last_verified": "2026-09-27T14:16:36.399Z"
+  }
+}

@@ -17,6 +17,7 @@ import {
   DomainError,
 } from '@wishscene/domain';
 import { feedbackStore, type FeedbackStore } from './store';
+import { requireUser } from '../auth/session';
 const COOKIE = 'wishscene-feedback';
 function publicItem(item: FeedbackRecord, actor: string, hasScreenshot: boolean): FeedbackItem {
   const { creator: _creator, voters, ...rest } = item;
@@ -51,20 +52,30 @@ export async function feedbackDispatch(
   path: string[],
   suppliedStore?: FeedbackStore,
 ) {
+  const auth = requireUser(request);
+  // Reading the board stays public. Creating, replying, voting and triaging require
+  // GitHub identity whenever authentication is configured for this deployment.
+  if ('response' in auth && request.method !== 'GET') return auth.response;
+  const user = !('response' in auth) && auth.mode === 'user' ? auth.user : null;
   const existing = request.cookies.get(COOKIE)?.value;
-  const actor = z.string().uuid().safeParse(existing).success ? existing! : randomUUID();
+  const actor = user
+    ? `github:${user.id}`
+    : z.string().uuid().safeParse(existing).success
+      ? existing!
+      : randomUUID();
   const respond = (data: unknown, status = 200) => {
     const response = NextResponse.json(data, {
       status,
       headers: { 'Cache-Control': 'no-store', ...(status === 429 ? { 'Retry-After': '60' } : {}) },
     });
-    response.cookies.set(COOKIE, actor, {
-      httpOnly: true,
-      sameSite: 'strict',
-      secure: request.nextUrl.protocol === 'https:',
-      path: '/',
-      maxAge: 31536000,
-    });
+    if (!user)
+      response.cookies.set(COOKIE, actor, {
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: request.nextUrl.protocol === 'https:',
+        path: '/',
+        maxAge: 31536000,
+      });
     return response;
   };
   try {
@@ -76,7 +87,7 @@ export async function feedbackDispatch(
     }
     const store = suppliedStore ?? (await feedbackStore());
     if (request.method === 'GET' && path.join('/') === 'session')
-      return respond({ storage: store.mode });
+      return respond({ storage: store.mode, user: user?.login ?? null });
     if (request.method === 'GET' && !path.length) {
       const query = request.nextUrl.searchParams;
       const search = (query.get('q') || '').slice(0, 120).toLowerCase();
@@ -135,6 +146,7 @@ export async function feedbackDispatch(
     const now = new Date().toISOString();
     if (request.method === 'POST' && !path.length) {
       const input = feedbackCreate.parse(await readBody(request));
+      if (user) input.author = user.login;
       if (
         input.screenshot &&
         !Buffer.from(input.screenshot.split(',')[1], 'base64')
@@ -147,11 +159,13 @@ export async function feedbackDispatch(
     }
     if (request.method === 'PATCH' && path.length === 1) {
       const input = feedbackPatch.parse(await readBody(request));
+      if (user) input.author = user.login;
       const saved = await store.change(path[0], (item) => triageFeedback(item, input, now));
       return respond(publicItem(saved.item, actor, !!saved.image));
     }
     if (request.method === 'POST' && path.length === 2 && path[1] === 'comments') {
       const input = feedbackReply.parse(await readBody(request));
+      if (user) input.author = user.login;
       const saved = await store.change(path[0], (item) => replyToFeedback(item, input, now));
       return respond(publicItem(saved.item, actor, !!saved.image));
     }

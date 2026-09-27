@@ -1437,6 +1437,41 @@ textarea {
 .skip-link:focus {
   top: 12px;
 }
+.login {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.login-card {
+  width: min(360px, 100%);
+  display: grid;
+  gap: 16px;
+  padding: 32px 28px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  text-align: center;
+}
+.login-card .wordmark {
+  justify-content: center;
+  color: var(--ink);
+}
+.login-card p {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.login-error {
+  color: #9c5546;
+  background: #fff0e8;
+  border: 1px solid #e6bfb5;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.login-button {
+  width: 100%;
+}
 .spin {
   animation: spin 2s linear infinite;
 }

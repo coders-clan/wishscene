@@ -1,6 +1,17 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { MessageSquarePlus, MousePointer2, Scan, List, X, Send, Copy, Check } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import {
+  MessageSquarePlus,
+  MousePointer2,
+  Scan,
+  List,
+  X,
+  Send,
+  Copy,
+  Check,
+  Github,
+} from 'lucide-react';
 import type {
   Annotation,
   FeedbackCreate,
@@ -11,9 +22,10 @@ import { feedbackCategories, feedbackPriorities } from '@wishscene/contracts';
 import { pageTarget, screenshotSection, targetFor } from './capture';
 import { annotatedJpeg, AnnotationEditor } from './annotation-editor';
 import { FeedbackDialog } from './dialog';
-import { feedbackRequest, readName, saveName } from './client';
+import { fetchAuthSession, feedbackRequest, readName, saveName, signOut } from './client';
 
 export function FeedbackLauncher() {
+  const pathname = usePathname();
   const [menu, setMenu] = useState(false);
   const [mode, setMode] = useState<'element' | 'region' | null>(null);
   const [rect, setRect] = useState<{ x: number; y: number; width: number; height: number } | null>(
@@ -26,6 +38,13 @@ export function FeedbackLauncher() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState<string | null>(null);
   const [name, setName] = useState('');
+  const [authRequired, setAuthRequired] = useState(false);
+  const [sessionLoaded, setSessionLoaded] = useState(false);
+  const [authUser, setAuthUser] = useState<{
+    login: string;
+    name: string | null;
+    avatarUrl: string;
+  } | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<FeedbackCreate['category']>('bug');
@@ -38,6 +57,13 @@ export function FeedbackLauncher() {
   useEffect(() => {
     setName(readName());
     void feedbackRequest('/session').catch(() => undefined);
+    void fetchAuthSession()
+      .then((session) => {
+        setAuthRequired(session.authRequired);
+        setAuthUser(session.user);
+      })
+      .catch(() => setAuthRequired(true))
+      .finally(() => setSessionLoaded(true));
     function reveal() {
       if (!location.hash.startsWith('#feedback-target=')) return;
       try {
@@ -155,14 +181,14 @@ export function FeedbackLauncher() {
     if (!target || busy) return;
     setBusy(true);
     setError('');
-    saveName(name);
+    if (!authUser) saveName(name);
     try {
       const screenshot = source ? await annotatedJpeg(source, marks) : null;
       const item = await feedbackRequest<FeedbackItem>('', {
         method: 'POST',
         body: JSON.stringify({
           requestId: requestId.current,
-          author: name,
+          author: authUser ? authUser.login : name,
           title,
           description,
           category,
@@ -186,6 +212,37 @@ export function FeedbackLauncher() {
       setBusy(false);
     }
   }
+  if (pathname === '/login' || !sessionLoaded) return null;
+  if (authRequired && !authUser)
+    return (
+      <div data-feedback-ui className="feedback-launcher">
+        {menu && (
+          <div className="feedback-launch-menu">
+            <strong>Make wishscene better</strong>
+            <span>Sign in before adding feedback, replying or voting.</span>
+            <a
+              className="button primary"
+              href={`/api/auth/github?next=${encodeURIComponent(pathname)}`}
+            >
+              <Github size={18} />
+              Sign in with GitHub
+            </a>
+            <a className="button" href="/feedback">
+              <List />
+              View shared feedback
+            </a>
+          </div>
+        )}
+        <button
+          className="button primary feedback-launch-button"
+          aria-expanded={menu}
+          onClick={() => setMenu(!menu)}
+        >
+          <MessageSquarePlus size={20} />
+          Feedback
+        </button>
+      </div>
+    );
   return (
     <div data-feedback-ui>
       {!mode && !target && !busy && (
@@ -229,6 +286,11 @@ export function FeedbackLauncher() {
                 <List />
                 View shared feedback
               </a>
+              {authUser && (
+                <button className="button" onClick={() => void signOut()}>
+                  Sign out
+                </button>
+              )}
             </div>
           )}
           <button
@@ -378,17 +440,21 @@ export function FeedbackLauncher() {
               )}
             </div>
             <div className="feedback-fields">
-              <label>
-                Your name
-                <input
-                  required
-                  maxLength={60}
-                  autoComplete="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="How should the team know you?"
-                />
-              </label>
+              {authUser ? (
+                <p className="feedback-hint">Posting as @{authUser.login}</p>
+              ) : (
+                <label>
+                  Your name
+                  <input
+                    required
+                    maxLength={60}
+                    autoComplete="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="How should the team know you?"
+                  />
+                </label>
+              )}
               <label>
                 Short title
                 <input

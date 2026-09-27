@@ -1,10 +1,11 @@
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { NextRequest } from 'next/server';
 import { feedbackDispatch } from './api';
+import { seal } from '../auth/session';
 import { postgresFeedback, sqliteFeedback, type FeedbackStore } from './store';
 import { feedbackCreate, type FeedbackCreate, type FeedbackItem } from '@wishscene/contracts';
 import { createFeedback } from '@wishscene/domain';
@@ -177,4 +178,135 @@ it('keeps feedback across SQLite connections and a database reopen', async () =>
   expect((await reopened.get(report.id)).item.description).toBe(report.description);
   await reopened.close();
   await rm(dir, { recursive: true });
+});
+describe('feedback with GitHub sign-in required', () => {
+  const SECRET = 'a'.repeat(40);
+  let store: FeedbackStore;
+  beforeAll(async () => {
+    store = await sqliteFeedback(':memory:');
+  });
+  afterAll(async () => {
+    await store?.close();
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+  function stubAuth() {
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'client');
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', 'secret');
+    vi.stubEnv('WISHSCENE_SESSION_SECRET', SECRET);
+  }
+  function sessionCookie() {
+    const token = seal(
+      {
+        v: 1,
+        kind: 'session',
+        id: 42,
+        login: 'octocat',
+        name: null,
+        avatarUrl: 'https://x/a.png',
+        exp: Date.now() + 60000,
+      },
+      SECRET,
+    );
+    return `wishscene-session=${token}`;
+  }
+  it('allows reading without a session but rejects writes', async () => {
+    stubAuth();
+    const read = await feedbackDispatch(
+      new NextRequest('http://localhost:3000/api/feedback/', {
+        method: 'GET',
+        headers: { 'content-type': 'application/json', origin: 'http://localhost:3000' },
+      }),
+      [],
+      store,
+    );
+    expect(read.status).toBe(200);
+    const write = await feedbackDispatch(
+      new NextRequest('http://localhost:3000/api/feedback/', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', origin: 'http://localhost:3000' },
+        body: JSON.stringify(input()),
+      }),
+      [],
+      store,
+    );
+    expect(write.status).toBe(401);
+  });
+  it('binds create, triage, reply and votes to the GitHub session', async () => {
+    stubAuth();
+    const data = input();
+    data.author = 'someone-else';
+    const response = await feedbackDispatch(
+      new NextRequest('http://localhost:3000/api/feedback/', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          origin: 'http://localhost:3000',
+          cookie: sessionCookie(),
+        },
+        body: JSON.stringify(data),
+      }),
+      [],
+      store,
+    );
+    expect(response.status).toBe(201);
+    let report = await response.json();
+    expect(report.author).toBe('octocat');
+    const cookie = sessionCookie();
+    const patchResponse = await feedbackDispatch(
+      new NextRequest(`http://localhost:3000/api/feedback/${report.id}`, {
+        method: 'PATCH',
+        headers: {
+          'content-type': 'application/json',
+          origin: 'http://localhost:3000',
+          cookie,
+        },
+        body: JSON.stringify({
+          expectedRevision: report.revision,
+          author: 'someone-else',
+          status: 'in-progress',
+          priority: 'high',
+          assignee: 'Dave',
+        }),
+      }),
+      [report.id],
+      store,
+    );
+    report = await patchResponse.json();
+    expect(report.comments.at(-1)?.author).toBe('octocat');
+    const replyResponse = await feedbackDispatch(
+      new NextRequest(`http://localhost:3000/api/feedback/${report.id}/comments`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          origin: 'http://localhost:3000',
+          cookie,
+        },
+        body: JSON.stringify({
+          requestId: randomUUID(),
+          author: 'someone-else',
+          text: 'Authenticated reply',
+        }),
+      }),
+      [report.id, 'comments'],
+      store,
+    );
+    report = await replyResponse.json();
+    expect(report.comments.at(-1)?.author).toBe('octocat');
+    const voteResponse = await feedbackDispatch(
+      new NextRequest(`http://localhost:3000/api/feedback/${report.id}/vote`, {
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/json',
+          origin: 'http://localhost:3000',
+          cookie,
+        },
+        body: JSON.stringify({ voted: true }),
+      }),
+      [report.id, 'vote'],
+      store,
+    );
+    expect((await voteResponse.json()).voted).toBe(true);
+  });
 });

@@ -602,6 +602,16 @@
   background: #f3eff9;
   margin-bottom: 24px;
 }
+.feedback-sign-in-card {
+  display: grid;
+  gap: 12px;
+  color: #62566f;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.feedback-sign-in-card .button {
+  justify-self: start;
+}
 .feedback-thread h3 {
   display: flex;
   gap: 8px;

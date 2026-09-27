@@ -1,0 +1,36 @@
+{
+  "id": "fnd_72465c5d9d",
+  "title": "Vercel CLI deploy from apps/web fails: monorepo files not uploaded",
+  "observation": "Running `vercel deploy` from apps/web uploads only that folder (163 files), so install fails with ERR_PNPM_NO_LOCKFILE and workspace packages are missing. Project rootDirectory is apps/web with sourceFilesOutsideRootDirectory=true, so CLI deploys must run from the repo root (a clean `git archive HEAD` snapshot works). Git integration is not connected yet: `vercel git connect` to coders-clan/wishscene failed because the Vercel GitHub App lacks org/repo access. Preview and Production currently share one Neon DATABASE_URL, contrary to DEPLOYMENT.md step 5.",
+  "evidence": [
+    "dpl wishscene-oiawgeosg (2026-09-27): 'Downloading 163 deployment files' then '[ERR_PNPM_NO_LOCKFILE] Cannot install with \"frozen-lockfile\" because pnpm-lock.yaml is absent'",
+    "dpl_Aca5Toyeycj95PEEibrX1UeiAnZH from repo-root snapshot of 4d7901f: readyState READY, target production",
+    "GET /api/feedback on prod -> {\"items\":[],\"total\":0,\"storage\":\"postgres\"} HTTP 200",
+    "vercel git connect https://github.com/coders-clan/wishscene -> 'Failed to connect coders-clan/wishscene to project'",
+    "vercel env ls: DATABASE_URL set for Preview, Production (single value)"
+  ],
+  "method": null,
+  "severity": "medium",
+  "triage": "open",
+  "affected_files": [
+    "apps/web/vercel.json",
+    "docs/DEPLOYMENT.md"
+  ],
+  "affected_symbols": [],
+  "violates_constraint": null,
+  "spawned_decision": null,
+  "observed_at": "2026-09-27T13:53:54.000Z",
+  "resolved_commit": null,
+  "provenance": {
+    "source": "agent_recorded",
+    "confidence": 0.75,
+    "evidence": [
+      "dpl wishscene-oiawgeosg (2026-09-27): 'Downloading 163 deployment files' then '[ERR_PNPM_NO_LOCKFILE] Cannot install with \"frozen-lockfile\" because pnpm-lock.yaml is absent'",
+      "dpl_Aca5Toyeycj95PEEibrX1UeiAnZH from repo-root snapshot of 4d7901f: readyState READY, target production",
+      "GET /api/feedback on prod -> {\"items\":[],\"total\":0,\"storage\":\"postgres\"} HTTP 200",
+      "vercel git connect https://github.com/coders-clan/wishscene -> 'Failed to connect coders-clan/wishscene to project'",
+      "vercel env ls: DATABASE_URL set for Preview, Production (single value)"
+    ],
+    "last_verified": "2026-09-27T13:53:54.000Z"
+  }
+}
