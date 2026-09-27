@@ -379,7 +379,8 @@
     top: calc(8px + env(safe-area-inset-top));
     right: 72px;
     bottom: auto;
-    z-index: 40;
+    /* The opened capture menu must stay above both app action docks. */
+    z-index: 80;
   }
   body:has(.app-shell) .feedback-launch-button {
     width: 44px;
