@@ -44,6 +44,12 @@ describe('authMode', () => {
     vi.stubEnv('VERCEL', '1');
     expect(authMode()).toEqual({ mode: 'misconfigured' });
   });
+  it('is misconfigured on Render without a client id', () => {
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', '');
+    vi.stubEnv('VERCEL', '');
+    vi.stubEnv('RENDER', '1');
+    expect(authMode()).toEqual({ mode: 'misconfigured' });
+  });
   it('is misconfigured with a short session secret', () => {
     vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'client');
     vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', 'secret');
@@ -87,6 +93,7 @@ describe('readSession', () => {
     const token = seal(
       {
         v: 1,
+        kind: 'session',
         id: 1,
         login: 'octocat',
         name: 'Octo Cat',
@@ -109,11 +116,29 @@ describe('readSession', () => {
     const token = seal(
       {
         v: 1,
+        kind: 'session',
         id: 1,
         login: 'octocat',
         name: null,
         avatarUrl: 'https://x/a.png',
         exp: Date.now() - 1000,
+      },
+      SECRET,
+    );
+    expect(readSession(request(`${SESSION_COOKIE}=${token}`))).toBeNull();
+  });
+  it('does not accept an OAuth payload as a session', () => {
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'client');
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', 'secret');
+    vi.stubEnv('WISHSCENE_SESSION_SECRET', SECRET);
+    const token = seal(
+      {
+        v: 1,
+        kind: 'oauth',
+        state: 'state',
+        verifier: 'verifier',
+        next: '/',
+        exp: Date.now() + 1000,
       },
       SECRET,
     );
@@ -129,6 +154,8 @@ describe('safeNext', () => {
     ['javascript:alert(1)'],
     ['/api/auth/github'],
     ['/login'],
+    ['/LOGIN'],
+    ['/Api/Auth/github'],
     ['/..//evil.com'],
     ['/.//evil.com'],
     ['/%2e%2e//evil.com'],

@@ -25,7 +25,7 @@ The four destination presets use pre-generated AI photos of the same fictional A
 
 ## Shared developer feedback
 
-Use the floating **Feedback** button to select an element, capture a section, annotate it, and send a report. Everyone can read, reply, vote and triage on `/feedback`. [Feedback guide](docs/FEEDBACK.md) · [Neon + Vercel deployment](docs/DEPLOYMENT.md).
+Use the floating **Feedback** button to select an element, capture a section, annotate it, and send a report. Everyone can read `/feedback`; deployed contributions require GitHub sign-in. [Feedback guide](docs/FEEDBACK.md) · [Neon + Vercel deployment](docs/DEPLOYMENT.md).
 
 With `DATABASE_URL`, demo workspaces and feedback persist in Postgres across instances/deployments. Without it, local workspaces stay in memory and feedback uses a SQLite file.
 

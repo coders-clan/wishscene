@@ -53,8 +53,10 @@ export async function feedbackDispatch(
   suppliedStore?: FeedbackStore,
 ) {
   const auth = requireUser(request);
-  if ('response' in auth) return auth.response;
-  const user = auth.mode === 'user' ? auth.user : null;
+  // Reading the board stays public. Creating, replying, voting and triaging require
+  // GitHub identity whenever authentication is configured for this deployment.
+  if ('response' in auth && request.method !== 'GET') return auth.response;
+  const user = !('response' in auth) && auth.mode === 'user' ? auth.user : null;
   const existing = request.cookies.get(COOKIE)?.value;
   const actor = user
     ? `github:${user.id}`

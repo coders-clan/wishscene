@@ -21,7 +21,7 @@ export function authMode(): AuthMode {
     if (!clientSecret || !secret || secret.length < 32) return { mode: 'misconfigured' };
     return { mode: 'required', clientId, clientSecret, secret };
   }
-  return process.env.VERCEL ? { mode: 'misconfigured' } : { mode: 'open' };
+  return process.env.VERCEL || process.env.RENDER ? { mode: 'misconfigured' } : { mode: 'open' };
 }
 
 export function seal(payload: object, secret: string): string {
@@ -46,6 +46,7 @@ export function unseal(token: string, secret: string): unknown {
 
 const sessionPayload = z.object({
   v: z.literal(1),
+  kind: z.literal('session'),
   id: z.number().int().positive(),
   login: z.string().min(1).max(39),
   name: z.string().max(100).nullable(),
@@ -90,7 +91,10 @@ export function setSessionCookie(
   user: SessionUser,
   secret: string,
 ) {
-  const token = seal({ v: 1, ...user, exp: Date.now() + SESSION_MAX_AGE * 1000 }, secret);
+  const token = seal(
+    { v: 1, kind: 'session', ...user, exp: Date.now() + SESSION_MAX_AGE * 1000 },
+    secret,
+  );
   response.cookies.set(SESSION_COOKIE, token, sessionCookieOptions(request));
 }
 
@@ -142,8 +146,9 @@ export function safeNext(value: unknown): string {
     if (url.origin !== 'http://x') return '/';
     // Validate the normalized result: dot segments can collapse '/..//host' into '//host'.
     const next = `${url.pathname}${url.search}${url.hash}`;
-    if (!next.startsWith('/') || next.startsWith('//')) return '/';
-    if (next.startsWith('/api/auth') || next.startsWith('/login')) return '/';
+    if (next.length > 512 || !next.startsWith('/') || next.startsWith('//')) return '/';
+    const lowerPath = url.pathname.toLowerCase();
+    if (lowerPath.startsWith('/api/auth') || lowerPath.startsWith('/login')) return '/';
     return next;
   } catch {
     return '/';

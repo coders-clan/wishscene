@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
   const response = NextResponse.redirect(authorizeUrl(mode.clientId, request, state, challenge));
   response.cookies.set(
     OAUTH_COOKIE,
-    seal({ state, verifier, next, exp: Date.now() + 600000 }, mode.secret),
+    seal({ v: 1, kind: 'oauth', state, verifier, next, exp: Date.now() + 600000 }, mode.secret),
     {
       httpOnly: true,
       secure: request.nextUrl.protocol === 'https:',

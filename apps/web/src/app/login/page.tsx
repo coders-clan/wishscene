@@ -29,7 +29,7 @@ export default async function LoginPage({
         <span className="wordmark">
           wishscene<span className="brand-dot">.</span>
         </span>
-        <p>Sign in with your GitHub account to use the studio and team feedback.</p>
+        <p>Sign in with your GitHub account to add feedback, reply, vote and help triage.</p>
         {message && (
           <p className="login-error" role="alert">
             {message}

@@ -5,6 +5,10 @@ export async function feedbackRequest<T>(path = '', init?: RequestInit): Promise
     headers: { 'Content-Type': 'application/json', ...init?.headers },
   });
   const data = await response.json();
+  if (response.status === 401 && typeof location !== 'undefined') {
+    const next = `${location.pathname}${location.search}${location.hash}`;
+    location.assign(`/login?next=${encodeURIComponent(next)}`);
+  }
   if (!response.ok) throw new Error(data.error?.message || 'Could not reach the feedback board.');
   return data as T;
 }

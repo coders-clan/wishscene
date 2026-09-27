@@ -8,6 +8,7 @@ import {
   Download,
   ExternalLink,
   Filter,
+  Github,
   MessageCircle,
   MessageSquarePlus,
   RefreshCw,
@@ -43,15 +44,19 @@ function timestamp(value: string) {
 type AuthUser = { login: string; name: string | null; avatarUrl: string };
 function FeedbackDetail({
   id,
+  authRequired,
   authUser,
   onClose,
   onChange,
 }: {
   id: string;
+  authRequired: boolean;
   authUser: AuthUser | null;
   onClose: () => void;
   onChange: () => void;
 }) {
+  const canContribute = !authRequired || !!authUser;
+  const loginHref = `/api/auth/github?next=${encodeURIComponent(`/feedback?item=${id}`)}`;
   const [item, setItem] = useState<FeedbackItem | null>(null);
   const [draft, setDraft] = useState<Omit<FeedbackPatch, 'author'> | null>(null);
   const [author, setAuthor] = useState('');
@@ -113,6 +118,10 @@ function FeedbackDetail({
     };
   }, [id]);
   async function mutate(action: 'triage' | 'reply' | 'vote') {
+    if (!canContribute) {
+      location.href = loginHref;
+      return;
+    }
     if (!item || !draft) return;
     setBusy(true);
     setError('');
@@ -280,7 +289,15 @@ function FeedbackDetail({
                 <SlidersHorizontal size={18} />
                 Triage
               </h3>
-              {authUser ? (
+              {!canContribute ? (
+                <div className="feedback-sign-in-card">
+                  <p>Sign in with GitHub to vote, reply or update this report.</p>
+                  <a className="button primary" href={loginHref}>
+                    <Github size={18} />
+                    Sign in with GitHub
+                  </a>
+                </div>
+              ) : authUser ? (
                 <p className="feedback-hint">Posting as @{authUser.login}</p>
               ) : (
                 <label>
@@ -293,7 +310,7 @@ function FeedbackDetail({
                   />
                 </label>
               )}
-              {draft && (
+              {draft && canContribute && (
                 <>
                   <div className="feedback-field-row">
                     <label>
@@ -370,15 +387,17 @@ function FeedbackDetail({
                   </div>
                 </>
               )}
-              <button
-                className={`button feedback-vote ${item.voted ? 'selected' : ''}`}
-                aria-pressed={item.voted}
-                disabled={busy}
-                onClick={() => void mutate('vote')}
-              >
-                <ArrowUp size={18} />
-                {item.votes} · {item.voted ? 'You also noticed this' : 'I noticed this too'}
-              </button>
+              {canContribute && (
+                <button
+                  className={`button feedback-vote ${item.voted ? 'selected' : ''}`}
+                  aria-pressed={item.voted}
+                  disabled={busy}
+                  onClick={() => void mutate('vote')}
+                >
+                  <ArrowUp size={18} />
+                  {item.votes} · {item.voted ? 'You also noticed this' : 'I noticed this too'}
+                </button>
+              )}
             </div>
             <h3>
               <MessageCircle size={18} />
@@ -386,7 +405,11 @@ function FeedbackDetail({
             </h3>
             <div className="feedback-comments" aria-live="polite">
               {!item.comments.length && (
-                <p className="feedback-hint">Start the conversation. Everyone can reply.</p>
+                <p className="feedback-hint">
+                  {canContribute
+                    ? 'Start the conversation.'
+                    : 'No replies yet. Sign in to start the conversation.'}
+                </p>
               )}
               {item.comments.map((comment) => (
                 <article key={comment.id} className={`feedback-comment ${comment.kind}`}>
@@ -398,32 +421,34 @@ function FeedbackDetail({
                 </article>
               ))}
             </div>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                void mutate('reply');
-              }}
-              className="feedback-fields"
-            >
-              <label>
-                Reply
-                <textarea
-                  value={reply}
-                  rows={3}
-                  required
-                  maxLength={2000}
-                  onChange={(e) => {
-                    setReply(e.target.value);
-                    replyId.current = '';
-                  }}
-                  placeholder="Add details, a workaround, or an update…"
-                  dir="auto"
-                />
-              </label>
-              <button className="button primary" disabled={busy}>
-                Post reply
-              </button>
-            </form>
+            {canContribute && (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void mutate('reply');
+                }}
+                className="feedback-fields"
+              >
+                <label>
+                  Reply
+                  <textarea
+                    value={reply}
+                    rows={3}
+                    required
+                    maxLength={2000}
+                    onChange={(e) => {
+                      setReply(e.target.value);
+                      replyId.current = '';
+                    }}
+                    placeholder="Add details, a workaround, or an update…"
+                    dir="auto"
+                  />
+                </label>
+                <button className="button primary" disabled={busy}>
+                  Post reply
+                </button>
+              </form>
+            )}
             {error && (
               <p className="feedback-error" role="alert">
                 {error}
@@ -448,13 +473,19 @@ export function FeedbackBoard() {
   const [selected, setSelected] = useState<string | null>(null),
     [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [authLoaded, setAuthLoaded] = useState(false);
+  const [authRequired, setAuthRequired] = useState(false);
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   useEffect(() => {
     const id = new URLSearchParams(location.search).get('item');
     if (id && /^[a-f0-9-]{36}$/i.test(id)) setSelected(id);
     void fetchAuthSession()
-      .then((session) => setAuthUser(session.user))
-      .catch(() => undefined);
+      .then((session) => {
+        setAuthRequired(session.authRequired);
+        setAuthUser(session.user);
+      })
+      .catch(() => setAuthRequired(true))
+      .finally(() => setAuthLoaded(true));
   }, []);
   useEffect(() => {
     const controller = new AbortController();
@@ -497,11 +528,16 @@ export function FeedbackBoard() {
           wishscene<span className="brand-dot">.</span>
         </a>
         <div className="feedback-tools">
-          {authUser && (
+          {authLoaded && authUser ? (
             <button className="button" onClick={() => void signOut()}>
               Sign out
             </button>
-          )}
+          ) : authLoaded && authRequired ? (
+            <a className="button primary" href="/api/auth/github?next=%2Ffeedback">
+              <Github size={18} />
+              Sign in with GitHub
+            </a>
+          ) : null}
           <a className="button" href="/">
             <ArrowLeft size={18} />
             Back to studio
@@ -521,7 +557,7 @@ export function FeedbackBoard() {
         <div className="feedback-hero-card">
           <MessageSquarePlus size={30} />
           <strong>Built together.</strong>
-          <span>Everyone can read, reply, vote and move work forward.</span>
+          <span>Everyone can read. Sign in with GitHub to reply, vote and move work forward.</span>
           <a className="button primary" href="/">
             Open studio to mark an element
           </a>
@@ -701,12 +737,13 @@ export function FeedbackBoard() {
         </div>
       )}
       <p className="feedback-board-footer">
-        Shared with everyone on this deployment. Display names are unverified. Preview captures
-        before sharing.
+        Shared with everyone on this deployment. Contributors use verified GitHub identities when
+        sign-in is enabled. Preview captures before sharing.
       </p>
       {selected && (
         <FeedbackDetail
           id={selected}
+          authRequired={!authLoaded || authRequired}
           authUser={authUser}
           onClose={() => open(null)}
           onChange={() => setTick((x) => x + 1)}

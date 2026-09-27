@@ -7,6 +7,8 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const oauthPayload = z.object({
+  v: z.literal(1),
+  kind: z.literal('oauth'),
   state: z.string(),
   verifier: z.string(),
   next: z.string(),

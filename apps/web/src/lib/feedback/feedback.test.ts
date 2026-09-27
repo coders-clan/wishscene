@@ -200,6 +200,7 @@ describe('feedback with GitHub sign-in required', () => {
     const token = seal(
       {
         v: 1,
+        kind: 'session',
         id: 42,
         login: 'octocat',
         name: null,
@@ -210,9 +211,9 @@ describe('feedback with GitHub sign-in required', () => {
     );
     return `wishscene-session=${token}`;
   }
-  it('rejects requests without a session', async () => {
+  it('allows reading without a session but rejects writes', async () => {
     stubAuth();
-    const response = await feedbackDispatch(
+    const read = await feedbackDispatch(
       new NextRequest('http://localhost:3000/api/feedback/', {
         method: 'GET',
         headers: { 'content-type': 'application/json', origin: 'http://localhost:3000' },
@@ -220,9 +221,19 @@ describe('feedback with GitHub sign-in required', () => {
       [],
       store,
     );
-    expect(response.status).toBe(401);
+    expect(read.status).toBe(200);
+    const write = await feedbackDispatch(
+      new NextRequest('http://localhost:3000/api/feedback/', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', origin: 'http://localhost:3000' },
+        body: JSON.stringify(input()),
+      }),
+      [],
+      store,
+    );
+    expect(write.status).toBe(401);
   });
-  it('overrides the author with the session login on create', async () => {
+  it('binds create, triage, reply and votes to the GitHub session', async () => {
     stubAuth();
     const data = input();
     data.author = 'someone-else';
@@ -240,7 +251,62 @@ describe('feedback with GitHub sign-in required', () => {
       store,
     );
     expect(response.status).toBe(201);
-    const report = await response.json();
+    let report = await response.json();
     expect(report.author).toBe('octocat');
+    const cookie = sessionCookie();
+    const patchResponse = await feedbackDispatch(
+      new NextRequest(`http://localhost:3000/api/feedback/${report.id}`, {
+        method: 'PATCH',
+        headers: {
+          'content-type': 'application/json',
+          origin: 'http://localhost:3000',
+          cookie,
+        },
+        body: JSON.stringify({
+          expectedRevision: report.revision,
+          author: 'someone-else',
+          status: 'in-progress',
+          priority: 'high',
+          assignee: 'Dave',
+        }),
+      }),
+      [report.id],
+      store,
+    );
+    report = await patchResponse.json();
+    expect(report.comments.at(-1)?.author).toBe('octocat');
+    const replyResponse = await feedbackDispatch(
+      new NextRequest(`http://localhost:3000/api/feedback/${report.id}/comments`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          origin: 'http://localhost:3000',
+          cookie,
+        },
+        body: JSON.stringify({
+          requestId: randomUUID(),
+          author: 'someone-else',
+          text: 'Authenticated reply',
+        }),
+      }),
+      [report.id, 'comments'],
+      store,
+    );
+    report = await replyResponse.json();
+    expect(report.comments.at(-1)?.author).toBe('octocat');
+    const voteResponse = await feedbackDispatch(
+      new NextRequest(`http://localhost:3000/api/feedback/${report.id}/vote`, {
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/json',
+          origin: 'http://localhost:3000',
+          cookie,
+        },
+        body: JSON.stringify({ voted: true }),
+      }),
+      [report.id, 'vote'],
+      store,
+    );
+    expect((await voteResponse.json()).voted).toBe(true);
   });
 });
