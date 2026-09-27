@@ -14,7 +14,7 @@
     "@wishscene/providers": "workspace:*",
     "html-to-image": "1.11.13",
     "jszip": "3.10.1",
-    "lucide-react": "0.468.0",
+    "lucide-react": "1.48.0",
     "next": "16.3.6",
     "pg": "8.16.3",
     "react": "19.3.0",
