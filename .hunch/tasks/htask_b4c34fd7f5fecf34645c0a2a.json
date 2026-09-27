@@ -1,0 +1,44 @@
+{
+  "id": "htask_b4c34fd7f5fecf34645c0a2a",
+  "title": "Polish photo review sizing after visual QA",
+  "state": "completed",
+  "started_at": "2026-09-27T11:46:01.787Z",
+  "finished_at": "2026-09-27T11:50:44.246Z",
+  "coverage": "no-relevant-memory",
+  "lessons": [],
+  "applied": [],
+  "saved": [],
+  "checks": [
+    {
+      "label": "Review polish quality checks",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Review polish HTTP smoke",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Final review polish quality checks",
+      "state": "passed",
+      "exit_code": 0
+    }
+  ],
+  "conformance": [],
+  "refusals": 0,
+  "files": [
+    "apps/web/src/components/studio.tsx"
+  ],
+  "supersedes": [],
+  "source_snapshot": "sha256:a6feeabff2c4de77df81bb5af2f9126258d5c93b4692e6963ea958e862b3ed52",
+  "report_hash": "sha256:6b68309033057d35093d9ae107a722bd0d13fc37028b335de36125a4034f46c1",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_b4c34fd7f5fecf34645c0a2a"
+    ],
+    "last_verified": "2026-09-27T11:50:44.246Z"
+  }
+}
