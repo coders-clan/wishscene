@@ -1,0 +1,33 @@
+{
+  "id": "dec_d7095985f1",
+  "title": "Keep mock state behind the domain boundary intended for persistence. Each browser gets its own workspace, with no identity uploads or provider calls.",
+  "topic": null,
+  "status": "accepted",
+  "context": "Captured from an inline hunch-why comment (packages/domain/src/index.ts:51).",
+  "decision": "Keep mock state behind the domain boundary intended for persistence. Each browser gets its own workspace, with no identity uploads or provider calls.",
+  "consequences": [],
+  "alternatives_rejected": [],
+  "rejected_tripwires": [],
+  "related_components": [],
+  "related_files": [
+    "packages/domain/src/index.ts"
+  ],
+  "supersedes": null,
+  "superseded_by": null,
+  "caused_by_bug": null,
+  "commit": null,
+  "valid_from": "2026-09-27T09:37:17.635Z",
+  "valid_to": null,
+  "retired": {
+    "symbols": [],
+    "deps": []
+  },
+  "provenance": {
+    "source": "human_confirmed",
+    "confidence": 0.9,
+    "evidence": [
+      "packages/domain/src/index.ts:51"
+    ]
+  },
+  "date": "2026-09-27T09:37:17.635Z"
+}

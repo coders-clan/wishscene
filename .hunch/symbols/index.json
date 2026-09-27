@@ -1,0 +1,1268 @@
+[
+  {
+    "id": "sym_038f8c7076",
+    "file": "packages/domain/src/index.ts",
+    "name": "active",
+    "kind": "function",
+    "signature_hash": "sha1:2101efd8c80",
+    "calls": [],
+    "called_by": [
+      "sym_9b46929566",
+      "sym_b57b703a1f",
+      "sym_b52416f60e",
+      "sym_e5522ad0b2"
+    ],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 4,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_03b1eca43f",
+    "file": "apps/web/src/app/page.tsx",
+    "name": "Page",
+    "kind": "function",
+    "signature_hash": "sha1:fdf2b1811ea",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_0986473b45",
+    "file": "scripts/generate-demo-art.mjs",
+    "name": "tower",
+    "kind": "function",
+    "signature_hash": "sha1:9838ffea284",
+    "calls": [
+      "sym_a410e04f27"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 2,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_0b7658d5c7",
+    "file": "packages/domain/src/index.ts",
+    "name": "MockStudio",
+    "kind": "class",
+    "signature_hash": "sha1:12d99ec774a",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 282,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_0e797d939c",
+    "file": "packages/contracts/src/index.ts",
+    "name": "Workspace",
+    "kind": "interface",
+    "signature_hash": "sha1:5fe88b3904a",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 6,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_10711ce3ae",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "generate",
+    "kind": "function",
+    "signature_hash": "sha1:498c9b07017",
+    "calls": [
+      "sym_2bb1d9d5f2"
+    ],
+    "called_by": [
+      "sym_639b4d5e5c"
+    ],
+    "metrics": {
+      "loc": 6,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_14441b1549",
+    "file": "packages/domain/src/index.ts",
+    "name": "constructor",
+    "kind": "method",
+    "signature_hash": "sha1:30b3a629ee1",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 7,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_14441b1549_1",
+    "file": "packages/domain/src/index.ts",
+    "name": "constructor",
+    "kind": "method",
+    "signature_hash": "sha1:8ac74d2b7e9",
+    "calls": [
+      "sym_ecfa41841d"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 7,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_1f1b38ab6d",
+    "file": "packages/contracts/src/index.ts",
+    "name": "SceneStatus",
+    "kind": "type",
+    "signature_hash": "sha1:2f69c99b907",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_214c53a83f",
+    "file": "packages/contracts/src/index.ts",
+    "name": "ExperienceInput",
+    "kind": "type",
+    "signature_hash": "sha1:f42230bb5ca",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_29cfb77969",
+    "file": "packages/contracts/src/index.ts",
+    "name": "GenerationInput",
+    "kind": "type",
+    "signature_hash": "sha1:7533c59729d",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_2b22ce11fa",
+    "file": "packages/providers/src/index.ts",
+    "name": "candidates",
+    "kind": "method",
+    "signature_hash": "sha1:c7e1e91dae2",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 15,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_2bb1d9d5f2",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "api",
+    "kind": "function",
+    "signature_hash": "sha1:4a902fed774",
+    "calls": [],
+    "called_by": [
+      "sym_639b4d5e5c",
+      "sym_10711ce3ae",
+      "sym_36f63d6ae9",
+      "sym_a938904079"
+    ],
+    "metrics": {
+      "loc": 11,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 4,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_308480ea2b",
+    "file": "tests/domain.test.ts",
+    "name": "request",
+    "kind": "function",
+    "signature_hash": "sha1:79e86da1850",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 4,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_33b8f596c3",
+    "file": "packages/domain/src/index.ts",
+    "name": "export",
+    "kind": "method",
+    "signature_hash": "sha1:c90c66dec99",
+    "calls": [
+      "sym_e4658e7c42",
+      "sym_e78fcbf9ca",
+      "sym_5a3be9886a"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 34,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 3
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_36f63d6ae9",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "approve",
+    "kind": "function",
+    "signature_hash": "sha1:f12f124e765",
+    "calls": [
+      "sym_e5701c0afb",
+      "sym_2bb1d9d5f2"
+    ],
+    "called_by": [
+      "sym_639b4d5e5c"
+    ],
+    "metrics": {
+      "loc": 8,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 2
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_371c013f11",
+    "file": "packages/domain/src/index.ts",
+    "name": "snapshot",
+    "kind": "method",
+    "signature_hash": "sha1:dd298b98c3b",
+    "calls": [
+      "sym_e4658e7c42"
+    ],
+    "called_by": [
+      "sym_b02f511909"
+    ],
+    "metrics": {
+      "loc": 4,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_3e3509dde3",
+    "file": "packages/domain/src/index.ts",
+    "name": "restore",
+    "kind": "method",
+    "signature_hash": "sha1:a078757782b",
+    "calls": [],
+    "called_by": [
+      "sym_b52416f60e",
+      "sym_e4658e7c42"
+    ],
+    "metrics": {
+      "loc": 9,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_422ca6ef98",
+    "file": "scripts/generate-demo-art.mjs",
+    "name": "person",
+    "kind": "function",
+    "signature_hash": "sha1:00f61444a78",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 2,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_477765f8d2",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "activeJob",
+    "kind": "function",
+    "signature_hash": "sha1:0a5ac2811cd",
+    "calls": [],
+    "called_by": [
+      "sym_639b4d5e5c"
+    ],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_4d516f691e",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "Modal",
+    "kind": "type",
+    "signature_hash": "sha1:f49f72301b0",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_4fa89a4963",
+    "file": "packages/domain/src/index.ts",
+    "name": "create",
+    "kind": "method",
+    "signature_hash": "sha1:b31aa7d413a",
+    "calls": [
+      "sym_5a3be9886a",
+      "sym_f91baca3ba"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 11,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 2
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_565d8d37ff",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "exportPack",
+    "kind": "function",
+    "signature_hash": "sha1:c5645f13815",
+    "calls": [
+      "sym_e5701c0afb"
+    ],
+    "called_by": [
+      "sym_639b4d5e5c"
+    ],
+    "metrics": {
+      "loc": 30,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_596777fa81",
+    "file": "packages/contracts/src/index.ts",
+    "name": "Asset",
+    "kind": "interface",
+    "signature_hash": "sha1:c24cd01cd14",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 8,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_5a3be9886a",
+    "file": "packages/domain/src/index.ts",
+    "name": "DomainError",
+    "kind": "class",
+    "signature_hash": "sha1:44f14a77388",
+    "calls": [],
+    "called_by": [
+      "sym_e78fcbf9ca",
+      "sym_837814e880",
+      "sym_4fa89a4963",
+      "sym_9b46929566",
+      "sym_b57b703a1f",
+      "sym_b52416f60e",
+      "sym_e5522ad0b2",
+      "sym_33b8f596c3"
+    ],
+    "metrics": {
+      "loc": 9,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 8,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_5b4b5c701d",
+    "file": "packages/contracts/src/index.ts",
+    "name": "StoryUpdate",
+    "kind": "type",
+    "signature_hash": "sha1:1f8bf37d056",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_5e7171df4b",
+    "file": "packages/contracts/src/index.ts",
+    "name": "Scene",
+    "kind": "interface",
+    "signature_hash": "sha1:773be06e7c1",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 11,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_619b7b92f7",
+    "file": "scripts/smoke.mjs",
+    "name": "request",
+    "kind": "function",
+    "signature_hash": "sha1:4fda6878990",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 11,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_61e0035362",
+    "file": "pnpm-workspace.yaml",
+    "name": "pnpm-workspace.yaml",
+    "kind": "file",
+    "signature_hash": "sha1:cfda7f2c8f3",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 16,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_639b4d5e5c",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "Studio",
+    "kind": "function",
+    "signature_hash": "sha1:44fd705c938",
+    "calls": [
+      "sym_477765f8d2",
+      "sym_c03f447942",
+      "sym_e5701c0afb",
+      "sym_10711ce3ae",
+      "sym_ca815975e8",
+      "sym_2bb1d9d5f2",
+      "sym_565d8d37ff",
+      "sym_8236e01638",
+      "sym_36f63d6ae9"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 1026,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 9
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_66f8b427d0",
+    "file": "apps/web/src/app/layout.tsx",
+    "name": "RootLayout",
+    "kind": "function",
+    "signature_hash": "sha1:cf550ee13d4",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 7,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_6b0cc3375d",
+    "file": "apps/web/src/app/api/v1/[...path]/route.ts",
+    "name": "handle",
+    "kind": "function",
+    "signature_hash": "sha1:b125a295f67",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_77d0e87748",
+    "file": "pnpm-lock.yaml",
+    "name": "pnpm-lock.yaml",
+    "kind": "file",
+    "signature_hash": "sha1:10912d39cd1",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 3855,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_8236e01638",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "selectExperience",
+    "kind": "function",
+    "signature_hash": "sha1:34c53de0306",
+    "calls": [
+      "sym_c03f447942"
+    ],
+    "called_by": [
+      "sym_639b4d5e5c"
+    ],
+    "metrics": {
+      "loc": 5,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_837814e880",
+    "file": "packages/domain/src/index.ts",
+    "name": "scene",
+    "kind": "method",
+    "signature_hash": "sha1:4e7beabb6cf",
+    "calls": [
+      "sym_e78fcbf9ca",
+      "sym_5a3be9886a"
+    ],
+    "called_by": [
+      "sym_b57b703a1f",
+      "sym_b52416f60e",
+      "sym_e4658e7c42",
+      "sym_e5522ad0b2"
+    ],
+    "metrics": {
+      "loc": 6,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 4,
+      "fan_out": 2
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_8839d47266",
+    "file": "apps/web/src/lib/mock-api.ts",
+    "name": "body",
+    "kind": "function",
+    "signature_hash": "sha1:de277d4bb19",
+    "calls": [],
+    "called_by": [
+      "sym_fd92a4bd50"
+    ],
+    "metrics": {
+      "loc": 23,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_94c182e073",
+    "file": "packages/contracts/src/index.ts",
+    "name": "Destination",
+    "kind": "type",
+    "signature_hash": "sha1:73634e9053c",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_9a3ea12155",
+    "file": ".github/workflows/ci.yml",
+    "name": "ci.yml",
+    "kind": "file",
+    "signature_hash": "sha1:39b6e2de83c",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 36,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_9b46929566",
+    "file": "packages/domain/src/index.ts",
+    "name": "updateStory",
+    "kind": "method",
+    "signature_hash": "sha1:765bcf18d3c",
+    "calls": [
+      "sym_e4658e7c42",
+      "sym_e78fcbf9ca",
+      "sym_5a3be9886a",
+      "sym_038f8c7076"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 21,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 4
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_a3fec7dd86",
+    "file": "packages/providers/src/index.ts",
+    "name": "ImageProvider",
+    "kind": "interface",
+    "signature_hash": "sha1:aee2aa0031d",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 8,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_a410e04f27",
+    "file": "scripts/generate-demo-art.mjs",
+    "name": "windows",
+    "kind": "function",
+    "signature_hash": "sha1:f572338a10c",
+    "calls": [],
+    "called_by": [
+      "sym_0986473b45"
+    ],
+    "metrics": {
+      "loc": 8,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_a900a28d3a",
+    "file": "apps/web/src/lib/mock-api.test.ts",
+    "name": "call",
+    "kind": "function",
+    "signature_hash": "sha1:1940da3afdb",
+    "calls": [
+      "sym_fd92a4bd50",
+      "sym_c49cd54e0c"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 2,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 2
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_a938904079",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "submitStory",
+    "kind": "function",
+    "signature_hash": "sha1:1777b34f575",
+    "calls": [
+      "sym_e5701c0afb",
+      "sym_2bb1d9d5f2",
+      "sym_c03f447942"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 12,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 3
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_aac96e5ae6",
+    "file": "apps/web/src/app/api/v1/[...path]/route.ts",
+    "name": "Context",
+    "kind": "type",
+    "signature_hash": "sha1:d7c7c36d8b1",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_b02f511909",
+    "file": "packages/domain/src/index.ts",
+    "name": "reset",
+    "kind": "method",
+    "signature_hash": "sha1:48b04d59db0",
+    "calls": [
+      "sym_ecfa41841d",
+      "sym_371c013f11"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 4,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 2
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_b4a28f6741",
+    "file": "packages/contracts/src/index.ts",
+    "name": "Job",
+    "kind": "interface",
+    "signature_hash": "sha1:d6a4a487f5e",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 12,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_b52416f60e",
+    "file": "packages/domain/src/index.ts",
+    "name": "cancel",
+    "kind": "method",
+    "signature_hash": "sha1:e1266ec868c",
+    "calls": [
+      "sym_e4658e7c42",
+      "sym_5a3be9886a",
+      "sym_038f8c7076",
+      "sym_837814e880",
+      "sym_3e3509dde3"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 10,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 5
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_b57b703a1f",
+    "file": "packages/domain/src/index.ts",
+    "name": "generate",
+    "kind": "method",
+    "signature_hash": "sha1:200ef00d0ad",
+    "calls": [
+      "sym_e4658e7c42",
+      "sym_837814e880",
+      "sym_5a3be9886a",
+      "sym_038f8c7076"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 38,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 4
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_bc087f2197",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "submitExperience",
+    "kind": "function",
+    "signature_hash": "sha1:b7d067e7d76",
+    "calls": [
+      "sym_e5701c0afb",
+      "sym_c03f447942"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 11,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 2
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_c03f447942",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "close",
+    "kind": "function",
+    "signature_hash": "sha1:02875f7581f",
+    "calls": [],
+    "called_by": [
+      "sym_e4e31d7b4b",
+      "sym_639b4d5e5c",
+      "sym_bc087f2197",
+      "sym_a938904079",
+      "sym_8236e01638"
+    ],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 5,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_c49cd54e0c",
+    "file": "apps/web/src/lib/mock-api.test.ts",
+    "name": "req",
+    "kind": "function",
+    "signature_hash": "sha1:9be29c9cde0",
+    "calls": [],
+    "called_by": [
+      "sym_a900a28d3a"
+    ],
+    "metrics": {
+      "loc": 13,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_c83ec5eb7e",
+    "file": "tests/domain.test.ts",
+    "name": "fixture",
+    "kind": "function",
+    "signature_hash": "sha1:8d3ed0e6e1a",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 16,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_ca815975e8",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "openScene",
+    "kind": "function",
+    "signature_hash": "sha1:2d9ca28c656",
+    "calls": [],
+    "called_by": [
+      "sym_639b4d5e5c"
+    ],
+    "metrics": {
+      "loc": 4,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_d03415e3ba",
+    "file": "packages/contracts/src/index.ts",
+    "name": "ExportManifest",
+    "kind": "interface",
+    "signature_hash": "sha1:5aaf5af114e",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 13,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_e4658e7c42",
+    "file": "packages/domain/src/index.ts",
+    "name": "settle",
+    "kind": "method",
+    "signature_hash": "sha1:bbff99f7768",
+    "calls": [
+      "sym_837814e880",
+      "sym_3e3509dde3"
+    ],
+    "called_by": [
+      "sym_371c013f11",
+      "sym_9b46929566",
+      "sym_b57b703a1f",
+      "sym_b52416f60e",
+      "sym_e5522ad0b2",
+      "sym_33b8f596c3"
+    ],
+    "metrics": {
+      "loc": 32,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 6,
+      "fan_out": 2
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_e4e31d7b4b",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "ModalFrame",
+    "kind": "function",
+    "signature_hash": "sha1:11f5793e432",
+    "calls": [
+      "sym_c03f447942"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 44,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_e5522ad0b2",
+    "file": "packages/domain/src/index.ts",
+    "name": "approve",
+    "kind": "method",
+    "signature_hash": "sha1:19f866a0ba5",
+    "calls": [
+      "sym_e4658e7c42",
+      "sym_837814e880",
+      "sym_5a3be9886a",
+      "sym_038f8c7076"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 23,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 4
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_e5701c0afb",
+    "file": "apps/web/src/components/studio.tsx",
+    "name": "run",
+    "kind": "function",
+    "signature_hash": "sha1:ff4b8c353b5",
+    "calls": [],
+    "called_by": [
+      "sym_639b4d5e5c",
+      "sym_36f63d6ae9",
+      "sym_565d8d37ff",
+      "sym_bc087f2197",
+      "sym_a938904079"
+    ],
+    "metrics": {
+      "loc": 13,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 5,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c6f6d2e"
+  },
+  {
+    "id": "sym_e78fcbf9ca",
+    "file": "packages/domain/src/index.ts",
+    "name": "experience",
+    "kind": "method",
+    "signature_hash": "sha1:148c89d1aac",
+    "calls": [
+      "sym_5a3be9886a"
+    ],
+    "called_by": [
+      "sym_837814e880",
+      "sym_9b46929566",
+      "sym_f0e0ce1df7",
+      "sym_33b8f596c3"
+    ],
+    "metrics": {
+      "loc": 5,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 4,
+      "fan_out": 1
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_ecfa41841d",
+    "file": "packages/domain/src/index.ts",
+    "name": "seed",
+    "kind": "method",
+    "signature_hash": "sha1:e245a877684",
+    "calls": [
+      "sym_f91baca3ba"
+    ],
+    "called_by": [
+      "sym_14441b1549_1",
+      "sym_b02f511909"
+    ],
+    "metrics": {
+      "loc": 51,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 1
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_f038625ea6",
+    "file": "packages/providers/src/index.ts",
+    "name": "MockImageProvider",
+    "kind": "class",
+    "signature_hash": "sha1:2a7819a3858",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 17,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_f0e0ce1df7",
+    "file": "packages/domain/src/index.ts",
+    "name": "caption",
+    "kind": "method",
+    "signature_hash": "sha1:d1f54d8b6e7",
+    "calls": [
+      "sym_e78fcbf9ca"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_f91baca3ba",
+    "file": "packages/domain/src/index.ts",
+    "name": "makeExperience",
+    "kind": "method",
+    "signature_hash": "sha1:05d7177e506",
+    "calls": [],
+    "called_by": [
+      "sym_ecfa41841d",
+      "sym_4fa89a4963"
+    ],
+    "metrics": {
+      "loc": 20,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_fa3f25e7d1",
+    "file": "packages/contracts/src/index.ts",
+    "name": "Experience",
+    "kind": "interface",
+    "signature_hash": "sha1:0609d08c069",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 7,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:9706a33"
+  },
+  {
+    "id": "sym_fd92a4bd50",
+    "file": "apps/web/src/lib/mock-api.ts",
+    "name": "dispatch",
+    "kind": "function",
+    "signature_hash": "sha1:6942c9a7f72",
+    "calls": [
+      "sym_8839d47266"
+    ],
+    "called_by": [
+      "sym_a900a28d3a"
+    ],
+    "metrics": {
+      "loc": 130,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c6f6d2e"
+  }
+]

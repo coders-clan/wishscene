@@ -1,0 +1,6 @@
+node_modules
+.next
+pnpm-lock.yaml
+.hunch
+apps/web/public/demo
+apps/web/next-env.d.ts

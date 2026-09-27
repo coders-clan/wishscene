@@ -1,0 +1,3692 @@
+[
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_0020843d78",
+    "from": "sym_8236e01638",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_0128324efa",
+    "from": "sym_9b46929566",
+    "to": "sym_5a3be9886a",
+    "type": "calls",
+    "reason": "updateStory calls DomainError",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_0132e57852",
+    "from": "sym_e4658e7c42",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_0167de84fd",
+    "from": "sym_a938904079",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_017e09555a",
+    "from": "sym_e5522ad0b2",
+    "to": "sym_038f8c7076",
+    "type": "calls",
+    "reason": "approve calls active",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_01f82ce1fd",
+    "from": "sym_639b4d5e5c",
+    "to": "sym_8236e01638",
+    "type": "calls",
+    "reason": "Studio calls selectExperience",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_024c75baa5",
+    "from": "sym_d03415e3ba",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/index.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_054544cf36",
+    "from": "sym_a938904079",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_06267339de",
+    "from": "sym_b57b703a1f",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_065d814da1",
+    "from": "sym_639b4d5e5c",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_070ff27ffa",
+    "from": "sym_4d516f691e",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_075eedafb3",
+    "from": "sym_477765f8d2",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_07f9baee21",
+    "from": "sym_e5522ad0b2",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_09c0b90ba1",
+    "from": "sym_14441b1549_1",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_0a0b379fbc",
+    "from": "sym_f0e0ce1df7",
+    "to": "sym_e78fcbf9ca",
+    "type": "calls",
+    "reason": "caption calls experience",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_0af2016356",
+    "from": "sym_565d8d37ff",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_0afc3e9c3d",
+    "from": "sym_b02f511909",
+    "to": "sym_ecfa41841d",
+    "type": "calls",
+    "reason": "reset calls seed",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_0b2765c6b7",
+    "from": "sym_8839d47266",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_0b42d3bda3",
+    "from": "sym_3e3509dde3",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_0f21cf4d49",
+    "from": "sym_ca815975e8",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_0fa458ecd1",
+    "from": "sym_e4e31d7b4b",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_0ff6f6b258",
+    "from": "sym_36f63d6ae9",
+    "to": "sym_e5701c0afb",
+    "type": "calls",
+    "reason": "approve calls run",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_100d170bcc",
+    "from": "sym_f0e0ce1df7",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_11bef765d8",
+    "from": "sym_8236e01638",
+    "to": "sym_c03f447942",
+    "type": "calls",
+    "reason": "selectExperience calls close",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_12610828ff",
+    "from": "sym_f91baca3ba",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_12aef918dd",
+    "from": "sym_a900a28d3a",
+    "to": "sym_c49cd54e0c",
+    "type": "calls",
+    "reason": "call calls req",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/lib/mock-api.test.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_13fd1b0673",
+    "from": "sym_9b46929566",
+    "to": "sym_038f8c7076",
+    "type": "calls",
+    "reason": "updateStory calls active",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_146f620ef5",
+    "from": "sym_94c182e073",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/index.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_150fd85cc3",
+    "from": "sym_837814e880",
+    "to": "sym_5a3be9886a",
+    "type": "calls",
+    "reason": "scene calls DomainError",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_163a4765b0",
+    "from": "sym_b57b703a1f",
+    "to": "sym_5a3be9886a",
+    "type": "calls",
+    "reason": "generate calls DomainError",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_1800868825",
+    "from": "sym_a900a28d3a",
+    "to": "ext_4c9cfa1330",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.test.ts imports external package vitest",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.test.ts:imports:vitest"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_1918731c7f",
+    "from": "sym_14441b1549_1",
+    "to": "sym_ecfa41841d",
+    "type": "calls",
+    "reason": "constructor calls seed",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_1a9a92913d",
+    "from": "sym_36f63d6ae9",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_1bef91f593",
+    "from": "sym_038f8c7076",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_1cfd1af98e",
+    "from": "sym_4fa89a4963",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_1d3a89f082",
+    "from": "sym_14441b1549",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_23f4a491cf",
+    "from": "sym_b57b703a1f",
+    "to": "sym_837814e880",
+    "type": "calls",
+    "reason": "generate calls scene",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_24ea6ce701",
+    "from": "sym_619b7b92f7",
+    "to": "ext_f62b7d19fd",
+    "type": "imports",
+    "reason": "scripts/smoke.mjs imports external package node:child_process",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "scripts/smoke.mjs:imports:node:child_process"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_255eda8a37",
+    "from": "sym_5b4b5c701d",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/index.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_26389cf61f",
+    "from": "sym_9b46929566",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_29d84c8b9b",
+    "from": "sym_33b8f596c3",
+    "to": "sym_e78fcbf9ca",
+    "type": "calls",
+    "reason": "export calls experience",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_2b56298eac",
+    "from": "sym_2bb1d9d5f2",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_2c4838e1cf",
+    "from": "sym_837814e880",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_2d54dfd070",
+    "from": "sym_f91baca3ba",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_2eea18c924",
+    "from": "sym_c83ec5eb7e",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "tests/domain.test.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "tests/domain.test.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_2f4c1b0cb1",
+    "from": "sym_3e3509dde3",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_3039f72888",
+    "from": "sym_b02f511909",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_34c7bb923f",
+    "from": "sym_fd92a4bd50",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_35940073a7",
+    "from": "sym_5e7171df4b",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/index.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_37466fe48b",
+    "from": "sym_1f1b38ab6d",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/index.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_385effaec4",
+    "from": "sym_0b7658d5c7",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_38bf1acc51",
+    "from": "sym_308480ea2b",
+    "to": "ext_4c9cfa1330",
+    "type": "imports",
+    "reason": "tests/domain.test.ts imports external package vitest",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "tests/domain.test.ts:imports:vitest"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_39267fd385",
+    "from": "sym_639b4d5e5c",
+    "to": "sym_2bb1d9d5f2",
+    "type": "calls",
+    "reason": "Studio calls api",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_39f42bc242",
+    "from": "sym_4d516f691e",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_3c84ab8cb0",
+    "from": "sym_8839d47266",
+    "to": "ext_edee9402d1",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.ts imports external package next",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.ts:imports:next/server"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_3db221de74",
+    "from": "sym_33b8f596c3",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_3dba0712c4",
+    "from": "sym_33b8f596c3",
+    "to": "sym_5a3be9886a",
+    "type": "calls",
+    "reason": "export calls DomainError",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_3ea5f33489",
+    "from": "sym_e5522ad0b2",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_3eac25ae2f",
+    "from": "sym_4fa89a4963",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_3eecd39664",
+    "from": "sym_9b46929566",
+    "to": "sym_e78fcbf9ca",
+    "type": "calls",
+    "reason": "updateStory calls experience",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_46fabb66c7",
+    "from": "sym_837814e880",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_49322a2472",
+    "from": "sym_ecfa41841d",
+    "to": "sym_f91baca3ba",
+    "type": "calls",
+    "reason": "seed calls makeExperience",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_4baf36d453",
+    "from": "sym_14441b1549_1",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_4dadcbd020",
+    "from": "sym_6b0cc3375d",
+    "to": "ext_160901a8e6",
+    "type": "imports",
+    "reason": "apps/web/src/app/api/v1/[...path]/route.ts imports external package @/lib",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/app/api/v1/[...path]/route.ts:imports:@/lib/mock-api"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_4e210df274",
+    "from": "sym_8839d47266",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_4fb89614c0",
+    "from": "sym_0986473b45",
+    "to": "ext_a15b7d96bf",
+    "type": "imports",
+    "reason": "scripts/generate-demo-art.mjs imports external package node:fs",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "scripts/generate-demo-art.mjs:imports:node:fs"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_4fc1c5c89d",
+    "from": "sym_565d8d37ff",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_51806c2aee",
+    "from": "sym_36f63d6ae9",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_522d4b8949",
+    "from": "sym_2b22ce11fa",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/providers/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/providers/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_52f31af6a0",
+    "from": "sym_e4658e7c42",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_5332d44b1a",
+    "from": "sym_14441b1549",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_53ac53d2c7",
+    "from": "sym_4fa89a4963",
+    "to": "sym_f91baca3ba",
+    "type": "calls",
+    "reason": "create calls makeExperience",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_595be7ce1e",
+    "from": "sym_fd92a4bd50",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_59616a0e1c",
+    "from": "sym_4d516f691e",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_59b829fbf3",
+    "from": "sym_639b4d5e5c",
+    "to": "sym_477765f8d2",
+    "type": "calls",
+    "reason": "Studio calls activeJob",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_5a875715b4",
+    "from": "sym_8839d47266",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_5ad78ccd79",
+    "from": "sym_e4e31d7b4b",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_5af86ffb4f",
+    "from": "sym_bc087f2197",
+    "to": "sym_e5701c0afb",
+    "type": "calls",
+    "reason": "submitExperience calls run",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_5bb266573d",
+    "from": "sym_596777fa81",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/index.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_5bcf08cc77",
+    "from": "sym_b02f511909",
+    "to": "sym_371c013f11",
+    "type": "calls",
+    "reason": "reset calls snapshot",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_5df88ee068",
+    "from": "sym_f91baca3ba",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_5e11518368",
+    "from": "sym_038f8c7076",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_5f1b523694",
+    "from": "sym_9b46929566",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_605e3c0fb6",
+    "from": "sym_bc087f2197",
+    "to": "sym_c03f447942",
+    "type": "calls",
+    "reason": "submitExperience calls close",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_629fab9159",
+    "from": "sym_639b4d5e5c",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_63f390dba6",
+    "from": "sym_b02f511909",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_65f09d5df4",
+    "from": "sym_619b7b92f7",
+    "to": "ext_82f52b297c",
+    "type": "imports",
+    "reason": "scripts/smoke.mjs imports external package node:assert/strict",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "scripts/smoke.mjs:imports:node:assert/strict"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_671d2015e0",
+    "from": "sym_2bb1d9d5f2",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_68e938b1bd",
+    "from": "sym_038f8c7076",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_6942c97bbc",
+    "from": "sym_ca815975e8",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_696528b5f0",
+    "from": "sym_e4e31d7b4b",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_6a4dfec8f2",
+    "from": "sym_c03f447942",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_6b34836bec",
+    "from": "sym_ecfa41841d",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_6c4d5e0da2",
+    "from": "sym_fd92a4bd50",
+    "to": "ext_18a6883d87",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.ts imports external package @wishscene/domain",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.ts:imports:@wishscene/domain"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_6d021edfb5",
+    "from": "sym_33b8f596c3",
+    "to": "sym_e4658e7c42",
+    "type": "calls",
+    "reason": "export calls settle",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_6dc63c22c3",
+    "from": "sym_33b8f596c3",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_6e44fa985a",
+    "from": "sym_ecfa41841d",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_6f24c1b5a7",
+    "from": "sym_bc087f2197",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_72e094b15e",
+    "from": "sym_0b7658d5c7",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_73f0b33eda",
+    "from": "sym_ecfa41841d",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_73f3e74779",
+    "from": "sym_b52416f60e",
+    "to": "sym_038f8c7076",
+    "type": "calls",
+    "reason": "cancel calls active",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_75ff44d5a0",
+    "from": "sym_4fa89a4963",
+    "to": "sym_5a3be9886a",
+    "type": "calls",
+    "reason": "create calls DomainError",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_76c199d7ce",
+    "from": "sym_b52416f60e",
+    "to": "sym_e4658e7c42",
+    "type": "calls",
+    "reason": "cancel calls settle",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_776c441bd3",
+    "from": "sym_36f63d6ae9",
+    "to": "sym_2bb1d9d5f2",
+    "type": "calls",
+    "reason": "approve calls api",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_793aab8714",
+    "from": "sym_2bb1d9d5f2",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_799ed304af",
+    "from": "sym_4fa89a4963",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_7bcdb1db37",
+    "from": "sym_fd92a4bd50",
+    "to": "sym_8839d47266",
+    "type": "calls",
+    "reason": "dispatch calls body",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/lib/mock-api.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_7c2964985e",
+    "from": "sym_e5522ad0b2",
+    "to": "sym_837814e880",
+    "type": "calls",
+    "reason": "approve calls scene",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_7d34752f0a",
+    "from": "sym_e5522ad0b2",
+    "to": "sym_e4658e7c42",
+    "type": "calls",
+    "reason": "approve calls settle",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_7d4ff50065",
+    "from": "sym_fa3f25e7d1",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/index.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_7eacb63526",
+    "from": "sym_c83ec5eb7e",
+    "to": "ext_4c9cfa1330",
+    "type": "imports",
+    "reason": "tests/domain.test.ts imports external package vitest",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "tests/domain.test.ts:imports:vitest"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_7ebbad1840",
+    "from": "sym_639b4d5e5c",
+    "to": "sym_ca815975e8",
+    "type": "calls",
+    "reason": "Studio calls openScene",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_81243e6634",
+    "from": "sym_10711ce3ae",
+    "to": "sym_2bb1d9d5f2",
+    "type": "calls",
+    "reason": "generate calls api",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_81c1307550",
+    "from": "sym_bc087f2197",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_835c7414a9",
+    "from": "sym_e78fcbf9ca",
+    "to": "sym_5a3be9886a",
+    "type": "calls",
+    "reason": "experience calls DomainError",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_84e28f81c1",
+    "from": "sym_371c013f11",
+    "to": "sym_e4658e7c42",
+    "type": "calls",
+    "reason": "snapshot calls settle",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_857497f88f",
+    "from": "sym_565d8d37ff",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_863be7f6ef",
+    "from": "sym_e78fcbf9ca",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_8704de6784",
+    "from": "sym_214c53a83f",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/index.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_87241b7321",
+    "from": "sym_8236e01638",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_87772c584f",
+    "from": "sym_b57b703a1f",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_888ae7935f",
+    "from": "sym_5a3be9886a",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_88e3165a1a",
+    "from": "sym_477765f8d2",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_8952687895",
+    "from": "sym_8236e01638",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_8a3b979bd9",
+    "from": "sym_c83ec5eb7e",
+    "to": "ext_18a6883d87",
+    "type": "imports",
+    "reason": "tests/domain.test.ts imports external package @wishscene/domain",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "tests/domain.test.ts:imports:@wishscene/domain"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_8ad201cf34",
+    "from": "sym_e5522ad0b2",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_8c95338d5a",
+    "from": "sym_aac96e5ae6",
+    "to": "ext_edee9402d1",
+    "type": "imports",
+    "reason": "apps/web/src/app/api/v1/[...path]/route.ts imports external package next",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/app/api/v1/[...path]/route.ts:imports:next/server"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_9247377b17",
+    "from": "sym_e78fcbf9ca",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_96fcffc88b",
+    "from": "sym_639b4d5e5c",
+    "to": "sym_c03f447942",
+    "type": "calls",
+    "reason": "Studio calls close",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_985d85bcc1",
+    "from": "sym_b52416f60e",
+    "to": "sym_3e3509dde3",
+    "type": "calls",
+    "reason": "cancel calls restore",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_98a649c415",
+    "from": "sym_e5522ad0b2",
+    "to": "sym_5a3be9886a",
+    "type": "calls",
+    "reason": "approve calls DomainError",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_9a6caa8b45",
+    "from": "sym_b52416f60e",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_9a97d66950",
+    "from": "sym_03b1eca43f",
+    "to": "ext_a532e73f79",
+    "type": "imports",
+    "reason": "apps/web/src/app/page.tsx imports external package @/components",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/app/page.tsx:imports:@/components/studio"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_9eb2cbb6e5",
+    "from": "sym_639b4d5e5c",
+    "to": "sym_36f63d6ae9",
+    "type": "calls",
+    "reason": "Studio calls approve",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_9f1c66b8ec",
+    "from": "sym_10711ce3ae",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_a08b97c0f3",
+    "from": "sym_a938904079",
+    "to": "sym_c03f447942",
+    "type": "calls",
+    "reason": "submitStory calls close",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_a097e415f1",
+    "from": "sym_66f8b427d0",
+    "to": "ext_edee9402d1",
+    "type": "imports",
+    "reason": "apps/web/src/app/layout.tsx imports external package next",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/app/layout.tsx:imports:next"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_a112e22571",
+    "from": "sym_10711ce3ae",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_a25f89deae",
+    "from": "sym_a938904079",
+    "to": "sym_2bb1d9d5f2",
+    "type": "calls",
+    "reason": "submitStory calls api",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_a376c1c197",
+    "from": "sym_c03f447942",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_a7ec2c63ba",
+    "from": "sym_8839d47266",
+    "to": "ext_18a6883d87",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.ts imports external package @wishscene/domain",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.ts:imports:@wishscene/domain"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_ab9e2aa458",
+    "from": "sym_a938904079",
+    "to": "sym_e5701c0afb",
+    "type": "calls",
+    "reason": "submitStory calls run",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_ad1b3d7739",
+    "from": "sym_fd92a4bd50",
+    "to": "ext_edee9402d1",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.ts imports external package next",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.ts:imports:next/server"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_ad434293d4",
+    "from": "sym_aac96e5ae6",
+    "to": "ext_160901a8e6",
+    "type": "imports",
+    "reason": "apps/web/src/app/api/v1/[...path]/route.ts imports external package @/lib",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/app/api/v1/[...path]/route.ts:imports:@/lib/mock-api"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_b1535ed57a",
+    "from": "sym_b52416f60e",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_b3c0981c7c",
+    "from": "sym_a3fec7dd86",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/providers/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/providers/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_b3eba86a00",
+    "from": "sym_ca815975e8",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_b4359bbcd6",
+    "from": "sym_5a3be9886a",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_b49275c271",
+    "from": "sym_b52416f60e",
+    "to": "sym_837814e880",
+    "type": "calls",
+    "reason": "cancel calls scene",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_b4f23bd832",
+    "from": "sym_639b4d5e5c",
+    "to": "sym_10711ce3ae",
+    "type": "calls",
+    "reason": "Studio calls generate",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_b781a5ecf7",
+    "from": "sym_0e797d939c",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/index.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_b98823d838",
+    "from": "sym_f0e0ce1df7",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_ba32be6b2f",
+    "from": "sym_619b7b92f7",
+    "to": "ext_6dc01bee4d",
+    "type": "imports",
+    "reason": "scripts/smoke.mjs imports external package node:timers/promises",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "scripts/smoke.mjs:imports:node:timers/promises"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_ba9f2dbd5c",
+    "from": "sym_6b0cc3375d",
+    "to": "ext_edee9402d1",
+    "type": "imports",
+    "reason": "apps/web/src/app/api/v1/[...path]/route.ts imports external package next",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/app/api/v1/[...path]/route.ts:imports:next/server"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_bae72d45c1",
+    "from": "sym_9b46929566",
+    "to": "sym_e4658e7c42",
+    "type": "calls",
+    "reason": "updateStory calls settle",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_bceb2a62d0",
+    "from": "sym_a410e04f27",
+    "to": "ext_a15b7d96bf",
+    "type": "imports",
+    "reason": "scripts/generate-demo-art.mjs imports external package node:fs",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "scripts/generate-demo-art.mjs:imports:node:fs"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_bd88a507c2",
+    "from": "sym_308480ea2b",
+    "to": "ext_18a6883d87",
+    "type": "imports",
+    "reason": "tests/domain.test.ts imports external package @wishscene/domain",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "tests/domain.test.ts:imports:@wishscene/domain"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_bf67bc75e5",
+    "from": "sym_c49cd54e0c",
+    "to": "ext_4c9cfa1330",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.test.ts imports external package vitest",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.test.ts:imports:vitest"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_c5f1a866ca",
+    "from": "sym_e5701c0afb",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_c60f2bfa63",
+    "from": "sym_a938904079",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_c77348646e",
+    "from": "sym_10711ce3ae",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_c85125715b",
+    "from": "sym_477765f8d2",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_c8c17ecf9c",
+    "from": "sym_e5701c0afb",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_cb2c4511d9",
+    "from": "sym_36f63d6ae9",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_cdb38c124c",
+    "from": "sym_639b4d5e5c",
+    "to": "sym_e5701c0afb",
+    "type": "calls",
+    "reason": "Studio calls run",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_ce2cfbf932",
+    "from": "sym_e4658e7c42",
+    "to": "sym_837814e880",
+    "type": "calls",
+    "reason": "settle calls scene",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_cff4ea9335",
+    "from": "sym_0986473b45",
+    "to": "sym_a410e04f27",
+    "type": "calls",
+    "reason": "tower calls windows",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "scripts/generate-demo-art.mjs"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_d00c029835",
+    "from": "sym_c03f447942",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_d02b2a8fc4",
+    "from": "sym_14441b1549",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_d4ed0055cb",
+    "from": "sym_14441b1549_1",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_d4f166eb74",
+    "from": "sym_5a3be9886a",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_d6434f2cf4",
+    "from": "sym_29cfb77969",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/index.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_d76e10caad",
+    "from": "sym_e4e31d7b4b",
+    "to": "sym_c03f447942",
+    "type": "calls",
+    "reason": "ModalFrame calls close",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_d8df1f6199",
+    "from": "sym_837814e880",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_d94abbf77f",
+    "from": "sym_e4658e7c42",
+    "to": "sym_3e3509dde3",
+    "type": "calls",
+    "reason": "settle calls restore",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_d971161ccc",
+    "from": "sym_422ca6ef98",
+    "to": "ext_a15b7d96bf",
+    "type": "imports",
+    "reason": "scripts/generate-demo-art.mjs imports external package node:fs",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "scripts/generate-demo-art.mjs:imports:node:fs"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_da2daaa7b0",
+    "from": "sym_b57b703a1f",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_de5920845c",
+    "from": "sym_33b8f596c3",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_de91703d10",
+    "from": "sym_fd92a4bd50",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_df91aed8c4",
+    "from": "sym_f0e0ce1df7",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_dfd1f848dc",
+    "from": "sym_565d8d37ff",
+    "to": "sym_e5701c0afb",
+    "type": "calls",
+    "reason": "exportPack calls run",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_e1291241f5",
+    "from": "sym_b02f511909",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_e1c07bde7c",
+    "from": "sym_0b7658d5c7",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_e37b646bd0",
+    "from": "sym_c49cd54e0c",
+    "to": "ext_edee9402d1",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.test.ts imports external package next",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.test.ts:imports:next/server"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_e512150938",
+    "from": "sym_a900a28d3a",
+    "to": "sym_fd92a4bd50",
+    "type": "calls",
+    "reason": "call calls dispatch",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/lib/mock-api.test.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_e529f7e47d",
+    "from": "sym_b52416f60e",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_e5b854e49a",
+    "from": "sym_3e3509dde3",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_e741950097",
+    "from": "sym_308480ea2b",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "tests/domain.test.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "tests/domain.test.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_e7b2d6ee94",
+    "from": "sym_b57b703a1f",
+    "to": "sym_038f8c7076",
+    "type": "calls",
+    "reason": "generate calls active",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_e84bf67885",
+    "from": "sym_e4658e7c42",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_e8b1b424a9",
+    "from": "sym_b4a28f6741",
+    "to": "ext_370c9d479d",
+    "type": "imports",
+    "reason": "packages/contracts/src/index.ts imports external package zod",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/contracts/src/index.ts:imports:zod"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_e901d8dcd0",
+    "from": "sym_639b4d5e5c",
+    "to": "sym_565d8d37ff",
+    "type": "calls",
+    "reason": "Studio calls exportPack",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "apps/web/src/components/studio.tsx"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_ea271234bd",
+    "from": "sym_f038625ea6",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/providers/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/providers/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_ea9700b133",
+    "from": "sym_371c013f11",
+    "to": "ext_86bf21d2d7",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/providers",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/providers"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_ed0189beb8",
+    "from": "sym_371c013f11",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_ed290f7a36",
+    "from": "sym_b52416f60e",
+    "to": "sym_5a3be9886a",
+    "type": "calls",
+    "reason": "cancel calls DomainError",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_ee93e9967d",
+    "from": "sym_b57b703a1f",
+    "to": "sym_e4658e7c42",
+    "type": "calls",
+    "reason": "generate calls settle",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_f15e22a715",
+    "from": "sym_e78fcbf9ca",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_f1ec08eb06",
+    "from": "sym_9b46929566",
+    "to": "ext_c7dfc512fc",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package node:crypto",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:node:crypto"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_f5440b5f93",
+    "from": "sym_bc087f2197",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_f795f8abb7",
+    "from": "sym_a900a28d3a",
+    "to": "ext_edee9402d1",
+    "type": "imports",
+    "reason": "apps/web/src/lib/mock-api.test.ts imports external package next",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/lib/mock-api.test.ts:imports:next/server"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_fb57392b33",
+    "from": "sym_371c013f11",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "packages/domain/src/index.ts imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "packages/domain/src/index.ts:imports:@wishscene/contracts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_fbf2839593",
+    "from": "sym_e5701c0afb",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_fcb3d3552a",
+    "from": "sym_837814e880",
+    "to": "sym_e78fcbf9ca",
+    "type": "calls",
+    "reason": "scene calls experience",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/domain/src/index.ts"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_fe2718919e",
+    "from": "sym_639b4d5e5c",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  }
+]

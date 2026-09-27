@@ -1,0 +1,23 @@
+# >>> hunch (derived runtime index — regenerable from .hunch/*.json) >>>
+.hunch/*.sqlite
+.hunch/*.sqlite-shm
+.hunch/*.sqlite-wal
+.hunch/*.sqlite-journal
+.hunch/**/*.tmp*
+.hunch-cache/
+.hunch/local.json
+.hunch/events.log
+.hunch/pending-commit-repairs.json
+.hunch/dropped-commit-repairs.json
+.hunch-private/
+# <<< hunch <<<
+node_modules/
+.next/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+.env*
+!.env.example
+.DS_Store
