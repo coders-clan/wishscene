@@ -99,6 +99,7 @@ img {
   display: flex;
   flex-direction: column;
   z-index: 20;
+  overflow-y: auto;
 }
 .wordmark {
   font-size: 25px;
@@ -125,7 +126,7 @@ img {
   font-size: 9px;
   letter-spacing: 1.7px;
   color: #9495a6;
-  margin: 49px 9px 19px;
+  margin: 35px 9px 19px;
 }
 .nav-item {
   display: flex;
@@ -171,7 +172,7 @@ img {
   border-radius: 4px;
 }
 .sidebar-note {
-  margin: 42px 4px 0;
+  margin: 28px 4px 0;
   padding: 20px 15px 16px;
   border: 1px solid #30323f;
   border-radius: 10px;
@@ -202,7 +203,7 @@ img {
 }
 .sidebar-bottom {
   margin-top: auto;
-  padding-top: 34px;
+  padding-top: 20px;
 }
 .profile {
   display: flex;

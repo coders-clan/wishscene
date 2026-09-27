@@ -45,7 +45,9 @@ export async function dispatch(request: NextRequest, path: string[]) {
       { status: 503 },
     );
   const origin = request.headers.get('origin');
-  if (request.method !== 'GET' && origin && origin !== request.nextUrl.origin)
+  // hunch-why: Next can construct an internal URL with the bind address (0.0.0.0). Compare browser Origin against the request Host and protocol, or valid local mutations are incorrectly rejected. Do not trust forwarded-host headers here.
+  const requestOrigin = `${request.nextUrl.protocol}//${request.headers.get('host') ?? request.nextUrl.host}`;
+  if (request.method !== 'GET' && origin && origin !== requestOrigin)
     return NextResponse.json(
       { error: { code: 'ORIGIN', message: 'Cross-origin writes are disabled.' } },
       { status: 403 },

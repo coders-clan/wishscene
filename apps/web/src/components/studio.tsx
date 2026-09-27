@@ -830,8 +830,8 @@ export default function Studio() {
                 />
               </label>
               <label>
-                Destination
-                <select name="destination">
+                <span id="destination-label">Destination</span>
+                <select name="destination" aria-labelledby="destination-label">
                   {destinations.map((x) => (
                     <option key={x}>{x}</option>
                   ))}

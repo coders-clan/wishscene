@@ -19,6 +19,13 @@ const call = (path: string, method = 'GET', body?: unknown, cookie?: string, ori
   dispatch(req(path, method, body, cookie, origin), path.split('/'));
 
 describe('mock HTTP boundary', () => {
+  it('accepts the browser Host even when Next uses a different internal bind URL', async () => {
+    const request = new NextRequest('http://0.0.0.0:3000/api/v1/mock/reset', {
+      method: 'POST',
+      headers: { host: 'localhost:3000', origin: 'http://localhost:3000' },
+    });
+    expect((await dispatch(request, ['mock', 'reset'])).status).toBe(200);
+  });
   it('creates an HttpOnly session and isolates browsers', async () => {
     const a = await call('workspace');
     const b = await call('workspace');

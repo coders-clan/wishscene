@@ -1,0 +1,33 @@
+{
+  "id": "dec_b4fde6d9dc",
+  "title": "Next can construct an internal URL with the bind address (0.0.0.0). Compare browser Origin against the request Host and protocol, or valid local mutations are incorrectly rejected. Do not trust forwarded-host headers here.",
+  "topic": null,
+  "status": "accepted",
+  "context": "Captured from an inline hunch-why comment (apps/web/src/lib/mock-api.ts:48).",
+  "decision": "Next can construct an internal URL with the bind address (0.0.0.0). Compare browser Origin against the request Host and protocol, or valid local mutations are incorrectly rejected. Do not trust forwarded-host headers here.",
+  "consequences": [],
+  "alternatives_rejected": [],
+  "rejected_tripwires": [],
+  "related_components": [],
+  "related_files": [
+    "apps/web/src/lib/mock-api.ts"
+  ],
+  "supersedes": null,
+  "superseded_by": null,
+  "caused_by_bug": null,
+  "commit": null,
+  "valid_from": "2026-09-27T09:46:58.647Z",
+  "valid_to": null,
+  "retired": {
+    "symbols": [],
+    "deps": []
+  },
+  "provenance": {
+    "source": "human_confirmed",
+    "confidence": 0.9,
+    "evidence": [
+      "apps/web/src/lib/mock-api.ts:48"
+    ]
+  },
+  "date": "2026-09-27T09:46:58.647Z"
+}
