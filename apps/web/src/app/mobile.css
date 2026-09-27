@@ -1,0 +1,482 @@
+/* A phone-specific workspace; desktop layout and domain actions remain shared. */
+.mobile-app-nav,
+.mobile-brand,
+.mobile-story-chevron {
+  display: none;
+}
+.mobile-more-actions {
+  display: grid;
+  gap: 8px;
+}
+.mobile-more-actions > :is(button, a) {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 66px;
+  padding: 12px;
+  text-align: start;
+  border-radius: 14px;
+  background: #f1edf7;
+}
+.mobile-more-actions > :is(button, a) > span {
+  flex: 1;
+  font-weight: 600;
+}
+.mobile-more-actions small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 3px;
+}
+@media (max-width: 600px) {
+  :root {
+    --mobile-nav-height: calc(70px + env(safe-area-inset-bottom));
+  }
+  .app-shell {
+    min-height: 100dvh;
+  }
+  .app-shell .sidebar,
+  .app-shell .greeting,
+  .app-shell .breadcrumb,
+  .app-shell .page-footer {
+    display: none;
+  }
+  .app-shell .main-shell {
+    margin: 0;
+  }
+  .app-shell .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 35;
+    min-height: 60px;
+    padding: calc(8px + env(safe-area-inset-top)) 18px 8px;
+    background: #f7f5f0f5;
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid #e8e3ed;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+  }
+  .mobile-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 23px;
+    font-weight: 750;
+    letter-spacing: -1px;
+    min-height: 44px;
+  }
+  .mobile-brand > svg,
+  .mobile-brand > span {
+    color: var(--violet);
+  }
+  .mobile-brand > span {
+    margin-left: -7px;
+  }
+  .app-shell .demo-pill {
+    width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    font-size: 0;
+    gap: 0;
+    justify-content: center;
+  }
+  .app-shell .demo-pill > span {
+    display: none;
+  }
+  .app-shell .demo-pill > svg {
+    width: 18px;
+    height: 18px;
+  }
+  .app-shell main {
+    padding: 22px 16px calc(var(--mobile-nav-height) + 158px);
+  }
+  .mobile-app-nav {
+    position: fixed;
+    z-index: 60;
+    inset: auto 0 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: center;
+    height: var(--mobile-nav-height);
+    padding: 4px max(8px, env(safe-area-inset-right)) env(safe-area-inset-bottom)
+      max(8px, env(safe-area-inset-left));
+    background: #fffdfaf5;
+    backdrop-filter: blur(20px);
+    border-top: 1px solid #e4dfe9;
+    box-shadow: 0 -6px 28px #2e164308;
+  }
+  .mobile-app-nav > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 60px;
+    min-width: 0;
+    color: #756a83;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 12px;
+    touch-action: manipulation;
+  }
+  .mobile-app-nav > button[aria-current='page'] {
+    color: #6036d0;
+    background: #f0eafb;
+  }
+  .mobile-app-nav > button:active,
+  .mobile-more-actions > :is(button, a):active {
+    background: #e9dff8;
+  }
+  .mobile-create-icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 34px;
+    border-radius: 12px;
+    color: #fff;
+    background: var(--violet);
+    box-shadow: 0 3px 12px #6a4bff30;
+  }
+  .app-shell .experience-heading {
+    gap: 10px;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+  .app-shell .experience-title {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+  }
+  .app-shell .title-button {
+    text-align: start;
+    min-height: 44px;
+  }
+  .app-shell .title-button h2 {
+    font-size: clamp(21px, 6vw, 27px);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+  .app-shell .experience-title p {
+    font-size: 11px;
+    flex-wrap: wrap;
+  }
+  .app-shell .experience-heading > .button {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    gap: 0;
+    font-size: 0;
+    border: 1px solid #ddd4e9;
+    border-radius: 14px;
+    background: white;
+  }
+  .app-shell .story-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    margin-top: 12px;
+    padding: 0;
+    border: 1px solid #e8e0ef;
+    border-radius: 14px;
+    background: #f1ecf6;
+  }
+  .app-shell .story-title {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 0;
+    text-align: left;
+  }
+  .mobile-story-chevron {
+    display: block;
+    margin-left: auto;
+  }
+  .story-strip.is-expanded .mobile-story-chevron {
+    transform: rotate(180deg);
+  }
+  .app-shell .story-strip:not(.is-expanded) > :not(.story-title) {
+    display: none;
+  }
+  .app-shell .story-detail {
+    padding: 0 14px 12px;
+  }
+  .app-shell .demo-photo-note {
+    margin: 10px 0;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  .app-shell .demo-photo-note:not(.custom) {
+    display: none;
+  }
+  .app-shell .section-tabs {
+    margin-top: 12px;
+    padding: 4px;
+    border: 1px solid #e7e0ef;
+    border-radius: 14px;
+    background: #ece7f2;
+  }
+  .app-shell .section-tabs [role='tablist'] {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3px;
+  }
+  .app-shell .section-tabs [role='tab'] {
+    justify-content: center;
+    gap: 5px;
+    min-height: 44px;
+    padding: 8px 4px;
+    border: 0;
+    border-radius: 10px;
+    font-size: 12px;
+  }
+  .app-shell .section-tabs [role='tab'].selected {
+    background: #fff;
+    color: #6541c9;
+    box-shadow: 0 2px 6px #34205010;
+  }
+  .app-shell .board-heading {
+    margin: 16px 0 12px;
+    gap: 8px;
+    align-items: center;
+  }
+  .app-shell .board-heading h3 {
+    font-size: 16px;
+  }
+  .app-shell .board-heading p {
+    display: none;
+  }
+  .app-shell .board-heading .button {
+    min-height: 44px;
+    padding: 8px 10px;
+    font-size: 11px;
+    gap: 5px;
+  }
+  .app-shell .scene-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 12px;
+  }
+  .app-shell .scene-card {
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e8e1ed;
+    border-radius: 16px;
+  }
+  .app-shell .scene-image-button {
+    aspect-ratio: 3 / 4;
+    border-radius: 0;
+  }
+  .app-shell .scene-number {
+    top: 8px;
+    left: 8px;
+    font-size: 10px;
+    padding: 3px 5px;
+  }
+  .app-shell .scene-badge {
+    top: auto;
+    bottom: 8px;
+    right: 6px;
+    left: 6px;
+    justify-content: center;
+    font-size: 10px;
+    padding: 5px;
+  }
+  .app-shell .scene-time {
+    display: none;
+  }
+  .app-shell .scene-caption {
+    padding: 10px;
+  }
+  .app-shell .scene-caption h4 {
+    font-size: 13px;
+    min-height: 38px;
+    line-height: 1.4;
+  }
+  .app-shell .scene-caption > p {
+    font-size: 11px;
+    min-height: 32px;
+  }
+  .app-shell .scene-actions {
+    margin-top: 8px;
+    padding-top: 6px;
+  }
+  .app-shell .scene-actions > span {
+    display: none;
+  }
+  .app-shell .scene-actions > button {
+    width: 100%;
+    min-height: 44px;
+    justify-content: space-between;
+    font-size: 12px;
+  }
+  .app-shell .scene-compose-button {
+    font-size: 11px;
+    gap: 5px;
+    margin-top: 2px;
+  }
+  .app-shell .scene-compose-button > svg:last-child {
+    display: none;
+  }
+  .app-shell .draft-overlay {
+    padding: 10px;
+    gap: 8px;
+  }
+  .app-shell .draft-overlay strong {
+    font-size: 18px;
+  }
+  .app-shell .draft-overlay > span:last-child {
+    display: none;
+  }
+  .app-shell .export-bar {
+    position: fixed;
+    z-index: 50;
+    inset: auto 0 var(--mobile-nav-height);
+    min-height: 64px;
+    margin: 0;
+    padding: 10px 16px;
+    border: 0;
+    border-top: 1px solid #e8e1ed;
+    border-radius: 0;
+    background: #f7f5f0f5;
+    backdrop-filter: blur(16px);
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+  .app-shell .export-icon,
+  .app-shell .export-copy h3 {
+    display: none;
+  }
+  .app-shell .export-copy {
+    flex: 1;
+    min-width: 0;
+  }
+  .app-shell .export-copy p {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  .app-shell .export-bar .button {
+    width: auto;
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 10px 12px;
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .app-shell .board-footer {
+    font-size: 10px;
+    margin-bottom: 0;
+  }
+  .app-shell .board-footer > span:last-child {
+    display: none;
+  }
+  .app-shell .toast {
+    z-index: 90;
+    bottom: calc(var(--mobile-nav-height) + 74px);
+    font-size: 13px;
+  }
+  body:has(.app-shell) .feedback-launcher {
+    top: calc(8px + env(safe-area-inset-top));
+    right: 72px;
+    bottom: auto;
+    /* The opened capture menu must stay above both app action docks. */
+    z-index: 80;
+  }
+  body:has(.app-shell) .feedback-launch-button {
+    width: 44px;
+    padding: 10px;
+    min-height: 44px;
+    gap: 0;
+    font-size: 0;
+    border-radius: 14px;
+    box-shadow: none;
+  }
+  body:has(.app-shell) .feedback-toast {
+    bottom: calc(var(--mobile-nav-height) + 130px);
+  }
+  .app-shell .modal,
+  .app-shell .modal.wide {
+    width: 100%;
+    max-width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    overscroll-behavior: contain;
+  }
+  .app-shell .modal-inner {
+    padding: 0 18px calc(24px + env(safe-area-inset-bottom));
+  }
+  .app-shell .modal-heading {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    margin: 0 -18px 20px;
+    padding: calc(14px + env(safe-area-inset-top)) 18px 14px;
+    background: #fcfaf7f5;
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid #e9e2ef;
+  }
+  .app-shell .modal-heading h2 {
+    font-size: 23px;
+  }
+  .app-shell .modal-heading .eyebrow {
+    font-size: 10px;
+  }
+  .app-shell .modal.mobile-sheet {
+    height: fit-content;
+    top: auto;
+    bottom: 0;
+    max-height: calc(100dvh - 32px);
+    margin: auto 0 0;
+    border-radius: 24px 24px 0 0;
+  }
+  .app-shell .modal input,
+  .app-shell .modal select,
+  .app-shell .modal textarea {
+    font-size: 16px;
+  }
+  .app-shell .candidate img {
+    max-height: 43dvh;
+    object-fit: contain;
+  }
+  .app-shell .candidate > div {
+    flex-wrap: wrap;
+  }
+  .app-shell .review-footer {
+    gap: 14px;
+  }
+  .app-shell .library-grid {
+    gap: 12px;
+  }
+  .app-shell .library-card {
+    border-radius: 16px;
+  }
+  .app-shell .social-composer {
+    padding-top: 22px;
+  }
+  .app-shell .composer-intro h3 {
+    font-size: 24px;
+  }
+  .app-shell .composer-scenes {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 4px 4px 12px;
+    margin-inline: -4px;
+    scroll-snap-type: x proximity;
+  }
+  .app-shell .composer-scene {
+    flex: 0 0 220px;
+    scroll-snap-align: start;
+  }
+  .app-shell .composer-form {
+    padding: 18px 14px;
+    border-radius: 18px;
+  }
+  .app-shell .composer-actions .button {
+    flex: 1;
+    min-height: 48px;
+  }
+}

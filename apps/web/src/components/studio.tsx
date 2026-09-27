@@ -19,6 +19,8 @@ import {
   Layers3,
   Loader2,
   MapPin,
+  MoreHorizontal,
+  MessageSquarePlus,
   Plus,
   RotateCcw,
   Settings2,
@@ -66,7 +68,16 @@ const statusLabels = {
   stale: 'Story updated',
 };
 const activeJob = (status: string) => status === 'queued' || status === 'running';
-type Modal = 'new' | 'story' | 'developer' | 'identity' | 'library' | 'help' | 'review' | null;
+type Modal =
+  | 'new'
+  | 'story'
+  | 'developer'
+  | 'identity'
+  | 'library'
+  | 'help'
+  | 'review'
+  | 'more'
+  | null;
 
 function DemoLookFields({
   destination,
@@ -134,23 +145,32 @@ function ModalFrame({
   onClose,
   children,
   wide = false,
+  sheet = false,
 }: {
   title: string;
   eyebrow?: string;
   onClose: () => void;
   children: ReactNode;
   wide?: boolean;
+  sheet?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const dialog = ref.current!;
+    const previous = document.activeElement as HTMLElement | null;
+    const overflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
     dialog.showModal();
-    return () => dialog.close();
+    return () => {
+      dialog.close();
+      document.documentElement.style.overflow = overflow;
+      previous?.focus({ preventScroll: true });
+    };
   }, []);
   return (
     <dialog
       ref={ref}
-      className={`modal ${wide ? 'wide' : ''}`}
+      className={`modal ${wide ? 'wide' : ''} ${sheet ? 'mobile-sheet' : ''}`}
       onCancel={onClose}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -179,6 +199,7 @@ export default function Studio() {
   const [modal, setModal] = useState<Modal>(null);
   const [sceneId, setSceneId] = useState<string | null>(null);
   const [tab, setTab] = useState<'storyboard' | 'social' | 'motion'>('storyboard');
+  const [storyExpanded, setStoryExpanded] = useState(false);
   const [scenario, setScenario] = useState<GenerationInput['scenario']>('success');
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState('');
@@ -340,6 +361,11 @@ export default function Studio() {
     setTab('storyboard');
     close();
   };
+  function mobileScreen(next: 'storyboard' | 'social') {
+    setTab(next);
+    close();
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
 
   return (
     <div className="app-shell">
@@ -409,6 +435,9 @@ export default function Studio() {
       </aside>
       <div className="main-shell">
         <header className="topbar">
+          <a className="mobile-brand" href="/" aria-label="wishscene home">
+            <Sparkles size={20} /> wishscene<span>.</span>
+          </a>
           <div className="breadcrumb">
             Workspace <ChevronRight size={14} />
             <strong>My studio</strong>
@@ -480,12 +509,21 @@ export default function Studio() {
                   Story settings
                 </button>
               </section>
-              <div className="story-strip" data-feedback-id="story-settings">
-                <div className="story-title">
+              <div
+                className={`story-strip ${storyExpanded ? 'is-expanded' : ''}`}
+                data-feedback-id="story-settings"
+              >
+                <button
+                  className="story-title"
+                  aria-label="Story details"
+                  aria-expanded={storyExpanded}
+                  onClick={() => setStoryExpanded((value) => !value)}
+                >
                   <BookOpen size={17} />
                   <strong>Story Bible</strong>
                   <span className="version">v{experience.bibleVersion}</span>
-                </div>
+                  <ChevronDown size={16} className="mobile-story-chevron" />
+                </button>
                 <div className="story-detail">
                   <span>CAST</span>
                   <strong>Alex Morgan</strong>
@@ -898,6 +936,41 @@ export default function Studio() {
           )}
         </main>
       </div>
+      <nav className="mobile-app-nav" aria-label="Mobile navigation">
+        <button
+          aria-current={!modal && tab === 'storyboard' ? 'page' : undefined}
+          onClick={() => mobileScreen('storyboard')}
+        >
+          <Clapperboard size={21} />
+          <span>Studio</span>
+        </button>
+        <button aria-haspopup="dialog" onClick={() => setModal('library')}>
+          <FolderHeart size={21} />
+          <span>Experiences</span>
+        </button>
+        <button
+          className="mobile-create"
+          aria-label="New experience"
+          aria-haspopup="dialog"
+          onClick={() => setModal('new')}
+        >
+          <span className="mobile-create-icon">
+            <Plus size={24} />
+          </span>
+          <span>Create</span>
+        </button>
+        <button
+          aria-current={!modal && tab === 'social' ? 'page' : undefined}
+          onClick={() => mobileScreen('social')}
+        >
+          <Layers3 size={21} />
+          <span>Posts</span>
+        </button>
+        <button aria-haspopup="dialog" onClick={() => setModal('more')}>
+          <MoreHorizontal size={22} />
+          <span>More</span>
+        </button>
+      </nav>
       {notice && (
         <div className="toast" role="status">
           <Check size={17} />
@@ -909,6 +982,7 @@ export default function Studio() {
       )}
       {modal && (
         <ModalFrame
+          key={modal}
           title={
             modal === 'new'
               ? 'Where do you wish you were?'
@@ -922,7 +996,9 @@ export default function Studio() {
                       ? 'A collection of what ifs.'
                       : modal === 'review'
                         ? (scene?.title ?? 'Review scene')
-                        : 'A little tour of wishscene.'
+                        : modal === 'more'
+                          ? 'Your workspace'
+                          : 'A little tour of wishscene.'
           }
           eyebrow={
             modal === 'review'
@@ -935,7 +1011,53 @@ export default function Studio() {
           }
           onClose={close}
           wide={modal === 'review' || modal === 'library'}
+          sheet={modal === 'more'}
         >
+          {modal === 'more' && (
+            <div className="mobile-more-actions">
+              <button onClick={() => setModal('identity')}>
+                <Layers3 />
+                <span>
+                  Your identity<small>Meet the demo character</small>
+                </span>
+                <ChevronRight />
+              </button>
+              <a href="/feedback">
+                <MessageSquarePlus />
+                <span>
+                  Team feedback<small>Read reports, reply, and vote</small>
+                </span>
+                <ChevronRight />
+              </a>
+              <button
+                onClick={() => {
+                  setTab('motion');
+                  close();
+                  window.scrollTo({ top: 0 });
+                }}
+              >
+                <Film />
+                <span>
+                  Motion<small>Preview what’s coming next</small>
+                </span>
+                <ChevronRight />
+              </button>
+              <button onClick={() => setModal('help')}>
+                <CircleHelp />
+                <span>
+                  A quick tour<small>How to create your story</small>
+                </span>
+                <ChevronRight />
+              </button>
+              <button onClick={() => setModal('developer')}>
+                <Code2 />
+                <span>
+                  Developer tools<small>Mock scenarios and workspace reset</small>
+                </span>
+                <ChevronRight />
+              </button>
+            </div>
+          )}
           {error && (
             <p className="modal-error" role="alert">
               {error}
