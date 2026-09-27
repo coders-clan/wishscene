@@ -74,9 +74,19 @@
     margin-left: -7px;
   }
   .app-shell .demo-pill {
+    width: 44px;
     min-height: 44px;
-    padding: 8px 10px;
-    font-size: 11px;
+    padding: 10px;
+    font-size: 0;
+    gap: 0;
+    justify-content: center;
+  }
+  .app-shell .demo-pill > span {
+    display: none;
+  }
+  .app-shell .demo-pill > svg {
+    width: 18px;
+    height: 18px;
   }
   .app-shell main {
     padding: 22px 16px calc(var(--mobile-nav-height) + 158px);
@@ -166,7 +176,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 12px 20px;
-    margin-top: 18px;
+    margin-top: 12px;
     padding: 0;
     border: 1px solid #e8e0ef;
     border-radius: 14px;
@@ -197,8 +207,11 @@
     font-size: 10px;
     line-height: 1.5;
   }
+  .app-shell .demo-photo-note:not(.custom) {
+    display: none;
+  }
   .app-shell .section-tabs {
-    margin-top: 18px;
+    margin-top: 12px;
     padding: 4px;
     border: 1px solid #e7e0ef;
     border-radius: 14px;
@@ -224,12 +237,12 @@
     box-shadow: 0 2px 6px #34205010;
   }
   .app-shell .board-heading {
-    margin: 22px 0 14px;
+    margin: 16px 0 12px;
     gap: 8px;
     align-items: center;
   }
   .app-shell .board-heading h3 {
-    font-size: 18px;
+    font-size: 16px;
   }
   .app-shell .board-heading p {
     display: none;
@@ -363,12 +376,19 @@
     font-size: 13px;
   }
   body:has(.app-shell) .feedback-launcher {
-    bottom: calc(var(--mobile-nav-height) + 76px);
+    top: calc(8px + env(safe-area-inset-top));
+    right: 72px;
+    bottom: auto;
+    z-index: 40;
   }
   body:has(.app-shell) .feedback-launch-button {
-    padding: 10px 14px;
+    width: 44px;
+    padding: 10px;
     min-height: 44px;
-    font-size: 12px;
+    gap: 0;
+    font-size: 0;
+    border-radius: 14px;
+    box-shadow: none;
   }
   body:has(.app-shell) .feedback-toast {
     bottom: calc(var(--mobile-nav-height) + 130px);
@@ -404,7 +424,9 @@
     font-size: 10px;
   }
   .app-shell .modal.mobile-sheet {
-    height: auto;
+    height: fit-content;
+    top: auto;
+    bottom: 0;
     max-height: calc(100dvh - 32px);
     margin: auto 0 0;
     border-radius: 24px 24px 0 0;

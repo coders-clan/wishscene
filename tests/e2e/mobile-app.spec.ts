@@ -46,6 +46,7 @@ test('phone workspace has app navigation, compact scenes, and focused screens', 
   await nav.getByRole('button', { name: 'More', exact: true }).click();
   const more = page.getByRole('dialog', { name: 'Your workspace' });
   await expect(more.getByRole('link', { name: /Team feedback/ })).toBeVisible();
+  expect((await more.boundingBox())!.height).toBeLessThan(700);
   await page.screenshot({ path: testInfo.outputPath('mobile-more-sheet.png'), scale: 'css' });
   await more.getByRole('button', { name: 'Close dialog' }).click();
   await expect(nav.getByRole('button', { name: 'More', exact: true })).toBeFocused();
@@ -56,6 +57,14 @@ test('phone workspace has app navigation, compact scenes, and focused screens', 
   expect(screen.height).toBe(844);
   await create.getByRole('button', { name: 'Close dialog' }).click();
   await nav.getByRole('button', { name: 'Studio', exact: true }).click();
+  await expect(nav.getByRole('button', { name: 'Studio', exact: true })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+  await expect(page.getByRole('tab', { name: 'Storyboard' })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
   await page.screenshot({ path: testInfo.outputPath('mobile-app-home.png'), scale: 'css' });
 });
 

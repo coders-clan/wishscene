@@ -11,7 +11,7 @@ At 600px and below, Wishscene uses a dedicated app-style web workspace. Desktop 
 - Posts retains its mounted composer and unsaved per-image drafts across Studio/Posts switches.
 - Scene selection in Posts is a horizontal rail; the existing form and preview retain their behavior.
 - Safe-area insets reserve space for device notches and home indicators. Zoom remains enabled.
-- Feedback capture remains available above the export/navigation bars. Feedback permissions are unchanged.
+- Feedback capture is available from the phone's top bar without covering scene cards. Feedback permissions are unchanged.
 
 Implementation: `apps/web/src/app/mobile.css`, `components/studio.tsx`, and the root viewport configuration. Mobile rules are scoped to the studio shell to preserve the public feedback board and sign-in pages.
 
