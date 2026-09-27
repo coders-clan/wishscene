@@ -116,7 +116,7 @@ test('phone sheets support handle dismissal and scrollable feedback in a short v
   const feedback = page.getByRole('dialog', { name: 'Leave your mark' });
   await expect(feedback).toHaveCSS('border-top-left-radius', '24px');
   await page.setViewportSize({ width: 390, height: 420 });
-  const comment = feedback.getByLabel('Comment', { exact: true });
+  const comment = feedback.getByRole('textbox', { name: 'Comment', exact: true });
   await comment.fill('Still reachable when the available height shrinks.');
   await comment.scrollIntoViewIfNeeded();
   await expect(comment).toBeInViewport();
@@ -131,6 +131,10 @@ test('phone sheets support handle dismissal and scrollable feedback in a short v
   await page.screenshot({
     path: testInfo.outputPath('mobile-feedback-sheet-short.png'),
     scale: 'css',
+  });
+  page.once('dialog', async (confirmation) => {
+    expect(confirmation.message()).toBe('Discard this unsent feedback?');
+    await confirmation.accept();
   });
   await page.keyboard.press('Escape');
   await expect(feedback).toHaveCount(0);
