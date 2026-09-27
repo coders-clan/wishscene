@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useId, useRef } from 'react';
 import { X } from 'lucide-react';
+import { MobileSheetHandle } from '../mobile-sheet-handle';
 export function FeedbackDialog({
   title,
   children,
@@ -20,11 +21,14 @@ export function FeedbackDialog({
     const previousOverflow = document.documentElement.style.overflow;
     document.documentElement.style.overflow = 'hidden';
     dialog.showModal();
-    requestAnimationFrame(() => dialog.querySelector<HTMLElement>('[data-dialog-close]')?.focus());
+    const frame = requestAnimationFrame(() =>
+      dialog.querySelector<HTMLElement>('[data-dialog-close]')?.focus({ preventScroll: true }),
+    );
     return () => {
+      cancelAnimationFrame(frame);
       dialog.close();
       document.documentElement.style.overflow = previousOverflow;
-      previous?.focus();
+      previous?.focus({ preventScroll: true });
     };
   }, []);
   return (
@@ -39,6 +43,7 @@ export function FeedbackDialog({
       aria-labelledby={titleId}
     >
       <div className="feedback-dialog-heading">
+        <MobileSheetHandle onClose={onClose} />
         <div>
           <p className="eyebrow">WISHSCENE · BUILD TOGETHER</p>
           <h2 id={titleId}>{title}</h2>
