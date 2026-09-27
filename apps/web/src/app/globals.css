@@ -1592,6 +1592,9 @@ textarea {
   flex-wrap: wrap;
   gap: 10px;
 }
+.composer-preview-link {
+  display: none;
+}
 .composer-form .composer-message {
   font-size: var(--text-sm);
   min-height: 1.5em;
@@ -1778,6 +1781,14 @@ textarea {
   font-weight: 550;
 }
 @media (max-width: 1100px) {
+  .composer-preview-link {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--text-sm);
+    color: var(--strong);
+  }
   .composer-layout {
     grid-template-columns: minmax(0, 1fr);
     gap: 28px;

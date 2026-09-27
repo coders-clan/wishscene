@@ -42,6 +42,7 @@ export function SocialComposer({
   const [edits, setEdits] = useState<Record<string, SocialDraft>>({});
   const [choices, setChoices] = useState<Record<string, SocialPlatform>>({});
   const [saved, setSaved] = useState<Record<string, SceneSocial>>({});
+  const [editRevisions, setEditRevisions] = useState<Record<string, number>>({});
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -57,7 +58,7 @@ export function SocialComposer({
   const changed =
     platform !== social.platform ||
     JSON.stringify(draft) !== JSON.stringify(social.drafts[platform]);
-  const hasEdits = experience.scenes.some((item) => {
+  const isSceneDirty = (item: Experience['scenes'][number]) => {
     const base = baseFor(item.id, item.social);
     return (
       (choices[item.id] ?? base.platform) !== base.platform ||
@@ -66,7 +67,8 @@ export function SocialComposer({
         return edit && JSON.stringify(edit) !== JSON.stringify(base.drafts[target]);
       })
     );
-  });
+  };
+  const hasEdits = experience.scenes.some(isSceneDirty);
   useEffect(() => onDirtyChange(hasEdits), [hasEdits, onDirtyChange]);
   useEffect(() => {
     if (!hasEdits) return;
@@ -76,8 +78,14 @@ export function SocialComposer({
   }, [hasEdits]);
 
   function update(patch: Partial<SocialDraft>) {
+    rememberRevision();
     setEdits((previous) => ({ ...previous, [key]: { ...draft, ...patch } }));
     setMessage('');
+  }
+  function rememberRevision() {
+    // A refresh may deliver another tab's save while our draft is still being edited.
+    if (!isSceneDirty(scene))
+      setEditRevisions((previous) => ({ ...previous, [scene.id]: social.revision }));
   }
   async function save() {
     setSaving(true);
@@ -86,11 +94,12 @@ export function SocialComposer({
     try {
       const result = await onSave(scene.id, {
         expectedVersion: experience.bibleVersion,
-        expectedRevision: social.revision,
+        expectedRevision: editRevisions[scene.id] ?? social.revision,
         platform,
         draft,
       });
       setSaved((previous) => ({ ...previous, [scene.id]: result }));
+      setEditRevisions((previous) => ({ ...previous, [scene.id]: result.revision }));
       setEdits((previous) => {
         const next = { ...previous };
         delete next[key];
@@ -137,13 +146,25 @@ export function SocialComposer({
               setError('');
             }}
           >
-            <img src={demoPreview(experience, item)} alt="" width={60} height={80} />
+            <img
+              src={
+                item.assets.find(
+                  (asset) =>
+                    asset.id === item.approvedAssetId &&
+                    asset.bibleVersion === experience.bibleVersion,
+                )?.image ?? demoPreview(experience, item)
+              }
+              alt=""
+              width={60}
+              height={80}
+            />
             <span>
               <strong>
                 {String(item.ordinal + 1).padStart(2, '0')} · {item.title}
               </strong>
               <span>
                 {socialPlatforms[choices[item.id] ?? baseFor(item.id, item.social).platform].label}
+                {isSceneDirty(item) && ' · Unsaved'}
               </span>
             </span>
             {item.id === scene.id && <Check size={18} />}
@@ -169,6 +190,7 @@ export function SocialComposer({
               value={platform}
               disabled={saving}
               onChange={(event) => {
+                rememberRevision();
                 setChoices((previous) => ({
                   ...previous,
                   [scene.id]: event.target.value as SocialPlatform,
@@ -180,6 +202,11 @@ export function SocialComposer({
               {socialPlatformSchema.options.map((value) => (
                 <option key={value} value={value}>
                   {socialPlatforms[value].label}
+                  {edits[`${scene.id}:${value}`] &&
+                  JSON.stringify(edits[`${scene.id}:${value}`]) !==
+                    JSON.stringify(social.drafts[value])
+                    ? ' (unsaved)'
+                    : ''}
                 </option>
               ))}
             </select>
@@ -271,6 +298,9 @@ export function SocialComposer({
               <Copy size={18} /> Copy text
             </button>
           </div>
+          <a className="composer-preview-link" href="#post-preview">
+            View preview <ArrowRight size={18} />
+          </a>
           <p className="composer-message" role="status">
             {message ||
               (changed
@@ -278,7 +308,7 @@ export function SocialComposer({
                 : 'Each image keeps its own platform and text.')}
           </p>
         </form>
-        <div className="composer-preview-column">
+        <div className="composer-preview-column" id="post-preview">
           <div className="composer-preview-heading">
             <div className="composer-step">
               <span>02</span>

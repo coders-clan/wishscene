@@ -719,6 +719,11 @@ export default function Studio() {
                               onClick={() => {
                                 setSocialSceneId(item.id);
                                 setTab('social');
+                                requestAnimationFrame(() =>
+                                  document
+                                    .getElementById('panel-social')
+                                    ?.scrollIntoView({ block: 'start' }),
+                                );
                               }}
                             >
                               <Layers3 size={18} /> Create post <ArrowRight size={16} />

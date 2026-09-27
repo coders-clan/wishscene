@@ -167,6 +167,29 @@ test('preview platforms, retain per-image drafts, and reload saved text', async 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   );
+  // A refreshed snapshot must not turn an old unsaved draft into a valid overwrite.
+  await page.getByRole('tab', { name: 'Social pack' }).click();
+  await page.getByLabel('Post text', { exact: true }).fill('Unsaved local copy.');
+  const workspace = await (await page.request.get('/api/v1/workspace')).json();
+  const current = workspace.experiences[0].scenes[1];
+  const competing = await page.request.patch(
+    `/api/v1/experiences/tokyo-after-hours/scenes/${current.id}/social`,
+    {
+      data: {
+        expectedVersion: 1,
+        expectedRevision: current.social.revision,
+        platform: 'linkedin',
+        draft: { caption: 'Saved in another tab.', overlayText: '', tone: 'understated' },
+      },
+    },
+  );
+  expect(competing.ok()).toBe(true);
+  await page.getByLabel('Your caption', { exact: true }).fill('Refresh the workspace snapshot.');
+  await page.getByRole('button', { name: 'Save caption', exact: true }).click();
+  await expect(page.getByText('Caption saved.', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Save post', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('changed in another tab');
+  await expect(page.getByLabel('Post text', { exact: true })).toHaveValue('Unsaved local copy.');
 });
 
 test('create a fresh experience and edit the social caption', async ({ page }, testInfo) => {
