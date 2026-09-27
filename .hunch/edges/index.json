@@ -721,6 +721,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_280d1c0602",
+    "from": "sym_cf80ba8e55",
+    "to": "ext_0cab62d1f0",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package lucide-react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:lucide-react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_29d84c8b9b",
     "from": "sym_33b8f596c3",
     "to": "sym_e78fcbf9ca",
@@ -2287,6 +2305,24 @@
   },
   {
     "schema": "hunch.edge/1",
+    "id": "edge_8fac51fed4",
+    "from": "sym_cf80ba8e55",
+    "to": "ext_6b810c90aa",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package react",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:react"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
     "id": "edge_9247377b17",
     "from": "sym_e78fcbf9ca",
     "to": "ext_86bf21d2d7",
@@ -2388,6 +2424,24 @@
       "confidence": 1,
       "evidence": [
         "apps/web/src/app/page.tsx:imports:@/components/studio"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_9bbfd5c2a0",
+    "from": "sym_cf80ba8e55",
+    "to": "ext_69d9e36af2",
+    "type": "imports",
+    "reason": "apps/web/src/components/studio.tsx imports external package @wishscene/contracts",
+    "strength": 1,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 1,
+      "evidence": [
+        "apps/web/src/components/studio.tsx:imports:@wishscene/contracts"
       ]
     },
     "environment": null,
@@ -2532,6 +2586,24 @@
       "confidence": 1,
       "evidence": [
         "apps/web/src/lib/mock-api.ts:imports:@wishscene/domain"
+      ]
+    },
+    "environment": null,
+    "metadata": {}
+  },
+  {
+    "schema": "hunch.edge/1",
+    "id": "edge_ab3ed116e4",
+    "from": "sym_a4ba603560",
+    "to": "sym_119ac09ba3",
+    "type": "calls",
+    "reason": "demoPreview calls hasPhotoPreset",
+    "strength": 0.8,
+    "provenance": {
+      "source": "extracted",
+      "confidence": 0.8,
+      "evidence": [
+        "packages/contracts/src/demo.ts"
       ]
     },
     "environment": null,
