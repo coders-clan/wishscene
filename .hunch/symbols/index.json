@@ -105,12 +105,12 @@
     ],
     "metrics": {
       "loc": 6,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_14441b1549",
@@ -231,12 +231,12 @@
     ],
     "metrics": {
       "loc": 11,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 4,
       "fan_out": 0
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_308480ea2b",
@@ -291,12 +291,12 @@
     ],
     "metrics": {
       "loc": 8,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 2
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_371c013f11",
@@ -368,12 +368,12 @@
     ],
     "metrics": {
       "loc": 1,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_4d516f691e",
@@ -385,12 +385,12 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_4fa89a4963",
@@ -426,12 +426,12 @@
     ],
     "metrics": {
       "loc": 30,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_596777fa81",
@@ -515,17 +515,17 @@
     "file": "scripts/smoke.mjs",
     "name": "request",
     "kind": "function",
-    "signature_hash": "sha1:82c071689ab",
+    "signature_hash": "sha1:4fda6878990",
     "calls": [],
     "called_by": [],
     "metrics": {
       "loc": 11,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_61e0035362",
@@ -564,12 +564,12 @@
     "called_by": [],
     "metrics": {
       "loc": 1026,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 9
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_66f8b427d0",
@@ -636,12 +636,12 @@
     ],
     "metrics": {
       "loc": 5,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_837814e880",
@@ -680,12 +680,12 @@
     ],
     "metrics": {
       "loc": 23,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_94c182e073",
@@ -792,12 +792,12 @@
     "called_by": [],
     "metrics": {
       "loc": 2,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 2
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_a938904079",
@@ -813,12 +813,12 @@
     "called_by": [],
     "metrics": {
       "loc": 12,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 3
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_aac96e5ae6",
@@ -932,12 +932,12 @@
     "called_by": [],
     "metrics": {
       "loc": 11,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 2
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_c03f447942",
@@ -955,12 +955,12 @@
     ],
     "metrics": {
       "loc": 1,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 5,
       "fan_out": 0
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_c49cd54e0c",
@@ -974,12 +974,12 @@
     ],
     "metrics": {
       "loc": 13,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_c83ec5eb7e",
@@ -1010,12 +1010,12 @@
     ],
     "metrics": {
       "loc": 4,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_d03415e3ba",
@@ -1073,12 +1073,12 @@
     "called_by": [],
     "metrics": {
       "loc": 44,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 1
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_e5522ad0b2",
@@ -1118,12 +1118,12 @@
     ],
     "metrics": {
       "loc": 13,
-      "churn_90d": 1,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 5,
       "fan_out": 0
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   },
   {
     "id": "sym_e78fcbf9ca",
@@ -1249,7 +1249,7 @@
     "file": "apps/web/src/lib/mock-api.ts",
     "name": "dispatch",
     "kind": "function",
-    "signature_hash": "sha1:92a70f66b98",
+    "signature_hash": "sha1:6942c9a7f72",
     "calls": [
       "sym_8839d47266"
     ],
@@ -1257,12 +1257,12 @@
       "sym_a900a28d3a"
     ],
     "metrics": {
-      "loc": 128,
-      "churn_90d": 1,
+      "loc": 130,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c6f6d2e"
   }
 ]
