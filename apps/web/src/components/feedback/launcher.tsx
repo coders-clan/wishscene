@@ -417,6 +417,7 @@ export function FeedbackLauncher() {
                 <label>
                   Type
                   <select
+                    aria-label="Type"
                     value={category}
                     onChange={(e) => setCategory(e.target.value as FeedbackCreate['category'])}
                   >
@@ -428,6 +429,7 @@ export function FeedbackLauncher() {
                 <label>
                   Priority
                   <select
+                    aria-label="Priority"
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as FeedbackCreate['priority'])}
                   >

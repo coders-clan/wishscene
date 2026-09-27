@@ -22,6 +22,24 @@ test('capture an element, annotate it, share across browsers, reply and triage',
   await dialog.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(dialog.getByText('0/50 marks', { exact: false })).toBeVisible();
   await canvas.click({ position: { x: 10, y: 20 } });
+  await dialog.getByRole('button', { name: 'Hide area', exact: true }).click();
+  const box = (await canvas.boundingBox())!;
+  await page.mouse.move(box.x + box.width * 0.2, box.y + box.height * 0.2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.6, box.y + box.height * 0.8, { steps: 3 });
+  await page.mouse.up();
+  await expect(dialog.getByText('2/50 marks', { exact: false })).toBeVisible();
+  await expect
+    .poll(() =>
+      canvas.evaluate((el: HTMLCanvasElement) =>
+        Array.from(
+          el
+            .getContext('2d')!
+            .getImageData(Math.floor(el.width * 0.4), Math.floor(el.height * 0.5), 1, 1).data,
+        ).slice(0, 3),
+      ),
+    )
+    .toEqual([17, 17, 26]);
   await dialog.getByLabel('Your name').fill('Dave');
   await dialog.getByLabel('Short title').fill(title);
   await dialog
@@ -38,7 +56,12 @@ test('capture an element, annotate it, share across browsers, reply and triage',
   const link = page.getByRole('link', { name: 'Open report' });
   const href = await link.getAttribute('href');
   expect(href).toContain('/feedback?item=');
+  const saved = await (await page.request.get('/api/feedback/' + href!.split('item=')[1])).json();
+  expect(saved.target.excerpt).toBe('');
+  expect(saved.target.label).toBe('Redacted selection');
+  expect(saved.hasScreenshot).toBe(true);
   const other = await browser.newContext({
+    baseURL: 'http://localhost:3000',
     viewport:
       testInfo.project.name === 'mobile'
         ? { width: 390, height: 844 }

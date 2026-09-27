@@ -46,13 +46,15 @@ function FeedbackDetail({
   const [author, setAuthor] = useState('');
   const [reply, setReply] = useState('');
   const replyId = useRef('');
+  const triageDirty = useRef(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
   const refresh = useCallback(
     async (reset = false) => {
       const value = await feedbackRequest<FeedbackItem>(`/${id}`);
-      setItem(value);
+      setItem((old) => (old && old.revision > value.revision ? old : value));
+      if (reset) triageDirty.current = false;
       setDraft((old) =>
         !old || reset
           ? {
@@ -73,15 +75,16 @@ function FeedbackDetail({
       try {
         const value = await feedbackRequest<FeedbackItem>(`/${id}`);
         if (active) {
-          setItem(value);
-          setDraft(
-            (old) =>
-              old ?? {
-                expectedRevision: value.revision,
-                status: value.status,
-                priority: value.priority,
-                assignee: value.assignee,
-              },
+          setItem((old) => (old && old.revision > value.revision ? old : value));
+          setDraft((old) =>
+            triageDirty.current && old
+              ? old
+              : {
+                  expectedRevision: value.revision,
+                  status: value.status,
+                  priority: value.priority,
+                  assignee: value.assignee,
+                },
           );
         }
       } catch (e) {
@@ -127,15 +130,16 @@ function FeedbackDetail({
         method,
         body: JSON.stringify(body),
       });
-      setItem(value);
-      if (action === 'triage') {
+      setItem((old) => (old && old.revision > value.revision ? old : value));
+      if (action === 'triage') triageDirty.current = false;
+      if (!triageDirty.current) {
         setDraft({
           expectedRevision: value.revision,
           status: value.status,
           priority: value.priority,
           assignee: value.assignee,
         });
-        setNotice('Changes shared with everyone.');
+        if (action === 'triage') setNotice('Changes shared with everyone.');
       }
       if (action === 'reply') {
         setReply('');
@@ -157,7 +161,19 @@ function FeedbackDetail({
     }
   }
   return (
-    <FeedbackDialog title={item?.title || 'Feedback report'} onClose={onClose} wide>
+    <FeedbackDialog
+      title={item?.title || 'Feedback report'}
+      onClose={() => {
+        if (busy) return;
+        if (
+          (reply.trim() || triageDirty.current) &&
+          !window.confirm('Discard your unsaved reply or status changes?')
+        )
+          return;
+        onClose();
+      }}
+      wide
+    >
       {!item ? (
         <p role="status">{error || 'Loading report…'}</p>
       ) : (
@@ -267,10 +283,12 @@ function FeedbackDetail({
                     <label>
                       Status
                       <select
+                        aria-label="Status"
                         value={draft.status}
-                        onChange={(e) =>
-                          setDraft({ ...draft, status: e.target.value as FeedbackPatch['status'] })
-                        }
+                        onChange={(e) => {
+                          triageDirty.current = true;
+                          setDraft({ ...draft, status: e.target.value as FeedbackPatch['status'] });
+                        }}
                       >
                         {feedbackStatuses.map((x) => (
                           <option key={x} value={x}>
@@ -282,13 +300,15 @@ function FeedbackDetail({
                     <label>
                       Priority
                       <select
+                        aria-label="Priority"
                         value={draft.priority}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          triageDirty.current = true;
                           setDraft({
                             ...draft,
                             priority: e.target.value as FeedbackPatch['priority'],
-                          })
-                        }
+                          });
+                        }}
                       >
                         {feedbackPriorities.map((x) => (
                           <option key={x}>{x}</option>
@@ -302,7 +322,10 @@ function FeedbackDetail({
                       maxLength={60}
                       placeholder="Anyone on the team"
                       value={draft.assignee}
-                      onChange={(e) => setDraft({ ...draft, assignee: e.target.value })}
+                      onChange={(e) => {
+                        triageDirty.current = true;
+                        setDraft({ ...draft, assignee: e.target.value });
+                      }}
                     />
                   </label>
                   <div className="feedback-tools">
