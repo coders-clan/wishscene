@@ -77,7 +77,7 @@ test('capture feedback, allow teammate replies and votes, and restrict edits to 
   await detail.getByLabel('Reply', { exact: true }).fill('I can take this issue.');
   await detail.getByRole('button', { name: 'Post reply', exact: true }).click();
   await expect(detail.getByText('I can take this issue.', { exact: true })).toBeVisible();
-  await detail.getByRole('button', { name: 'I noticed this too', exact: true }).click();
+  await detail.getByRole('button', { name: /I noticed this too/ }).click();
   await expect(detail.getByRole('button', { name: /You also noticed this/ })).toBeVisible();
   await expect(detail.getByLabel('Status', { exact: true })).toHaveCount(0);
   await expect(detail.getByLabel('Assignee', { exact: true })).toHaveCount(0);
