@@ -1,0 +1,22 @@
+{
+  "id": "cmp_3a52ce7809",
+  "kind": "module",
+  "name": ".",
+  "responsibility": "",
+  "paths": [
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml"
+  ],
+  "status": "active",
+  "owners": [],
+  "fragility": 0,
+  "provenance": {
+    "source": "inferred",
+    "confidence": 0.5,
+    "evidence": [
+      "."
+    ]
+  },
+  "created_at": "2026-09-27T09:42:25.079Z",
+  "updated_at": "2026-09-27T09:42:25.079Z"
+}

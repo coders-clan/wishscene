@@ -1,0 +1,34 @@
+{
+  "id": "ev_9da17f1ddb",
+  "kind": "correction",
+  "occurred_at": "2026-09-27T09:37:17.635Z",
+  "repository": "git-remote:sha256:7407056330fae878f264df877f265740f1f6ff0092c174d885093bccac4a8c83",
+  "files": [
+    "packages/domain/src/index.ts"
+  ],
+  "symbols": [],
+  "text_ref": "con_480efb317d",
+  "related_records": [
+    "con_480efb317d"
+  ],
+  "data_class": "public",
+  "content_hash": "sha1:92fd1e8e64a61d4d9ca04f6872b2578a5cb77438",
+  "compiler": {
+    "status": "uncompilable",
+    "policy": null,
+    "reason": "Correction has no exact structured forbidden-package meaning. The legacy Constraint remains active.",
+    "scope_suggestion": {
+      "repos": [],
+      "paths": [],
+      "components": []
+    }
+  },
+  "provenance": {
+    "source": "derived",
+    "confidence": 1,
+    "evidence": [
+      "con_480efb317d",
+      "packages/domain/src/index.ts:162"
+    ]
+  }
+}
