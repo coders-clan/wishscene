@@ -23,7 +23,15 @@ import {
   type FeedbackPatch,
 } from '@wishscene/contracts';
 import { FeedbackDialog } from './dialog';
-import { downloadFile, feedbackRequest, readName, readable, saveName } from './client';
+import {
+  downloadFile,
+  fetchAuthSession,
+  feedbackRequest,
+  readName,
+  readable,
+  saveName,
+  signOut,
+} from './client';
 function timestamp(value: string) {
   return new Date(value).toLocaleString(undefined, {
     month: 'short',
@@ -32,18 +40,22 @@ function timestamp(value: string) {
     minute: '2-digit',
   });
 }
+type AuthUser = { login: string; name: string | null; avatarUrl: string };
 function FeedbackDetail({
   id,
+  authUser,
   onClose,
   onChange,
 }: {
   id: string;
+  authUser: AuthUser | null;
   onClose: () => void;
   onChange: () => void;
 }) {
   const [item, setItem] = useState<FeedbackItem | null>(null);
   const [draft, setDraft] = useState<Omit<FeedbackPatch, 'author'> | null>(null);
   const [author, setAuthor] = useState('');
+  const effectiveAuthor = authUser ? authUser.login : author;
   const [reply, setReply] = useState('');
   const replyId = useRef('');
   const triageDirty = useRef(false);
@@ -69,7 +81,7 @@ function FeedbackDetail({
     [id],
   );
   useEffect(() => {
-    setAuthor(readName());
+    if (!authUser) setAuthor(readName());
     let active = true;
     const load = async () => {
       try {
@@ -105,21 +117,21 @@ function FeedbackDetail({
     setBusy(true);
     setError('');
     setNotice('');
-    if (action !== 'vote' && !author.trim()) {
+    if (action !== 'vote' && !authUser && !author.trim()) {
       setError('Add your name before posting.');
       setBusy(false);
       return;
     }
-    saveName(author);
+    if (!authUser) saveName(author);
     try {
       let path = `/${id}`,
         method = 'PATCH',
-        body: unknown = { ...draft, author };
+        body: unknown = { ...draft, author: effectiveAuthor };
       if (action === 'reply') {
         replyId.current ||= crypto.randomUUID();
         path += '/comments';
         method = 'POST';
-        body = { requestId: replyId.current, author, text: reply };
+        body = { requestId: replyId.current, author: effectiveAuthor, text: reply };
       }
       if (action === 'vote') {
         path += '/vote';
@@ -268,15 +280,19 @@ function FeedbackDetail({
                 <SlidersHorizontal size={18} />
                 Triage
               </h3>
-              <label>
-                Your name
-                <input
-                  maxLength={60}
-                  value={author}
-                  onChange={(e) => setAuthor(e.target.value)}
-                  placeholder="Display name"
-                />
-              </label>
+              {authUser ? (
+                <p className="feedback-hint">Posting as @{authUser.login}</p>
+              ) : (
+                <label>
+                  Your name
+                  <input
+                    maxLength={60}
+                    value={author}
+                    onChange={(e) => setAuthor(e.target.value)}
+                    placeholder="Display name"
+                  />
+                </label>
+              )}
               {draft && (
                 <>
                   <div className="feedback-field-row">
@@ -432,9 +448,13 @@ export function FeedbackBoard() {
   const [selected, setSelected] = useState<string | null>(null),
     [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   useEffect(() => {
     const id = new URLSearchParams(location.search).get('item');
     if (id && /^[a-f0-9-]{36}$/i.test(id)) setSelected(id);
+    void fetchAuthSession()
+      .then((session) => setAuthUser(session.user))
+      .catch(() => undefined);
   }, []);
   useEffect(() => {
     const controller = new AbortController();
@@ -476,10 +496,17 @@ export function FeedbackBoard() {
         <a className="wordmark" href="/">
           wishscene<span className="brand-dot">.</span>
         </a>
-        <a className="button" href="/">
-          <ArrowLeft size={18} />
-          Back to studio
-        </a>
+        <div className="feedback-tools">
+          {authUser && (
+            <button className="button" onClick={() => void signOut()}>
+              Sign out
+            </button>
+          )}
+          <a className="button" href="/">
+            <ArrowLeft size={18} />
+            Back to studio
+          </a>
+        </div>
       </header>
       <section className="feedback-board-hero">
         <div>
@@ -680,6 +707,7 @@ export function FeedbackBoard() {
       {selected && (
         <FeedbackDetail
           id={selected}
+          authUser={authUser}
           onClose={() => open(null)}
           onChange={() => setTick((x) => x + 1)}
         />

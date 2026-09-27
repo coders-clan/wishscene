@@ -33,3 +33,17 @@ export function downloadFile(content: string, filename: string, type = 'applicat
 export function readable(value: string) {
   return value.replaceAll('-', ' ');
 }
+export async function fetchAuthSession(): Promise<{
+  authRequired: boolean;
+  user: { login: string; name: string | null; avatarUrl: string } | null;
+}> {
+  const response = await fetch('/api/auth/session', { cache: 'no-store' });
+  return response.json();
+}
+export async function signOut() {
+  await fetch('/api/auth/logout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  location.href = '/login';
+}

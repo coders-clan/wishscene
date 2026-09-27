@@ -11,7 +11,7 @@ import { feedbackCategories, feedbackPriorities } from '@wishscene/contracts';
 import { pageTarget, screenshotSection, targetFor } from './capture';
 import { annotatedJpeg, AnnotationEditor } from './annotation-editor';
 import { FeedbackDialog } from './dialog';
-import { feedbackRequest, readName, saveName } from './client';
+import { fetchAuthSession, feedbackRequest, readName, saveName, signOut } from './client';
 
 export function FeedbackLauncher() {
   const [menu, setMenu] = useState(false);
@@ -26,6 +26,12 @@ export function FeedbackLauncher() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState<string | null>(null);
   const [name, setName] = useState('');
+  const [authRequired, setAuthRequired] = useState(false);
+  const [authUser, setAuthUser] = useState<{
+    login: string;
+    name: string | null;
+    avatarUrl: string;
+  } | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<FeedbackCreate['category']>('bug');
@@ -38,6 +44,12 @@ export function FeedbackLauncher() {
   useEffect(() => {
     setName(readName());
     void feedbackRequest('/session').catch(() => undefined);
+    void fetchAuthSession()
+      .then((session) => {
+        setAuthRequired(session.authRequired);
+        setAuthUser(session.user);
+      })
+      .catch(() => undefined);
     function reveal() {
       if (!location.hash.startsWith('#feedback-target=')) return;
       try {
@@ -155,14 +167,14 @@ export function FeedbackLauncher() {
     if (!target || busy) return;
     setBusy(true);
     setError('');
-    saveName(name);
+    if (!authUser) saveName(name);
     try {
       const screenshot = source ? await annotatedJpeg(source, marks) : null;
       const item = await feedbackRequest<FeedbackItem>('', {
         method: 'POST',
         body: JSON.stringify({
           requestId: requestId.current,
-          author: name,
+          author: authUser ? authUser.login : name,
           title,
           description,
           category,
@@ -186,6 +198,7 @@ export function FeedbackLauncher() {
       setBusy(false);
     }
   }
+  if (authRequired && !authUser) return null;
   return (
     <div data-feedback-ui>
       {!mode && !target && !busy && (
@@ -229,6 +242,11 @@ export function FeedbackLauncher() {
                 <List />
                 View shared feedback
               </a>
+              {authUser && (
+                <button className="button" onClick={() => void signOut()}>
+                  Sign out
+                </button>
+              )}
             </div>
           )}
           <button
@@ -378,17 +396,21 @@ export function FeedbackLauncher() {
               )}
             </div>
             <div className="feedback-fields">
-              <label>
-                Your name
-                <input
-                  required
-                  maxLength={60}
-                  autoComplete="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="How should the team know you?"
-                />
-              </label>
+              {authUser ? (
+                <p className="feedback-hint">Posting as @{authUser.login}</p>
+              ) : (
+                <label>
+                  Your name
+                  <input
+                    required
+                    maxLength={60}
+                    autoComplete="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="How should the team know you?"
+                  />
+                </label>
+              )}
               <label>
                 Short title
                 <input

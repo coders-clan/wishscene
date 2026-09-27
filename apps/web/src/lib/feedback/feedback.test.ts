@@ -1,10 +1,11 @@
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { NextRequest } from 'next/server';
 import { feedbackDispatch } from './api';
+import { seal } from '../auth/session';
 import { postgresFeedback, sqliteFeedback, type FeedbackStore } from './store';
 import { feedbackCreate, type FeedbackCreate, type FeedbackItem } from '@wishscene/contracts';
 import { createFeedback } from '@wishscene/domain';
@@ -177,4 +178,69 @@ it('keeps feedback across SQLite connections and a database reopen', async () =>
   expect((await reopened.get(report.id)).item.description).toBe(report.description);
   await reopened.close();
   await rm(dir, { recursive: true });
+});
+describe('feedback with GitHub sign-in required', () => {
+  const SECRET = 'a'.repeat(40);
+  let store: FeedbackStore;
+  beforeAll(async () => {
+    store = await sqliteFeedback(':memory:');
+  });
+  afterAll(async () => {
+    await store?.close();
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+  function stubAuth() {
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'client');
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', 'secret');
+    vi.stubEnv('WISHSCENE_SESSION_SECRET', SECRET);
+  }
+  function sessionCookie() {
+    const token = seal(
+      {
+        v: 1,
+        id: 42,
+        login: 'octocat',
+        name: null,
+        avatarUrl: 'https://x/a.png',
+        exp: Date.now() + 60000,
+      },
+      SECRET,
+    );
+    return `wishscene-session=${token}`;
+  }
+  it('rejects requests without a session', async () => {
+    stubAuth();
+    const response = await feedbackDispatch(
+      new NextRequest('http://localhost:3000/api/feedback/', {
+        method: 'GET',
+        headers: { 'content-type': 'application/json', origin: 'http://localhost:3000' },
+      }),
+      [],
+      store,
+    );
+    expect(response.status).toBe(401);
+  });
+  it('overrides the author with the session login on create', async () => {
+    stubAuth();
+    const data = input();
+    data.author = 'someone-else';
+    const response = await feedbackDispatch(
+      new NextRequest('http://localhost:3000/api/feedback/', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          origin: 'http://localhost:3000',
+          cookie: sessionCookie(),
+        },
+        body: JSON.stringify(data),
+      }),
+      [],
+      store,
+    );
+    expect(response.status).toBe(201);
+    const report = await response.json();
+    expect(report.author).toBe('octocat');
+  });
 });
