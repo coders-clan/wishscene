@@ -5,11 +5,11 @@ Version 0.2 · Architecture companion to the authoritative [stack decision](STAC
 ## 1. Stack and boundaries
 
 - Web: Next.js 16 App Router + TypeScript, responsive editor, Better Auth, accessible components.
-- API: typed HTTP contract, Zod validation, per-user authorization on every object. Start as a modular Next.js API or separate Node service if workers require independent scaling.
+- API: Next.js Route Handlers with Zod contracts and per-user authorization on every object. Workers scale separately; no second API service in MVP.
 - DB: Postgres + Prisma migrations. Object storage for originals, normalized inputs, candidates and exports; bucket private, encryption at rest, short-lived scoped URLs.
 - Queue: Redis + BullMQ durable jobs; dedicated workers for image, evaluation, video and render. Web requests never wait for model jobs.
 - Render: FFmpeg worker for crops, sequence, captions, audio normalization and ZIP. Pin versions/container images.
-- Auth: managed OAuth/email provider with verified account; no biometric authentication claim.
+- Auth: Better Auth with Prisma adapter and email sign-in initially; no biometric authentication claim.
 - Observability: traces by job ID, structured errors, provider latency/cost counters, redacted logs.
 
 Boundary rule: core domain depends on `ImageProvider`, `VideoProvider`, `TextProvider`, `AssetStore` interfaces, never vendor-specific response types. Start with FLUX.2 [pro] for image experiments and Runway image-to-video in Phase 2, both behind replaceable adapters. Issue #5 validates image quality before release; provider terms and region remain an ADR. See [evaluation](EVALUATION.md).
