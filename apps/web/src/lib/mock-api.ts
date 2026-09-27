@@ -1,7 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { approvalInput, experienceInput, generationInput, storyUpdate } from '@wishscene/contracts';
+import {
+  approvalInput,
+  experienceInput,
+  generationInput,
+  storyUpdate,
+  socialUpdate,
+} from '@wishscene/contracts';
 import { DomainError, MockStudio } from '@wishscene/domain';
 
 const TTL = 60 * 60 * 1000;
@@ -95,6 +101,14 @@ export async function dispatch(request: NextRequest, path: string[]) {
         .parse(await body(request));
       studio.caption(path[1], input.caption);
       result = { saved: true };
+    } else if (
+      request.method === 'PATCH' &&
+      path.length === 5 &&
+      path[0] === 'experiences' &&
+      path[2] === 'scenes' &&
+      path[4] === 'social'
+    ) {
+      result = studio.updateSocial(path[1], path[3], socialUpdate.parse(await body(request)));
     } else if (
       request.method === 'POST' &&
       path.length === 3 &&

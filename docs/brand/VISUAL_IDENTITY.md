@@ -49,6 +49,10 @@ Use a legible system sans-serif stack for UI and a slightly more expressive but 
 
 Hierarchy: concise 48–64 px desktop hero, 32–40 px mobile hero, 24–32 px section heads, 16–18 px body, 14 px labels. Keep body line length around 55–75 characters where practical. Use sentence case rather than all caps in controls.
 
+### Studio implementation scale
+
+Keep body and input text at 16 px, controls and supporting copy at 14 px, and secondary badges/metadata at least 12 px. Use rem-based sizes so browser preferences can scale the UI. Main card titles are 18 px; workspace headings are 24–28 px. Mobile reflows cards into one column and wraps controls instead of shrinking labels. Interactive targets are at least 44 px high (icon-only controls also 44 px wide). Platform previews use the same readable scale; decorative social chrome must not reduce caption readability.
+
 ## Imagery
 
 Show *sets* rather than isolated hero shots: a main image next to two related moments, with shared wardrobe and weather. Mix close, medium and environmental frames. Favor believable ambient light and human-scale places. Avoid identical model poses, plastic skin, oversaturated travel postcards, and landmarks distorted beyond recognition. Any example of generated media receives an AI-created label in context.

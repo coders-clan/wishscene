@@ -42,6 +42,11 @@ User can approve one candidate per scene, regenerate scene, change prompt contro
 
 ## 5. Social pack
 
+**Per-image composer (P11):** every scene exposes **Create post**. Select a platform/format, choose a tone, use or edit suggested copy, add text for vertical images, and inspect a live platform-style preview. Each image/platform keeps independent text. Save explicitly before export. [SOCIAL_COMPOSER.md](SOCIAL_COMPOSER.md) specifies fields, budgets, API, conflicts, acceptance checks and remaining renderer work.
+
+The demo implements six previews, session saving, deterministic copy and per-image text/metadata export alongside original photos. The production requirements below include rendering/editing capabilities still to be built.
+
+
 Carousel: select 2–10 approved images, reorder, crop separately to 1:1 or 4:5, preview safe zones, export JPG/PNG.
 Stories: up to one vertical item per scene, editable overlay text and stickers, 9:16 safe-zone preview.
 Captions: three variants (playful, understated, cinematic), editable by user; no invented factual claims that an event actually occurred. Hashtags optional. User may save custom tone for future drafts.

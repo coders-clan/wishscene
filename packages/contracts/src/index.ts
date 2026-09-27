@@ -1,5 +1,7 @@
 import { z } from 'zod';
+import type { SceneSocial, SocialExport } from './social';
 export { demoPresets, hasPhotoPreset, demoPreview } from './demo';
+export * from './social';
 
 export const destinationSchema = z.enum(['Tokyo', 'Kyoto', 'Amalfi', 'Iceland']);
 export const experienceInput = z
@@ -50,6 +52,7 @@ export interface Scene {
   status: SceneStatus;
   assets: Asset[];
   approvedAssetId: string | null;
+  social: SceneSocial;
 }
 export interface Experience extends ExperienceInput {
   id: string;
@@ -87,5 +90,5 @@ export interface ExportManifest {
   mood: string;
   caption: string;
   provenance: string;
-  assets: Array<Asset & { title: string; filename: string }>;
+  assets: Array<Asset & { title: string; filename: string; social: SocialExport }>;
 }

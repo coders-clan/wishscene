@@ -56,9 +56,21 @@ try {
       assetId: scene.assets.at(-1).id,
       expectedVersion: 1,
     });
+  await request(`experiences/${exp.id}/scenes/${exp.scenes[0].id}/social`, 'PATCH', {
+    expectedVersion: 1,
+    expectedRevision: 0,
+    platform: 'instagram-story',
+    draft: {
+      caption: 'An imagined Tokyo evening.',
+      overlayText: 'Another kind of night',
+      tone: 'cinematic',
+    },
+  });
   const manifest = await request(`experiences/${exp.id}/exports`, 'POST', {});
   assert.equal(manifest.assets.length, 4);
   assert.equal(manifest.mock, true);
+  assert.equal(manifest.assets[0].social.platform, 'instagram-story');
+  assert.equal(manifest.assets[0].social.overlayText, 'Another kind of night');
   for (const asset of manifest.assets) {
     const image = await fetch(`${base}${asset.image}`);
     assert.equal(image.status, 200);

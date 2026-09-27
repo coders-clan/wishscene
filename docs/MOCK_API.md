@@ -10,6 +10,7 @@ Base: `/api/v1`. All responses are JSON; all request bodies use `Content-Type: a
 | PATCH | `/experiences/:id/caption` | caption | `{ saved: true }` |
 | POST | `/experiences/:id/scenes/:sceneId/generations` | requestKey, scenario | 202 `Job` |
 | POST | `/experiences/:id/scenes/:sceneId/approval` | assetId, expectedVersion | `{ approved: true }` |
+| PATCH | `/experiences/:id/scenes/:sceneId/social` | expectedVersion, expectedRevision, platform, draft: { caption, overlayText, tone } | updated `SceneSocial`; saves only this platform and selects it for the image |
 | POST | `/jobs/:id/cancel` | `{}` | `{ cancelled: true }` |
 | POST | `/experiences/:id/exports` | `{}` | `ExportManifest` when every scene is approved at the current version |
 | POST | `/mock/reset` | `{}` | reseeded Workspace for the current cookie |
@@ -23,7 +24,7 @@ Errors are `{ "error": { "code": "...", "message": "..." } }`:
 - 400 `VALIDATION` or `INVALID_JSON`
 - 403 `ORIGIN` for cross-origin mutations when an Origin header is present
 - 404 `NOT_FOUND`
-- 409 `STALE_VERSION`, `KEY_REUSED`, `ALREADY_RUNNING`, `NOT_READY`, `LIMIT`
+- 409 `STALE_VERSION`, `KEY_REUSED`, `ALREADY_RUNNING`, `NOT_READY`, `LIMIT`, `STALE_SOCIAL`
 - 413 `BODY_TOO_LARGE`, 415 `JSON_REQUIRED`
 - 503 `MOCK_DISABLED` in production unless `WISHSCENE_MOCK=1`; `CAPACITY` after 100 active sessions
 
@@ -37,3 +38,9 @@ curl -b /tmp/wishscene.cookies http://localhost:3000/api/v1/workspace
 ```
 
 The UI builds the ZIP from the returned manifest and same-origin image assets as binary data. Each asset has `media: 'photo' | 'illustration'`; matching destination/outfit/mood presets return one JPG per scene, while custom settings return two SVG placeholders. Export filenames preserve the actual file format. No export record is persisted and there is no real queue, storage integration, or runtime provider invocation. Production endpoints must add authentication, owner checks, transactional persistence, rate limits and proper deployment origin configuration. See [DEMO_PHOTOS.md](DEMO_PHOTOS.md) for the exact supported presets.
+
+## Per-image social drafts
+
+Every Scene includes `social: { platform, revision, drafts }`. Supported platform IDs: `instagram`, `instagram-story`, `tiktok`, `facebook`, `linkedin`, `x`. Tones: `playful`, `understated`, `cinematic`. Overlay text is at most 80 characters. Caption budgets vary by preset; see [SOCIAL_COMPOSER.md](SOCIAL_COMPOSER.md). Unknown platforms, extra fields and over-budget captions return 400. Version/revision conflicts return 409 and do not mutate saved drafts; scene IDs remain scoped to the experience and session.
+
+Every exported asset adds `social: { platform, caption, overlayText, tone, previewAspectRatio, previewOnly: true }`. The ZIP includes a per-image text file under `posts/`. It still downloads original images: preview crop/overlay are not rendered into output pixels. Other saved platform drafts stay in the workspace; export uses each scene’s selected platform.
