@@ -1,4 +1,8 @@
 /* A phone-specific workspace; desktop layout and domain actions remain shared. */
+.mobile-sheet-handle {
+  display: none;
+}
+
 .mobile-app-nav,
 .mobile-brand,
 .mobile-story-chevron {
@@ -398,12 +402,60 @@
   .app-shell .modal.wide {
     width: 100%;
     max-width: 100%;
-    height: 100dvh;
-    max-height: 100dvh;
-    margin: 0;
+    height: auto;
+    max-height: calc(var(--sheet-viewport-height, 100dvh) - max(24px, env(safe-area-inset-top)));
+    top: auto;
+    bottom: var(--sheet-viewport-bottom, 0px);
+    margin: auto 0 0;
     border: 0;
-    border-radius: 0;
+    border-radius: 24px 24px 0 0;
     overscroll-behavior: contain;
+  }
+  .feedback-dialog,
+  .feedback-dialog.feedback-wide {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: calc(var(--sheet-viewport-height, 100dvh) - max(24px, env(safe-area-inset-top)));
+    top: auto;
+    bottom: var(--sheet-viewport-bottom, 0px);
+    margin: auto 0 0;
+    padding: 0 16px calc(18px + env(safe-area-inset-bottom));
+    border: 0;
+    border-radius: 24px 24px 0 0;
+    overscroll-behavior: contain;
+  }
+  .feedback-dialog-heading {
+    margin-inline: -16px;
+    padding: 44px 16px 14px;
+  }
+  .app-shell .modal[open],
+  .feedback-dialog[open] {
+    animation: mobile-sheet-enter 220ms ease-out;
+    translate: 0 var(--sheet-drag-y, 0px);
+  }
+  .mobile-sheet-handle {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    inset: 0 0 auto;
+    width: 100%;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+  }
+  .mobile-sheet-handle:active {
+    cursor: grabbing;
+  }
+  .mobile-sheet-handle > span {
+    width: 40px;
+    height: 5px;
+    border-radius: 99px;
+    background: #bfb4cd;
   }
   .app-shell .modal-inner {
     padding: 0 18px calc(24px + env(safe-area-inset-bottom));
@@ -413,7 +465,7 @@
     top: 0;
     z-index: 5;
     margin: 0 -18px 20px;
-    padding: calc(14px + env(safe-area-inset-top)) 18px 14px;
+    padding: 44px 18px 14px;
     background: #fcfaf7f5;
     backdrop-filter: blur(16px);
     border-bottom: 1px solid #e9e2ef;
@@ -423,14 +475,6 @@
   }
   .app-shell .modal-heading .eyebrow {
     font-size: 10px;
-  }
-  .app-shell .modal.mobile-sheet {
-    height: fit-content;
-    top: auto;
-    bottom: 0;
-    max-height: calc(100dvh - 32px);
-    margin: auto 0 0;
-    border-radius: 24px 24px 0 0;
   }
   .app-shell .modal input,
   .app-shell .modal select,
@@ -478,5 +522,21 @@
   .app-shell .composer-actions .button {
     flex: 1;
     min-height: 48px;
+  }
+}
+
+@keyframes mobile-sheet-enter {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell .modal[open],
+  .feedback-dialog[open] {
+    animation: none;
   }
 }

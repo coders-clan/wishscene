@@ -45,6 +45,7 @@ import {
   type SceneSocial,
 } from '@wishscene/contracts';
 import { SocialComposer } from './social-composer';
+import { MobileSheetHandle } from './mobile-sheet-handle';
 
 async function api<T>(path: string, method = 'GET', payload?: unknown): Promise<T> {
   const response = await fetch(`/api/v1/${path}`, {
@@ -145,14 +146,12 @@ function ModalFrame({
   onClose,
   children,
   wide = false,
-  sheet = false,
 }: {
   title: string;
   eyebrow?: string;
   onClose: () => void;
   children: ReactNode;
   wide?: boolean;
-  sheet?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -170,7 +169,7 @@ function ModalFrame({
   return (
     <dialog
       ref={ref}
-      className={`modal ${wide ? 'wide' : ''} ${sheet ? 'mobile-sheet' : ''}`}
+      className={`modal ${wide ? 'wide' : ''}`}
       onCancel={onClose}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -179,6 +178,7 @@ function ModalFrame({
     >
       <div className="modal-inner">
         <div className="modal-heading">
+          <MobileSheetHandle onClose={onClose} />
           <div>
             {eyebrow && <p className="eyebrow">{eyebrow}</p>}
             <h2 id="modal-title">{title}</h2>
@@ -1011,7 +1011,6 @@ export default function Studio() {
           }
           onClose={close}
           wide={modal === 'review' || modal === 'library'}
-          sheet={modal === 'more'}
         >
           {modal === 'more' && (
             <div className="mobile-more-actions">
