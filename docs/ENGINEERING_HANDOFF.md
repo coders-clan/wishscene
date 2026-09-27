@@ -2,7 +2,7 @@
 
 ## First development session
 
-1. Read PRD, functional spec, technical design, roadmap and evaluation plan.
+1. Read PRD, functional spec, [chosen stack](STACK.md), technical design, roadmap and evaluation plan.
 2. Implement only the earliest unblocked issue; avoid building video before photo identity quality is measured.
 3. Record an ADR for each irreversible choice (provider, region, retention, authentication, billing).
 4. Open small PRs with user-visible evidence. Never put real reference faces, secrets or provider keys in git.
@@ -21,7 +21,7 @@ docs/                     # source of product truth and ADRs
 tests/fixtures/           # synthetic or consent-cleared fixtures only
 ```
 
-This is a proposal, not an existing codebase.
+This is the selected structure in STACK.md, not an existing codebase.
 
 ## Initial vertical slice
 
