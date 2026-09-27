@@ -18,14 +18,21 @@ import {
 } from '@wishscene/domain';
 import { feedbackStore, type FeedbackStore } from './store';
 import { requireUser } from '../auth/session';
+import { isJsonRequest, isSameOriginWrite } from '../request-security';
 const COOKIE = 'wishscene-feedback';
 function publicItem(item: FeedbackRecord, actor: string, hasScreenshot: boolean): FeedbackItem {
   const { creator: _creator, voters, ...rest } = item;
   void _creator;
-  return { ...rest, votes: voters.length, voted: voters.includes(actor), hasScreenshot };
+  return {
+    ...rest,
+    votes: voters.length,
+    voted: voters.includes(actor),
+    canEdit: item.creator === actor,
+    hasScreenshot,
+  };
 }
 async function readBody(request: NextRequest) {
-  if (!request.headers.get('content-type')?.startsWith('application/json'))
+  if (!isJsonRequest(request))
     throw new DomainError(415, 'JSON_REQUIRED', 'Send application/json.');
   const reader = request.body?.getReader();
   if (!reader) throw new DomainError(400, 'INVALID_JSON', 'A JSON body is required.');
@@ -80,9 +87,7 @@ export async function feedbackDispatch(
   };
   try {
     if (request.method !== 'GET') {
-      const origin = request.headers.get('origin');
-      const expected = `${request.nextUrl.protocol}//${request.headers.get('host') ?? request.nextUrl.host}`;
-      if ((origin && origin !== expected) || request.headers.get('sec-fetch-site') === 'cross-site')
+      if (!isSameOriginWrite(request))
         throw new DomainError(403, 'ORIGIN', 'Cross-origin writes are disabled.');
     }
     const store = suppliedStore ?? (await feedbackStore());
@@ -137,7 +142,10 @@ export async function feedbackDispatch(
       return new NextResponse(Buffer.from(image.split(',')[1], 'base64'), {
         headers: {
           'Content-Type': 'image/jpeg',
+          'Content-Disposition': `inline; filename="wishscene-feedback-${path[0]}.jpg"`,
           'Cache-Control': 'private, max-age=3600',
+          'Content-Security-Policy': "default-src 'none'; sandbox",
+          'Cross-Origin-Resource-Policy': 'same-origin',
           'X-Content-Type-Options': 'nosniff',
         },
       });
@@ -147,20 +155,26 @@ export async function feedbackDispatch(
     if (request.method === 'POST' && !path.length) {
       const input = feedbackCreate.parse(await readBody(request));
       if (user) input.author = user.login;
-      if (
-        input.screenshot &&
-        !Buffer.from(input.screenshot.split(',')[1], 'base64')
-          .subarray(0, 3)
-          .equals(Buffer.from([0xff, 0xd8, 0xff]))
-      )
-        throw new DomainError(400, 'INVALID_IMAGE', 'A JPEG screenshot is required.');
+      if (input.screenshot) {
+        const image = Buffer.from(input.screenshot.split(',')[1], 'base64');
+        if (
+          image.length < 5 ||
+          !image.subarray(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff])) ||
+          !image.subarray(-2).equals(Buffer.from([0xff, 0xd9]))
+        )
+          throw new DomainError(400, 'INVALID_IMAGE', 'A complete JPEG screenshot is required.');
+      }
       const saved = await store.create(createFeedback(input, actor, now), input.screenshot);
       return respond(publicItem(saved.item, actor, !!saved.image), 201);
     }
     if (request.method === 'PATCH' && path.length === 1) {
       const input = feedbackPatch.parse(await readBody(request));
       if (user) input.author = user.login;
-      const saved = await store.change(path[0], (item) => triageFeedback(item, input, now));
+      const saved = await store.change(path[0], (item) => {
+        if (item.creator !== actor)
+          throw new DomainError(403, 'NOT_CREATOR', 'Only the report creator can edit it.');
+        return triageFeedback(item, input, now);
+      });
       return respond(publicItem(saved.item, actor, !!saved.image));
     }
     if (request.method === 'POST' && path.length === 2 && path[1] === 'comments') {

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('capture an element, annotate it, share across browsers, reply and triage', async ({
+test('capture feedback, allow teammate replies and votes, and restrict edits to the creator', async ({
   page,
   browser,
 }, testInfo) => {
@@ -77,12 +77,11 @@ test('capture an element, annotate it, share across browsers, reply and triage',
   await detail.getByLabel('Reply', { exact: true }).fill('I can take this issue.');
   await detail.getByRole('button', { name: 'Post reply', exact: true }).click();
   await expect(detail.getByText('I can take this issue.', { exact: true })).toBeVisible();
-  await detail.getByRole('button', { name: 'Reload latest' }).click();
-  await expect(detail.getByText('Latest status loaded.')).toBeVisible();
-  await detail.getByLabel('Status', { exact: true }).selectOption('in-progress');
-  await detail.getByLabel('Assignee', { exact: true }).fill('Teammate');
-  await detail.getByRole('button', { name: 'Save changes', exact: true }).click();
-  await expect(detail.getByText('Changes shared with everyone.')).toBeVisible();
+  await detail.getByRole('button', { name: 'I noticed this too', exact: true }).click();
+  await expect(detail.getByRole('button', { name: /You also noticed this/ })).toBeVisible();
+  await expect(detail.getByLabel('Status', { exact: true })).toHaveCount(0);
+  await expect(detail.getByLabel('Assignee', { exact: true })).toHaveCount(0);
+  await expect(detail.getByRole('button', { name: 'Save changes', exact: true })).toHaveCount(0);
   await teammate.screenshot({
     path: testInfo.outputPath('feedback-shared-detail.png'),
     fullPage: true,
@@ -91,6 +90,10 @@ test('capture an element, annotate it, share across browsers, reply and triage',
   await page.goto(href!);
   const original = page.getByRole('dialog', { name: title });
   await expect(original.getByText('I can take this issue.', { exact: true })).toBeVisible();
+  await original.getByLabel('Status', { exact: true }).selectOption('in-progress');
+  await original.getByLabel('Assignee', { exact: true }).fill('Teammate');
+  await original.getByRole('button', { name: 'Save changes', exact: true }).click();
+  await expect(original.getByText('Your report was updated.', { exact: true })).toBeVisible();
   await expect(original.getByLabel('Assignee', { exact: true })).toHaveValue('Teammate');
   await original.getByRole('button', { name: 'Close feedback dialog' }).click();
   await page.getByLabel('Search feedback').fill(title);

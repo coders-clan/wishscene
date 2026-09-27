@@ -103,6 +103,7 @@ export interface FeedbackRecord extends Omit<FeedbackCreate, 'requestId' | 'scre
 export type FeedbackItem = Omit<FeedbackRecord, 'voters' | 'creator'> & {
   votes: number;
   voted: boolean;
+  canEdit: boolean;
   hasScreenshot: boolean;
 };
 export type FeedbackSummary = Omit<FeedbackItem, 'comments' | 'annotations' | 'target'> & {

@@ -5,10 +5,14 @@ import { GET as finishGitHub } from './callback/route';
 import { OAUTH_COOKIE, readSessionToken, seal, SESSION_COOKIE, unseal } from '@/lib/auth/session';
 
 const SECRET = 'a'.repeat(40);
+const CLIENT_ID = 'c'.repeat(20);
+const CLIENT_SECRET = 'b'.repeat(40);
+const STATE = 's'.repeat(43);
+const VERIFIER = 'v'.repeat(43);
 
 function configureAuth() {
-  vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'client-id');
-  vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', 'client-secret');
+  vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', CLIENT_ID);
+  vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', CLIENT_SECRET);
   vi.stubEnv('WISHSCENE_SESSION_SECRET', SECRET);
 }
 
@@ -26,7 +30,7 @@ describe('GitHub OAuth routes', () => {
     expect(response.status).toBe(307);
     const destination = new URL(response.headers.get('location')!);
     expect(destination.origin).toBe('https://github.com');
-    expect(destination.searchParams.get('client_id')).toBe('client-id');
+    expect(destination.searchParams.get('client_id')).toBe(CLIENT_ID);
     expect(destination.searchParams.get('redirect_uri')).toBe(
       'https://wishscene.test/api/auth/github/callback',
     );
@@ -50,9 +54,10 @@ describe('GitHub OAuth routes', () => {
       {
         v: 1,
         kind: 'oauth',
-        state: 'expected-state',
-        verifier: 'pkce-verifier',
+        state: STATE,
+        verifier: VERIFIER,
         next: '/feedback',
+        iat: Date.now(),
         exp: Date.now() + 60_000,
       },
       SECRET,
@@ -79,7 +84,7 @@ describe('GitHub OAuth routes', () => {
     vi.stubGlobal('fetch', fetchMock);
     const response = await finishGitHub(
       new NextRequest(
-        'https://wishscene.test/api/auth/github/callback?code=temporary-code&state=expected-state',
+        `https://wishscene.test/api/auth/github/callback?code=temporary-code&state=${STATE}`,
         { headers: { cookie: `${OAUTH_COOKIE}=${oauthCookie}` } },
       ),
     );
@@ -88,7 +93,7 @@ describe('GitHub OAuth routes', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toMatchObject({
       code: 'temporary-code',
-      code_verifier: 'pkce-verifier',
+      code_verifier: VERIFIER,
     });
     const session = response.cookies.get(SESSION_COOKIE)!;
     expect(readSessionToken(session.value)).toMatchObject({ id: 42, login: 'octocat' });
@@ -104,16 +109,17 @@ describe('GitHub OAuth routes', () => {
       {
         v: 1,
         kind: 'oauth',
-        state: 'expected-state',
-        verifier: 'pkce-verifier',
+        state: STATE,
+        verifier: VERIFIER,
         next: '/',
+        iat: Date.now(),
         exp: Date.now() + 60_000,
       },
       SECRET,
     );
     const response = await finishGitHub(
       new NextRequest(
-        'https://wishscene.test/api/auth/github/callback?code=temporary-code&state=wrong-state',
+        `https://wishscene.test/api/auth/github/callback?code=temporary-code&state=${'x'.repeat(43)}`,
         { headers: { cookie: `${OAUTH_COOKIE}=${oauthCookie}` } },
       ),
     );

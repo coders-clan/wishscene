@@ -44,8 +44,14 @@ try {
     await delay(250);
   }
   assert.ok(ready, `Server did not become ready: ${logs}`);
-  const page = await (await fetch(base)).text();
+  const pageResponse = await fetch(base);
+  const page = await pageResponse.text();
   assert.match(page, /wishscene/);
+  assert.match(pageResponse.headers.get('content-security-policy') || '', /frame-ancestors 'none'/);
+  assert.equal(pageResponse.headers.get('x-frame-options'), 'DENY');
+  assert.equal(pageResponse.headers.get('x-content-type-options'), 'nosniff');
+  assert.equal(pageResponse.headers.get('referrer-policy'), 'strict-origin-when-cross-origin');
+  assert.match(pageResponse.headers.get('permissions-policy') || '', /camera=\(\)/);
   const workspace = await request('workspace');
   const exp = workspace.experiences[0];
   for (const scene of exp.scenes.filter((x) => x.status !== 'approved'))
@@ -98,7 +104,7 @@ try {
   });
   assert.equal(blocked.status, 409);
   console.log(
-    'PASS: production server, session cookie, generation, approval, export manifest, binary photo assets, stale export guard.',
+    'PASS: production server, security headers, session cookie, generation, approval, export manifest, binary photo assets, stale export guard.',
   );
 } finally {
   try {

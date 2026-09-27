@@ -59,11 +59,11 @@ function FeedbackDetail({
   const loginHref = `/api/auth/github?next=${encodeURIComponent(`/feedback?item=${id}`)}`;
   const [item, setItem] = useState<FeedbackItem | null>(null);
   const [draft, setDraft] = useState<Omit<FeedbackPatch, 'author'> | null>(null);
+  const triageDirty = useRef(false);
   const [author, setAuthor] = useState('');
   const effectiveAuthor = authUser ? authUser.login : author;
   const [reply, setReply] = useState('');
   const replyId = useRef('');
-  const triageDirty = useRef(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
@@ -71,17 +71,15 @@ function FeedbackDetail({
     async (reset = false) => {
       const value = await feedbackRequest<FeedbackItem>(`/${id}`);
       setItem((old) => (old && old.revision > value.revision ? old : value));
-      if (reset) triageDirty.current = false;
-      setDraft((old) =>
-        !old || reset
-          ? {
-              expectedRevision: value.revision,
-              status: value.status,
-              priority: value.priority,
-              assignee: value.assignee,
-            }
-          : old,
-      );
+      if (!triageDirty.current || reset) {
+        triageDirty.current = false;
+        setDraft({
+          expectedRevision: value.revision,
+          status: value.status,
+          priority: value.priority,
+          assignee: value.assignee,
+        });
+      }
     },
     [id],
   );
@@ -93,16 +91,13 @@ function FeedbackDetail({
         const value = await feedbackRequest<FeedbackItem>(`/${id}`);
         if (active) {
           setItem((old) => (old && old.revision > value.revision ? old : value));
-          setDraft((old) =>
-            triageDirty.current && old
-              ? old
-              : {
-                  expectedRevision: value.revision,
-                  status: value.status,
-                  priority: value.priority,
-                  assignee: value.assignee,
-                },
-          );
+          if (!triageDirty.current)
+            setDraft({
+              expectedRevision: value.revision,
+              status: value.status,
+              priority: value.priority,
+              assignee: value.assignee,
+            });
         }
       } catch (e) {
         if (active) setError((e as Error).message);
@@ -117,55 +112,81 @@ function FeedbackDetail({
       clearInterval(timer);
     };
   }, [id]);
-  async function mutate(action: 'triage' | 'reply' | 'vote') {
+  async function vote() {
     if (!canContribute) {
       location.href = loginHref;
       return;
     }
-    if (!item || !draft) return;
+    if (!item) return;
     setBusy(true);
     setError('');
     setNotice('');
-    if (action !== 'vote' && !authUser && !author.trim()) {
-      setError('Add your name before posting.');
-      setBusy(false);
-      return;
-    }
-    if (!authUser) saveName(author);
     try {
-      let path = `/${id}`,
-        method = 'PATCH',
-        body: unknown = { ...draft, author: effectiveAuthor };
-      if (action === 'reply') {
-        replyId.current ||= crypto.randomUUID();
-        path += '/comments';
-        method = 'POST';
-        body = { requestId: replyId.current, author: effectiveAuthor, text: reply };
-      }
-      if (action === 'vote') {
-        path += '/vote';
-        method = 'PUT';
-        body = { voted: !item.voted };
-      }
-      const value = await feedbackRequest<FeedbackItem>(path, {
-        method,
-        body: JSON.stringify(body),
+      const value = await feedbackRequest<FeedbackItem>(`/${id}/vote`, {
+        method: 'PUT',
+        body: JSON.stringify({ voted: !item.voted }),
       });
       setItem((old) => (old && old.revision > value.revision ? old : value));
-      if (action === 'triage') triageDirty.current = false;
-      if (!triageDirty.current) {
-        setDraft({
-          expectedRevision: value.revision,
-          status: value.status,
-          priority: value.priority,
-          assignee: value.assignee,
-        });
-        if (action === 'triage') setNotice('Changes shared with everyone.');
-      }
-      if (action === 'reply') {
-        setReply('');
-        replyId.current = '';
-      }
+      onChange();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function postReply() {
+    if (!canContribute) {
+      location.href = loginHref;
+      return;
+    }
+    if (!item || !reply.trim()) return;
+    if (!authUser && !author.trim()) {
+      setError('Add your name before posting.');
+      return;
+    }
+    setBusy(true);
+    setError('');
+    setNotice('');
+    if (!authUser) saveName(author);
+    replyId.current ||= crypto.randomUUID();
+    try {
+      const value = await feedbackRequest<FeedbackItem>(`/${id}/comments`, {
+        method: 'POST',
+        body: JSON.stringify({
+          requestId: replyId.current,
+          author: effectiveAuthor,
+          text: reply,
+        }),
+      });
+      setItem((old) => (old && old.revision > value.revision ? old : value));
+      setReply('');
+      replyId.current = '';
+      onChange();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function saveTriage() {
+    if (!item?.canEdit || !draft) return;
+    setBusy(true);
+    setError('');
+    setNotice('');
+    try {
+      const value = await feedbackRequest<FeedbackItem>(`/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ ...draft, author: effectiveAuthor }),
+      });
+      setItem(value);
+      setDraft({
+        expectedRevision: value.revision,
+        status: value.status,
+        priority: value.priority,
+        assignee: value.assignee,
+      });
+      triageDirty.current = false;
+      setNotice('Your report was updated.');
       onChange();
     } catch (e) {
       setError((e as Error).message);
@@ -188,7 +209,7 @@ function FeedbackDetail({
         if (busy) return;
         if (
           (reply.trim() || triageDirty.current) &&
-          !window.confirm('Discard your unsaved reply or status changes?')
+          !window.confirm('Discard your unsaved reply or report changes?')
         )
           return;
         onClose();
@@ -284,115 +305,108 @@ function FeedbackDetail({
             </div>
           </div>
           <div className="feedback-thread">
+            {item.canEdit && draft && (
+              <div className="feedback-triage">
+                <h3>
+                  <SlidersHorizontal size={18} />
+                  Edit your report
+                </h3>
+                <p className="feedback-hint">Only the report creator can change these fields.</p>
+                <div className="feedback-field-row">
+                  <label>
+                    Status
+                    <select
+                      aria-label="Status"
+                      value={draft.status}
+                      onChange={(e) => {
+                        triageDirty.current = true;
+                        setDraft({ ...draft, status: e.target.value as FeedbackPatch['status'] });
+                      }}
+                    >
+                      {feedbackStatuses.map((value) => (
+                        <option key={value} value={value}>
+                          {readable(value)}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    Priority
+                    <select
+                      aria-label="Priority"
+                      value={draft.priority}
+                      onChange={(e) => {
+                        triageDirty.current = true;
+                        setDraft({
+                          ...draft,
+                          priority: e.target.value as FeedbackPatch['priority'],
+                        });
+                      }}
+                    >
+                      {feedbackPriorities.map((value) => (
+                        <option key={value}>{value}</option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+                <label>
+                  Assignee
+                  <input
+                    maxLength={60}
+                    placeholder="Anyone on the team"
+                    value={draft.assignee}
+                    onChange={(e) => {
+                      triageDirty.current = true;
+                      setDraft({ ...draft, assignee: e.target.value });
+                    }}
+                  />
+                </label>
+                <div className="feedback-tools">
+                  <button
+                    className="button primary"
+                    disabled={busy || !triageDirty.current}
+                    onClick={() => void saveTriage()}
+                  >
+                    Save changes
+                  </button>
+                  <button
+                    className="button"
+                    disabled={busy}
+                    onClick={() =>
+                      void refresh(true)
+                        .then(() => setNotice('Latest report loaded.'))
+                        .catch((e) => setError(e.message))
+                    }
+                  >
+                    <RefreshCw size={16} />
+                    Reload latest
+                  </button>
+                </div>
+              </div>
+            )}
             <div className="feedback-triage">
-              <h3>
-                <SlidersHorizontal size={18} />
-                Triage
-              </h3>
+              <h3>Vote</h3>
               {!canContribute ? (
                 <div className="feedback-sign-in-card">
-                  <p>Sign in with GitHub to vote, reply or update this report.</p>
+                  <p>Sign in with GitHub to vote or reply.</p>
                   <a className="button primary" href={loginHref}>
                     <Github size={18} />
                     Sign in with GitHub
                   </a>
                 </div>
-              ) : authUser ? (
-                <p className="feedback-hint">Posting as @{authUser.login}</p>
               ) : (
-                <label>
-                  Your name
-                  <input
-                    maxLength={60}
-                    value={author}
-                    onChange={(e) => setAuthor(e.target.value)}
-                    placeholder="Display name"
-                  />
-                </label>
-              )}
-              {draft && canContribute && (
-                <>
-                  <div className="feedback-field-row">
-                    <label>
-                      Status
-                      <select
-                        aria-label="Status"
-                        value={draft.status}
-                        onChange={(e) => {
-                          triageDirty.current = true;
-                          setDraft({ ...draft, status: e.target.value as FeedbackPatch['status'] });
-                        }}
-                      >
-                        {feedbackStatuses.map((x) => (
-                          <option key={x} value={x}>
-                            {readable(x)}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    <label>
-                      Priority
-                      <select
-                        aria-label="Priority"
-                        value={draft.priority}
-                        onChange={(e) => {
-                          triageDirty.current = true;
-                          setDraft({
-                            ...draft,
-                            priority: e.target.value as FeedbackPatch['priority'],
-                          });
-                        }}
-                      >
-                        {feedbackPriorities.map((x) => (
-                          <option key={x}>{x}</option>
-                        ))}
-                      </select>
-                    </label>
-                  </div>
-                  <label>
-                    Assignee
-                    <input
-                      maxLength={60}
-                      placeholder="Anyone on the team"
-                      value={draft.assignee}
-                      onChange={(e) => {
-                        triageDirty.current = true;
-                        setDraft({ ...draft, assignee: e.target.value });
-                      }}
-                    />
-                  </label>
-                  <div className="feedback-tools">
-                    <button
-                      className="button primary"
-                      disabled={busy}
-                      onClick={() => void mutate('triage')}
-                    >
-                      Save changes
-                    </button>
-                    <button
-                      className="button"
-                      disabled={busy}
-                      onClick={() => {
-                        void refresh(true)
-                          .then(() => {
-                            setError('');
-                            setNotice('Latest status loaded.');
-                          })
-                          .catch((e) => setError(e.message));
-                      }}
-                    >
-                      <RefreshCw size={16} />
-                      Reload latest
-                    </button>
-                  </div>
-                </>
+                <p className="feedback-hint">
+                  {authUser
+                    ? `Voting as @${authUser.login}`
+                    : 'Your vote is stored in this browser.'}
+                </p>
               )}
               {canContribute && (
                 <button
                   className={`button feedback-vote ${item.voted ? 'selected' : ''}`}
                   aria-pressed={item.voted}
                   disabled={busy}
-                  onClick={() => void mutate('vote')}
+                  onClick={() => void vote()}
                 >
                   <ArrowUp size={18} />
                   {item.votes} · {item.voted ? 'You also noticed this' : 'I noticed this too'}
@@ -401,14 +415,12 @@ function FeedbackDetail({
             </div>
             <h3>
               <MessageCircle size={18} />
-              Discussion & activity
+              Replies & activity
             </h3>
             <div className="feedback-comments" aria-live="polite">
               {!item.comments.length && (
                 <p className="feedback-hint">
-                  {canContribute
-                    ? 'Start the conversation.'
-                    : 'No replies yet. Sign in to start the conversation.'}
+                  {canContribute ? 'Start the conversation.' : 'No replies yet.'}
                 </p>
               )}
               {item.comments.map((comment) => (
@@ -425,10 +437,21 @@ function FeedbackDetail({
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  void mutate('reply');
+                  void postReply();
                 }}
                 className="feedback-fields"
               >
+                {!authUser && (
+                  <label>
+                    Your name
+                    <input
+                      maxLength={60}
+                      value={author}
+                      onChange={(e) => setAuthor(e.target.value)}
+                      placeholder="Display name"
+                    />
+                  </label>
+                )}
                 <label>
                   Reply
                   <textarea
@@ -449,6 +472,18 @@ function FeedbackDetail({
                 </button>
               </form>
             )}
+            <button
+              className="button"
+              disabled={busy}
+              onClick={() =>
+                void refresh()
+                  .then(() => setNotice('Latest activity loaded.'))
+                  .catch((e) => setError(e.message))
+              }
+            >
+              <RefreshCw size={16} />
+              Reload latest
+            </button>
             {error && (
               <p className="feedback-error" role="alert">
                 {error}
@@ -557,7 +592,7 @@ export function FeedbackBoard() {
         <div className="feedback-hero-card">
           <MessageSquarePlus size={30} />
           <strong>Built together.</strong>
-          <span>Everyone can read. Sign in with GitHub to reply, vote and move work forward.</span>
+          <span>Everyone can read. Sign in with GitHub to add feedback, reply and vote.</span>
           <a className="button primary" href="/">
             Open studio to mark an element
           </a>

@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { configuredAppOrigin } from '../request-security';
 
 export const SESSION_COOKIE = 'wishscene-session';
 export const OAUTH_COOKIE = 'wishscene-oauth';
@@ -18,7 +19,20 @@ export function authMode(): AuthMode {
   if (clientId) {
     const clientSecret = process.env.WISHSCENE_GITHUB_CLIENT_SECRET;
     const secret = process.env.WISHSCENE_SESSION_SECRET;
-    if (!clientSecret || !secret || secret.length < 32) return { mode: 'misconfigured' };
+    const configuredOrigin = configuredAppOrigin();
+    const vercelProduction = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+    const hasVercelOrigin =
+      !!process.env.VERCEL && !!vercelProduction && /^[a-z0-9.-]+$/i.test(vercelProduction);
+    if (
+      clientId.length < 10 ||
+      !clientSecret ||
+      clientSecret.length < 20 ||
+      !secret ||
+      secret.length < 32 ||
+      configuredOrigin === null ||
+      ((process.env.VERCEL || process.env.RENDER) && !configuredOrigin && !hasVercelOrigin)
+    )
+      return { mode: 'misconfigured' };
     return { mode: 'required', clientId, clientSecret, secret };
   }
   return process.env.VERCEL || process.env.RENDER ? { mode: 'misconfigured' } : { mode: 'open' };
@@ -31,6 +45,7 @@ export function seal(payload: object, secret: string): string {
 }
 
 export function unseal(token: string, secret: string): unknown {
+  if (!token || token.length > 4096) return null;
   const dot = token.lastIndexOf('.');
   if (dot < 0) return null;
   const body = token.slice(0, dot);
@@ -48,16 +63,31 @@ const sessionPayload = z.object({
   v: z.literal(1),
   kind: z.literal('session'),
   id: z.number().int().positive(),
-  login: z.string().min(1).max(39),
+  login: z
+    .string()
+    .min(1)
+    .max(39)
+    .regex(/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/),
   name: z.string().max(100).nullable(),
-  avatarUrl: z.string().url(),
-  exp: z.number(),
+  avatarUrl: z
+    .string()
+    .url()
+    .refine((value) => new URL(value).protocol === 'https:'),
+  iat: z.number().int(),
+  exp: z.number().int(),
 });
 
 function parseSessionToken(token: string | undefined, secret: string): SessionUser | null {
   if (!token) return null;
   const parsed = sessionPayload.safeParse(unseal(token, secret));
-  if (!parsed.success || parsed.data.exp <= Date.now()) return null;
+  const now = Date.now();
+  if (
+    !parsed.success ||
+    parsed.data.exp <= now ||
+    parsed.data.iat > now + 60_000 ||
+    parsed.data.exp - parsed.data.iat > SESSION_MAX_AGE * 1000
+  )
+    return null;
   const { id, login, name, avatarUrl } = parsed.data;
   return { id, login, name, avatarUrl };
 }
@@ -78,7 +108,7 @@ export function readSessionToken(token: string | undefined): SessionUser | null 
 function sessionCookieOptions(request: NextRequest) {
   return {
     httpOnly: true,
-    secure: request.nextUrl.protocol === 'https:',
+    secure: request.nextUrl.protocol === 'https:' || !!process.env.VERCEL || !!process.env.RENDER,
     sameSite: 'lax' as const,
     path: '/',
     maxAge: SESSION_MAX_AGE,
@@ -91,11 +121,21 @@ export function setSessionCookie(
   user: SessionUser,
   secret: string,
 ) {
+  const now = Date.now();
   const token = seal(
-    { v: 1, kind: 'session', ...user, exp: Date.now() + SESSION_MAX_AGE * 1000 },
+    {
+      v: 1,
+      kind: 'session',
+      ...user,
+      iat: now,
+      exp: now + SESSION_MAX_AGE * 1000,
+    },
     secret,
   );
-  response.cookies.set(SESSION_COOKIE, token, sessionCookieOptions(request));
+  response.cookies.set(SESSION_COOKIE, token, {
+    ...sessionCookieOptions(request),
+    priority: 'high',
+  });
 }
 
 export function clearSessionCookie(response: NextResponse) {

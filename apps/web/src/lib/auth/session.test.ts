@@ -4,6 +4,8 @@ import { authMode, readSession, safeNext, seal, unseal, SESSION_COOKIE } from '.
 
 const SECRET = 'a'.repeat(40);
 const SHORT_SECRET = 'a'.repeat(20);
+const CLIENT_ID = 'c'.repeat(20);
+const CLIENT_SECRET = 'b'.repeat(40);
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -50,26 +52,41 @@ describe('authMode', () => {
     vi.stubEnv('RENDER', '1');
     expect(authMode()).toEqual({ mode: 'misconfigured' });
   });
+  it('requires a canonical origin for configured auth on Render', () => {
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', CLIENT_ID);
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', CLIENT_SECRET);
+    vi.stubEnv('WISHSCENE_SESSION_SECRET', SECRET);
+    vi.stubEnv('RENDER', '1');
+    expect(authMode()).toEqual({ mode: 'misconfigured' });
+  });
+  it('rejects an insecure canonical origin for a deployed app', () => {
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', CLIENT_ID);
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', CLIENT_SECRET);
+    vi.stubEnv('WISHSCENE_SESSION_SECRET', SECRET);
+    vi.stubEnv('RENDER', '1');
+    vi.stubEnv('WISHSCENE_PUBLIC_ORIGIN', 'http://wishscene.example');
+    expect(authMode()).toEqual({ mode: 'misconfigured' });
+  });
   it('is misconfigured with a short session secret', () => {
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'client');
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', 'secret');
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', CLIENT_ID);
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', CLIENT_SECRET);
     vi.stubEnv('WISHSCENE_SESSION_SECRET', SHORT_SECRET);
     expect(authMode()).toEqual({ mode: 'misconfigured' });
   });
   it('is misconfigured when the client secret is missing', () => {
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'client');
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', CLIENT_ID);
     vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', '');
     vi.stubEnv('WISHSCENE_SESSION_SECRET', SECRET);
     expect(authMode()).toEqual({ mode: 'misconfigured' });
   });
   it('is required when fully configured', () => {
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'client');
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', 'secret');
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', CLIENT_ID);
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', CLIENT_SECRET);
     vi.stubEnv('WISHSCENE_SESSION_SECRET', SECRET);
     expect(authMode()).toEqual({
       mode: 'required',
-      clientId: 'client',
-      clientSecret: 'secret',
+      clientId: CLIENT_ID,
+      clientSecret: CLIENT_SECRET,
       secret: SECRET,
     });
   });
@@ -87,8 +104,8 @@ describe('readSession', () => {
     expect(readSession(request())).toBeNull();
   });
   it('returns the user for a valid session cookie', () => {
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'client');
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', 'secret');
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', CLIENT_ID);
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', CLIENT_SECRET);
     vi.stubEnv('WISHSCENE_SESSION_SECRET', SECRET);
     const token = seal(
       {
@@ -98,6 +115,7 @@ describe('readSession', () => {
         login: 'octocat',
         name: 'Octo Cat',
         avatarUrl: 'https://x/a.png',
+        iat: Date.now(),
         exp: Date.now() + 1000,
       },
       SECRET,
@@ -110,8 +128,8 @@ describe('readSession', () => {
     });
   });
   it('rejects an expired session', () => {
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'client');
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', 'secret');
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', CLIENT_ID);
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', CLIENT_SECRET);
     vi.stubEnv('WISHSCENE_SESSION_SECRET', SECRET);
     const token = seal(
       {
@@ -121,6 +139,7 @@ describe('readSession', () => {
         login: 'octocat',
         name: null,
         avatarUrl: 'https://x/a.png',
+        iat: Date.now() - 2000,
         exp: Date.now() - 1000,
       },
       SECRET,
@@ -128,16 +147,17 @@ describe('readSession', () => {
     expect(readSession(request(`${SESSION_COOKIE}=${token}`))).toBeNull();
   });
   it('does not accept an OAuth payload as a session', () => {
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', 'client');
-    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', 'secret');
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_ID', CLIENT_ID);
+    vi.stubEnv('WISHSCENE_GITHUB_CLIENT_SECRET', CLIENT_SECRET);
     vi.stubEnv('WISHSCENE_SESSION_SECRET', SECRET);
     const token = seal(
       {
         v: 1,
         kind: 'oauth',
-        state: 'state',
-        verifier: 'verifier',
+        state: 's'.repeat(43),
+        verifier: 'v'.repeat(43),
         next: '/',
+        iat: Date.now(),
         exp: Date.now() + 1000,
       },
       SECRET,
