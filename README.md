@@ -2,7 +2,7 @@
 
 wishscene creates a coherent fictional experience starring a consenting user: photos, short video clips, a Reel or mini movie, Stories, carousel, cover, and editable captions. The product makes creative fantasy media, with clear AI provenance on exports.
 
-**Status:** working developer scaffold with a responsive studio, deterministic mock generation, scene review, versioned stories, and downloadable illustrated packs. Public repository. Real AI generation, authentication, persistent storage, and video are planned next.
+**Status:** working developer scaffold with a responsive studio, 16 photorealistic preset images of one fictional man, deterministic mock generation, scene review, versioned stories, and downloadable image packs. Public repository. Live AI generation, authentication, persistent storage, and video are planned next.
 
 ## Run the studio
 
@@ -20,7 +20,7 @@ Open **http://localhost:3000**. No API keys or database required. Start with Tok
 - [Mock API contract](docs/MOCK_API.md)
 - [Hunch workflow](docs/HUNCH.md)
 
-All bundled artwork is original SVG illustration. The mock does not generate photorealistic media or verify identity. State is isolated by browser cookie and lives in the server process.
+The four destination presets use pre-generated AI photos of the same fictional Alex, with matching outfit and mood settings. Custom settings fall back to labeled SVG illustrations; they do not alter the photos. No live model calls or automated likeness verification run in this demo. See [photo presets and provenance](docs/DEMO_PHOTOS.md). State is isolated by browser cookie and lives in the server process.
 
 ## Start here
 

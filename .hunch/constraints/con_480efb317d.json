@@ -9,7 +9,7 @@
   "enforcement": "advisory_v1",
   "match": null,
   "forbids": null,
-  "rationale": "Captured from an inline hunch-rule comment (packages/domain/src/index.ts:162).",
+  "rationale": "Captured from an inline hunch-rule comment (packages/domain/src/index.ts:164).",
   "source_decision": null,
   "violations": [],
   "status": "active",
@@ -19,7 +19,7 @@
     "source": "human_confirmed",
     "confidence": 0.9,
     "evidence": [
-      "packages/domain/src/index.ts:162"
+      "packages/domain/src/index.ts:164"
     ]
   }
 }

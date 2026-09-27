@@ -34,9 +34,9 @@ const shotLists = {
     ['Last light, first wish', 'Wide · hilltop view', '18:00', 'garden'],
   ],
   Amalfi: [
-    ['Somewhere in the sunshine', 'Wide · coastal view', '09:30', 'coast'],
-    ['Espresso with a view', 'Medium · terrace moment', '11:15', 'cafe'],
-    ['Take the scenic route', 'Wide · seaside walk', '17:00', 'coast'],
+    ['Somewhere in the sunshine', 'Wide · coastal view', '17:30', 'coast'],
+    ['Espresso with a view', 'Medium · terrace moment', '17:45', 'cafe'],
+    ['Take the scenic route', 'Wide · seaside walk', '18:00', 'coast'],
     ['Golden hour, forever', 'Wide · sunset portrait', '18:10', 'rooftop'],
   ],
   Iceland: [
@@ -92,6 +92,7 @@ export class MockStudio {
       scene.assets = this.provider.candidates({
         jobId: `seed-${i}`,
         scene,
+        story: tokyo,
         bibleVersion: 1,
         createdAt: tokyo.createdAt,
       });
@@ -103,7 +104,8 @@ export class MockStudio {
       profile: {
         name: 'Alex Morgan',
         referenceCount: 0,
-        description: 'Fictional demo character. No uploaded photos.',
+        description:
+          'Fictional AI-created man shared across 16 bundled travel photos. No personal photos uploaded.',
       },
       experiences: [
         tokyo,
@@ -266,6 +268,7 @@ export class MockStudio {
         ...this.provider.candidates({
           jobId: job.id,
           scene,
+          story: experience,
           bibleVersion: job.bibleVersion,
           createdAt: new Date(now).toISOString(),
         }),
@@ -312,7 +315,7 @@ export class MockStudio {
       return {
         ...asset,
         title: scene.title,
-        filename: `${String(scene.ordinal + 1).padStart(2, '0')}-${scene.art}-variant-${asset.variant + 1}.svg`,
+        filename: `${String(scene.ordinal + 1).padStart(2, '0')}-${scene.art}-variant-${asset.variant + 1}.${asset.media === 'photo' ? 'jpg' : 'svg'}`,
       };
     });
     return {
@@ -325,8 +328,9 @@ export class MockStudio {
       outfit: experience.outfit,
       mood: experience.mood,
       caption: experience.caption,
-      provenance:
-        'Illustrated mock artwork. Fictional experience created with wishscene. No real AI generation or likeness verification took place.',
+      provenance: assets.every((asset) => asset.media === 'photo')
+        ? 'Pre-generated AI photo fixtures of fictional Alex Morgan. Photos match the recorded destination preset, outfit and mood. No live generation or automated likeness verification took place. Fictional experience created with wishscene.'
+        : 'Illustrated developer fixtures. Custom outfit and mood inputs are metadata only and are not rendered into these illustrations. No live generation or likeness verification took place. Fictional experience created with wishscene.',
       assets,
     };
   }

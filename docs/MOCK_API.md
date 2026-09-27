@@ -36,4 +36,4 @@ curl -b /tmp/wishscene.cookies -H 'Content-Type: application/json' \
 curl -b /tmp/wishscene.cookies http://localhost:3000/api/v1/workspace
 ```
 
-The UI builds the ZIP from the returned manifest and same-origin SVG assets. No export record is persisted and there is no real queue, storage integration, or provider invocation. Production endpoints must add authentication, owner checks, transactional persistence, rate limits and proper deployment origin configuration.
+The UI builds the ZIP from the returned manifest and same-origin image assets as binary data. Each asset has `media: 'photo' | 'illustration'`; matching destination/outfit/mood presets return one JPG per scene, while custom settings return two SVG placeholders. Export filenames preserve the actual file format. No export record is persisted and there is no real queue, storage integration, or runtime provider invocation. Production endpoints must add authentication, owner checks, transactional persistence, rate limits and proper deployment origin configuration. See [DEMO_PHOTOS.md](DEMO_PHOTOS.md) for the exact supported presets.

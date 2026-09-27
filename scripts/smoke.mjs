@@ -62,7 +62,14 @@ try {
   for (const asset of manifest.assets) {
     const image = await fetch(`${base}${asset.image}`);
     assert.equal(image.status, 200);
-    assert.match(await image.text(), /<svg/);
+    if (asset.media === 'photo') {
+      assert.match(image.headers.get('content-type'), /image\/jpeg/);
+      const bytes = Buffer.from(await image.arrayBuffer());
+      assert.equal(bytes.subarray(0, 3).toString('hex'), 'ffd8ff');
+      assert.equal(bytes.subarray(-2).toString('hex'), 'ffd9');
+    } else {
+      assert.match(await image.text(), /<svg/);
+    }
   }
   await request(`experiences/${exp.id}/story`, 'PATCH', {
     expectedVersion: 1,
@@ -75,7 +82,7 @@ try {
   });
   assert.equal(blocked.status, 409);
   console.log(
-    'PASS: production server, session cookie, generation, approval, export manifest, SVG assets, stale export guard.',
+    'PASS: production server, session cookie, generation, approval, export manifest, binary photo assets, stale export guard.',
   );
 } finally {
   try {

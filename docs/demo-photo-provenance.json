@@ -1,0 +1,156 @@
+{
+  "schema": "wishscene.demo-photos/1",
+  "created_on": "2026-09-27",
+  "generation_tool": "built-in image_gen",
+  "fictional_subject": "Alex Morgan",
+  "personal_reference_photos_used": false,
+  "live_generation": false,
+  "identity_verification": "Visual review only; no automated likeness score",
+  "conversion": "Generated PNG to JPEG, quality 88, mozjpeg; no visual retouching",
+  "assets": [
+    {
+      "filename": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: vertical 3:4 editorial travel photograph for wishscene demo. Create a single photographic image, not a collage. Fictional adult man Alex, about 32, Mediterranean appearance, olive skin, short naturally wavy dark brown hair, brown eyes, neat short stubble, slightly prominent straight nose, lean average build. He wears an ivory casual overshirt jacket over a black crew-neck shirt, charcoal trousers, white understated sneakers. Three-quarter full-body candid street portrait in Tokyo at night, believable Japanese side street with small neon storefront lights, after rain reflections, authentic city scale, softly out-of-focus background, pleasant relaxed expression, face clearly recognizable. Natural skin pores, realistic fabric, subtle grain, real travel photography, 50mm lens. Keep face unobstructed, main subject center-safe for portrait crops. No extra prominent people, no watermarks, no captions, no invented logos. This fictional man will serve as the identity reference for a cohesive series. Output portrait 3:4 if possible. Save a copy of the generated output to the execution workspace if supported and return its local path.",
+      "reference_asset": null,
+      "width": 1086,
+      "height": 1448,
+      "bytes": 344648,
+      "sha256": "a12886359943e0f10e38c5b29f45b9278b2c63ed6eb1e3229ca0ae6e9062604f"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/tokyo-cafe.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Same exact ivory jacket, black crew neck, charcoal trousers. Tokyo after dark 20:15, seated at an intimate modern Japanese cafe window, warm practical lights inside and out-of-focus neon outside, holding a small ceramic cup, medium seated portrait. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 209909,
+      "sha256": "e931435c9d4188fcfddeef06848f3d8cb3a067ca08bb3f0e30e0a5aeac139098"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/tokyo-rooftop.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Same exact ivory jacket, black crew neck, charcoal trousers. Tokyo at night 21:00, standing by a safe rooftop terrace railing with a realistic Tokyo skyline behind, relaxed three-quarter waist-up portrait, city lights and soft facial light. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 235967,
+      "sha256": "5613c7d42c8b99e217d546d734faa18358755b6133ac00fb70ef258377ab4938"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/tokyo-walk.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Same exact ivory jacket, black crew neck, charcoal trousers. Tokyo at night 22:10, walking along a narrow quiet Japanese street lit by paper lanterns, closer mid-thigh portrait, glancing naturally toward camera, different street from reference. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 262390,
+      "sha256": "25f2936f595e98585baa3fe0cd523d5510d30ad6d70c01b41de5e44bea991ef1"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/kyoto-garden.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Wear a sage-green overshirt over a white crew-neck T-shirt and sand-colored chinos, no logos. Kyoto Japanese moss garden at 07:30, soft morning light, slow living feeling, relaxed full-body portrait walking on a stone path, traditional timber pavilion and maple leaves. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 389532,
+      "sha256": "86f55193a34745ebbc2bd30388cd84c654c052a9714059a6eb29e6a0f89a5cdd"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/kyoto-matcha.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Wear a sage-green overshirt over a white crew-neck T-shirt and sand-colored chinos, no logos. Kyoto at 09:00, seated by a traditional Japanese teahouse window with a matcha bowl held naturally in both hands, medium portrait, soft morning light, tranquil slow-living feeling. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 224155,
+      "sha256": "398c922a7dc5d6596905ae0d632df0912df903c06a218e99a58904a31b1ef0e6"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/kyoto-lanterns.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Wear a sage-green overshirt over a white crew-neck T-shirt and sand-colored chinos, no logos. Kyoto Gion old town at 17:15, timber facades and warm hanging lanterns, slow-living feeling, relaxed standing street portrait, soft late-afternoon light. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 271711,
+      "sha256": "81c9e5ed38f2a85efa214da381cc26a09710a6f4c8b46ecc41d7165e7b7d360d"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/kyoto-hill.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Wear a sage-green overshirt over a white crew-neck T-shirt and sand-colored chinos, no logos. Kyoto hillside at 18:00 with a distant traditional pagoda and wooded cityscape, relaxed waist-up portrait, calm slow-living feeling, soft sunset. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 250512,
+      "sha256": "4ed12d3adca70b22f6b526487e3128520d58a03837206eb5e8ad45da92e17d25"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/amalfi-coast.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Wear an off-white linen shirt with sleeves casually rolled and sand-colored relaxed linen trousers, no jacket, no logos. Amalfi Coast at 17:30 golden hour, coastal overlook with pastel cliffside buildings and blue sea, sun-warmed portrait, relaxed travel editorial. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 277438,
+      "sha256": "28626b7242340ef233997770c796cd11acbc9d92ed8253976e655e04d764349b"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/amalfi-espresso.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Wear an off-white linen shirt with sleeves casually rolled and sand-colored relaxed linen trousers, no jacket, no logos. Amalfi at 17:45 golden hour, seated at a simple outdoor cafe terrace with small espresso cup, Mediterranean sea and distant cliffs behind, warm medium portrait. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 252636,
+      "sha256": "e3e653b80ba98df462f16e50f7f4b2ae2cd5546e9774b9c5a827dd36f22df9dd"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/amalfi-walk.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Wear an off-white linen shirt with sleeves casually rolled and sand-colored relaxed linen trousers, no jacket, no logos. Amalfi Coast at 18:00 golden hour, full-body walking portrait on a stone seaside promenade, sea and hillside behind, gentle warm light. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 353950,
+      "sha256": "ebb7f8da2d3fc1299084077ec4601c8f74e45e67e7953c3e1c29c8a6ae4a6966"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/amalfi-sunset.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Wear an off-white linen shirt with sleeves casually rolled and sand-colored relaxed linen trousers, no jacket, no logos. Amalfi Coast at 18:10 sunset, medium portrait at a coastal terrace, distant pastel houses and calm sea, soft golden rim light, face naturally illuminated. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 268495,
+      "sha256": "5315b2af5307f8d5ce4e4b97cd17b9e433675ba259d442af95548e4b213e2b99"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/iceland-mountain.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Wear an amber/mustard weatherproof parka over a charcoal knit layer, dark hiking trousers and brown hiking boots. Iceland at 08:00, rugged mountain and mossy lava landscape, standing three-quarter full-body portrait, cool misty light and adventurous atmosphere. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 313382,
+      "sha256": "f66d78a46c028d081a4f0eed1a4ca8eec770fff1dccde9c8c0188a353bd0c519"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/iceland-landscape.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Wear an amber/mustard weatherproof parka over a charcoal knit layer, dark hiking trousers and brown hiking boots. Iceland at 10:30, epic dramatic volcanic valley with distant waterfall, traveler walking in foreground, entire man visible but not tiny, face identifiable, overcast natural light, adventure editorial. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 328654,
+      "sha256": "99ea7691d030aa7aaa3850bf7b7dc8f3b97d604ca0c4e8fd755b33ac47eed87b"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/iceland-cabin.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Wear an amber/mustard weatherproof parka unzipped over a charcoal knit layer, dark hiking trousers and brown hiking boots. Iceland at 14:15, wooden mountain cabin porch, holding a steaming enamel mug with both hands, medium portrait, rugged landscape behind, cool daylight, adventurous travel feeling. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 297285,
+      "sha256": "3e4fe8c671585c563062db89c6c6ab9d343fa8b941bf5df9367aa7ace71d584b"
+    },
+    {
+      "filename": "apps/web/public/demo/photos/iceland-aurora.jpg",
+      "prompt": "Use case: identity-preserve. Asset type: single vertical 3:4 photorealistic editorial travel photo for wishscene. Input image 1 is the FICTIONAL man's identity reference, not a background to reuse. Keep exactly the same face, brown eyes, curly dark hair, stubble, olive skin tone, adult age and lean build. Create one new natural photo of this same man: Wear an amber/mustard weatherproof parka over a charcoal knit layer, dark hiking trousers and brown hiking boots. Iceland at 22:00, northern lights subtly streaking the starry sky over snowy volcanic mountains, man in foreground waist-up portrait softly lit by a warm off-camera camping light, credible night exposure, adventure editorial. Main person center-safe for portrait cropping, recognizable unobstructed face. Real skin texture, credible anatomy and hands, realistic materials and lighting, subtle camera grain. This is a coherent travel series, not a fashion ad. No captions, watermark, added logos or collage. Change the pose naturally. Portrait 3:4.",
+      "reference_asset": "apps/web/public/demo/photos/tokyo-neon.jpg",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 216435,
+      "sha256": "f403af2b51cb2997327fe0c28e2fde2ec0493fed5c0f9cf0b2bfcbc65fd5d125"
+    }
+  ]
+}

@@ -1177,6 +1177,53 @@ textarea {
   gap: 18px;
   margin: 20px 0;
 }
+.candidate-grid:has(.candidate:only-child) {
+  grid-template-columns: minmax(0, 440px);
+  justify-content: center;
+}
+.candidate:only-child img {
+  max-height: 520px;
+  height: auto;
+  object-fit: contain;
+}
+.preset-note {
+  padding: 15px;
+  border: 1px solid #ddd4ea;
+  border-radius: 10px;
+  background: #f5f0fa;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.preset-note strong {
+  color: #5c4283;
+}
+.preset-note p {
+  margin: 5px 0;
+  color: var(--muted);
+}
+.preset-note .button {
+  margin-top: 10px;
+}
+.demo-photo-note {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 13px;
+  color: #726184;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.demo-photo-note svg {
+  flex-shrink: 0;
+}
+.demo-photo-note.custom {
+  color: #805d31;
+}
+.demo-photo-note button {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .candidate {
   min-width: 0;
 }

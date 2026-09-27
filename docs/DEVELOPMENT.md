@@ -20,18 +20,18 @@ VS Code users can reopen this repo in the included dev container. It installs de
 | --- | --- |
 | Studio | Responsive storyboard, experience picker, creation form, native dialogs, review UI |
 | Starter data | Tokyo, Amalfi, Iceland; create Kyoto too; fictional Alex character |
-| Artwork | 16 original bundled SVG illustrations; original and warm grades |
+| Artwork | 16 pre-generated AI photos of fictional Alex; four matching destination presets; 16 SVG fallbacks for custom settings |
 | Story Bible | Versioned outfit and mood; optimistic version check; edits clear approvals and cancel old jobs |
 | Generation | Simulated queued → running → ready/failed; 2.4-second normal and 12-second slow scenario |
-| Review | Two current-version candidates per run; previous candidates retained in session state |
+| Review | One fixed photo per scene for a matching preset; two illustrated grades for custom settings; previous candidates retained |
 | Retry/cancel | Idempotent request keys; one active job per scene; safe cancellation; previous choice retained |
-| Social pack | Editable caption; preview of four frames; ZIP with SVGs, caption, provenance, manifest |
+| Social pack | Editable caption; preview of four frames; ZIP with JPG photos or SVG fallbacks, caption, provenance, manifest |
 | Isolation | Random HttpOnly session cookie; separate in-memory workspace per browser |
 | Hunch | Pinned CLI/MCP configs, project memory, explicit task and verification workflow |
 
 **This is a developer sandbox, not the production backend.** Mock state is lost on server restart, expires after one hour without API activity, and is not shared across server processes. Maximum 100 active sessions, 20 experiences per session, and 500 jobs per session. Use Developer tools → Reset demo workspace to reseed. Session expiry silently starts a new seeded workspace on the next request. Multiple tabs in one browser share the session.
 
-Jobs advance when the API is read; there is no queue consumer or background execution. The UI polls while jobs are active. Mock generation does not condition artwork on outfit/mood and does not measure likeness. The variants are prebuilt color grades. Preview art for a draft is inspirational; approval still requires a generated mock candidate.
+Jobs advance when the API is read; there is no queue consumer or background execution. The UI polls while jobs are active. Exact destination/outfit/mood presets select pre-generated matching photos; custom settings fall back to labeled illustrations whose appearance does not change with free text. Regeneration reuses the same photo. No live generation or automated likeness checks occur. Preview art for a draft is inspirational; approval still requires loading a mock candidate. See [DEMO_PHOTOS.md](DEMO_PHOTOS.md).
 
 Real authentication/ownership, Postgres/Prisma, BullMQ/Redis workers, private object storage, photo upload, paid image generation, actual photo/social resizing, and video are **not implemented**. The chosen production stack remains in [STACK.md](STACK.md). Do not deploy the mock as a real user service.
 
@@ -40,10 +40,11 @@ Real authentication/ownership, Postgres/Prisma, BullMQ/Redis workers, private ob
 1. Tokyo starts with two approved scenes, one review scene, one draft.
 2. Click **Generate remaining**. Review and approve a candidate for scenes 3 and 4.
 3. Open **Social pack**, edit and save the caption.
-4. **Export demo pack** downloads four SVGs plus `manifest.json`, `caption.txt`, and `README.txt`.
+4. **Export demo pack** downloads four JPGs for a matching photo preset (SVGs for custom settings), plus `manifest.json`, `caption.txt`, and `README.txt`.
 5. Change the look under **Story settings**. Version increments; every existing approval clears. Old candidates cannot be approved or exported against the new story.
 6. In **Developer tools**, choose Failure or Slow. Generate a scene, observe failure/retry or cancel the slow job. Scenario changes apply to subsequent requests.
-7. Create a new Kyoto experience. Reloading preserves server state; the selected experience defaults to Tokyo after reload. Use the title picker to switch.
+7. Create a new Kyoto experience. Selecting the destination fills its matching photo outfit and mood. Reloading preserves server state; the selected experience defaults to Tokyo after reload. Use the title picker to switch.
+8. Edit the outfit to a custom value: the form explains the illustrated fallback. Use **Use Kyoto photo preset** to restore matching photos; saving still clears previous approvals.
 
 ## Code map
 
@@ -55,7 +56,8 @@ Real authentication/ownership, Postgres/Prisma, BullMQ/Redis workers, private ob
 | `packages/contracts/src/` | Zod inputs and shared response types |
 | `packages/domain/src/` | Mock state machine, versioning, approvals, export readiness |
 | `packages/providers/src/` | Minimal deterministic fixture adapter; production provider contract is still a follow-up |
-| `apps/web/public/demo/` | Original SVG fixtures; no external image hosts |
+| `apps/web/public/demo/` | Original SVG fixtures and 16 bundled JPG photos; no external image hosts |
+| `packages/contracts/src/demo.ts` | Shared preset settings and preview selection used by provider and browser |
 | `scripts/generate-demo-art.mjs` | Reproducible illustration source |
 | `tests/` | Domain regression cases and Playwright journeys |
 | `apps/web/src/lib/mock-api.test.ts` | HTTP/session/validation boundary cases |
@@ -94,5 +96,5 @@ Pick an unassigned issue and make a feature branch. Keep mock flows usable while
 2. **#3** — BullMQ worker + durable job/outbox store, asynchronous provider contracts, retries, cancellation and late-result tests.
 3. **#6** — Adult consent + private reference-photo lifecycle; no real faces until retention/storage decisions land.
 4. **#8** — Image benchmark adapter after #5; compare actual likeness/session consistency.
-5. **#10** — Real image derivatives, provenance and social exports; replace SVG-only mock packs.
+5. **#10** — Real image derivatives, verified provenance and social export layouts beyond original fixture files.
 6. **#13–14** — Video and reel rendering after the photo quality gate.
