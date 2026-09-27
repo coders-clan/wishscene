@@ -28,6 +28,8 @@ This deploys the **developer demo**, including shared feedback. GitHub sign-in i
 
 The studio and feedback board remain publicly readable. Adding feedback, replying and voting require GitHub sign-in. Only the report creator can change status, priority or assignee. Any GitHub account may sign in — this proves identity, not team membership; it is not an org or allowlist check and it does not make anonymous demo workspaces into cross-device accounts.
 
+On Vercel and Render, Postgres connections force `sslmode=verify-full` so the server verifies both the database certificate and hostname even if a provider URL uses a weaker mode.
+
 1. Create a GitHub OAuth App: GitHub → Settings → Developer settings → OAuth Apps (or the org's own settings, if this deployment should only be usable by an org's members using their GitHub accounts).
 2. Homepage URL: `https://project-rxuus.vercel.app`. Authorization callback URL: `https://project-rxuus.vercel.app/api/auth/github/callback`.
 3. Set `WISHSCENE_GITHUB_CLIENT_ID`, `WISHSCENE_GITHUB_CLIENT_SECRET` and `WISHSCENE_SESSION_SECRET` (see the table above) on Production. Preview deployments need the same variables and stay behind Vercel Deployment Protection in addition to GitHub sign-in.
