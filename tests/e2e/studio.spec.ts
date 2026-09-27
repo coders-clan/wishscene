@@ -27,6 +27,9 @@ test('complete an experience, download it, then invalidate old approvals', async
   });
   for (const title of ['Above the ordinary', 'The long way home']) {
     await page.getByRole('button', { name: `Review ${title}`, exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Approve', exact: true }).first()).toBeInViewport(
+      { ratio: 1 },
+    );
     if (title === 'Above the ordinary')
       await page.screenshot({ path: testInfo.outputPath('photo-review.png'), fullPage: true });
     await page.getByRole('button', { name: 'Approve', exact: true }).first().click();

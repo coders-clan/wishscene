@@ -1182,7 +1182,7 @@ textarea {
   justify-content: center;
 }
 .candidate:only-child img {
-  max-height: 520px;
+  max-height: min(420px, 45dvh);
   height: auto;
   object-fit: contain;
 }
@@ -1216,6 +1216,10 @@ textarea {
 }
 .demo-photo-note svg {
   flex-shrink: 0;
+}
+.demo-photo-note > span {
+  flex: 1;
+  min-width: 0;
 }
 .demo-photo-note.custom {
   color: #805d31;

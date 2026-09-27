@@ -650,12 +650,8 @@ export default function Studio() {
                             <p>{item.shot}</p>
                             <div className="scene-actions">
                               <span>
-                                {
-                                  item.assets.filter(
-                                    (a) => a.bibleVersion === experience.bibleVersion,
-                                  ).length
-                                }{' '}
-                                candidates
+                                {currentAssets.length}{' '}
+                                {currentAssets.length === 1 ? 'candidate' : 'candidates'}
                               </span>
                               {job ? (
                                 <button

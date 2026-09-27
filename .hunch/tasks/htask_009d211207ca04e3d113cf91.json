@@ -1,0 +1,103 @@
+{
+  "id": "htask_009d211207ca04e3d113cf91",
+  "title": "Photorealistic demo scenes with one consistent fictional identity",
+  "state": "completed",
+  "started_at": "2026-09-27T11:15:01.954Z",
+  "finished_at": "2026-09-27T11:44:58.896Z",
+  "coverage": "delivered",
+  "lessons": [
+    {
+      "kind": "decisions",
+      "record_id": "dec_d7095985f1",
+      "content_hash": "sha256:29520b57b092cac438bde01d9bbe033bcb46924890cfbb9195847434d1e5feba",
+      "title": "Keep mock state behind the domain boundary intended for persistence. Each browser gets its own workspace, with no identity uploads or provider calls."
+    },
+    {
+      "kind": "constraints",
+      "record_id": "con_480efb317d",
+      "content_hash": "sha256:baf5c7ae2343825874fe77bd2e2be74c25fd501221411af03142bd5563b5e41a",
+      "title": "A Story Bible edit must invalidate previous approvals and cancel active jobs before a newer version can be exported."
+    }
+  ],
+  "applied": [],
+  "saved": [],
+  "checks": [
+    {
+      "label": "Photo integration lint and types",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Photo integration types",
+      "state": "failed",
+      "exit_code": 2
+    },
+    {
+      "label": "Photo integration types",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Story and API regression checks",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Photo HTTP smoke",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Complete photo demo quality checks",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Final photo HTTP smoke",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Final committed demo quality checks",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Final committed photo HTTP smoke",
+      "state": "passed",
+      "exit_code": 0
+    }
+  ],
+  "conformance": [
+    {
+      "kind": "decisions",
+      "record_id": "dec_d7095985f1",
+      "content_hash": "sha256:29520b57b092cac438bde01d9bbe033bcb46924890cfbb9195847434d1e5feba",
+      "outcome": "unavailable"
+    },
+    {
+      "kind": "constraints",
+      "record_id": "con_480efb317d",
+      "content_hash": "sha256:baf5c7ae2343825874fe77bd2e2be74c25fd501221411af03142bd5563b5e41a",
+      "outcome": "unavailable"
+    }
+  ],
+  "refusals": 0,
+  "files": [
+    "packages/domain/src/index.ts",
+    "packages/providers/src/index.ts"
+  ],
+  "supersedes": [
+    "htask_e3d8f29d5c6ed9f1fde6fbcf"
+  ],
+  "source_snapshot": "sha256:31e811967f835b969299a386a1f8416e88e054c6f1456bea334cca863bc2002e",
+  "report_hash": "sha256:d39bb894e2331793ca48962d4828917b99f657173c5fe1b0b515f6b9062d3b07",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_009d211207ca04e3d113cf91"
+    ],
+    "last_verified": "2026-09-27T11:44:58.896Z"
+  }
+}
