@@ -1,5 +1,41 @@
 [
   {
+    "id": "sym_00903c29e9",
+    "file": "packages/domain/src/feedback.ts",
+    "name": "voteForFeedback",
+    "kind": "function",
+    "signature_hash": "sha1:bae4eb4b208",
+    "calls": [
+      "sym_5a3be9886a"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 16,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_018e28e149",
+    "file": "apps/web/src/components/feedback/launcher.tsx",
+    "name": "escape",
+    "kind": "function",
+    "signature_hash": "sha1:dee60a4fb36",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 6,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
     "id": "sym_038f8c7076",
     "file": "packages/domain/src/index.ts",
     "name": "active",
@@ -14,12 +50,12 @@
     ],
     "metrics": {
       "loc": 1,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 4,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_03b1eca43f",
@@ -62,17 +98,19 @@
     "file": "packages/domain/src/index.ts",
     "name": "MockStudio",
     "kind": "class",
-    "signature_hash": "sha1:8ed3cabcc4d",
+    "signature_hash": "sha1:aa892fe6caa",
     "calls": [],
-    "called_by": [],
+    "called_by": [
+      "sym_3e3509dde3"
+    ],
     "metrics": {
-      "loc": 314,
-      "churn_90d": 3,
+      "loc": 319,
+      "churn_90d": 4,
       "bug_count": 0,
-      "fan_in": 0,
+      "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_0e797d939c",
@@ -84,12 +122,12 @@
     "called_by": [],
     "metrics": {
       "loc": 6,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_10711ce3ae",
@@ -105,12 +143,29 @@
     ],
     "metrics": {
       "loc": 6,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_1121dafd3b",
+    "file": "packages/contracts/src/feedback.ts",
+    "name": "FeedbackRecord",
+    "kind": "interface",
+    "signature_hash": "sha1:630c0437965",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 11,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:ef76e3d"
   },
   {
     "id": "sym_119ac09ba3",
@@ -132,6 +187,61 @@
     "last_changed": "commit:c67aa83"
   },
   {
+    "id": "sym_11fd0c083f",
+    "file": "apps/web/src/components/feedback/board.tsx",
+    "name": "load",
+    "kind": "function",
+    "signature_hash": "sha1:80da99cf7bb",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 20,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
+    "id": "sym_11fd0c083f_1",
+    "file": "apps/web/src/components/feedback/board.tsx",
+    "name": "load",
+    "kind": "function",
+    "signature_hash": "sha1:77f328f7ef2",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 14,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
+    "id": "sym_14427e62f4",
+    "file": "apps/web/src/components/feedback/annotation-editor.tsx",
+    "name": "AnnotationEditor",
+    "kind": "function",
+    "signature_hash": "sha1:55ea7e05c6e",
+    "calls": [
+      "sym_697faafb91",
+      "sym_ada0d86a7f",
+      "sym_56052ad23f"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 165,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 3
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
     "id": "sym_14441b1549",
     "file": "packages/domain/src/index.ts",
     "name": "constructor",
@@ -141,12 +251,12 @@
     "called_by": [],
     "metrics": {
       "loc": 7,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_14441b1549_1",
@@ -160,12 +270,32 @@
     "called_by": [],
     "metrics": {
       "loc": 7,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 1
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_1b38a20455",
+    "file": "apps/web/src/components/feedback/board.tsx",
+    "name": "timestamp",
+    "kind": "function",
+    "signature_hash": "sha1:fac607ce388",
+    "calls": [],
+    "called_by": [
+      "sym_6fdaa6187d",
+      "sym_20af674c9a"
+    ],
+    "metrics": {
+      "loc": 8,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 0
+    },
+    "last_changed": "commit:a5b3169"
   },
   {
     "id": "sym_1f1b38ab6d",
@@ -177,12 +307,12 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_1faa11e08b",
@@ -207,6 +337,27 @@
     "last_changed": "commit:dc719e9"
   },
   {
+    "id": "sym_20af674c9a",
+    "file": "apps/web/src/components/feedback/board.tsx",
+    "name": "FeedbackBoard",
+    "kind": "function",
+    "signature_hash": "sha1:9d06c11c2c4",
+    "calls": [
+      "sym_86924f89e8",
+      "sym_cdc4930260",
+      "sym_1b38a20455"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 267,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 3
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
     "id": "sym_214c53a83f",
     "file": "packages/contracts/src/index.ts",
     "name": "ExperienceInput",
@@ -216,12 +367,87 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_21809bc11a",
+    "file": "packages/contracts/src/feedback.ts",
+    "name": "Annotation",
+    "kind": "type",
+    "signature_hash": "sha1:8e17ab955e3",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:ef76e3d"
+  },
+  {
+    "id": "sym_2270eef2db",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "change",
+    "kind": "method",
+    "signature_hash": "sha1:6c791a6abc5",
+    "calls": [],
+    "called_by": [
+      "sym_5059f1bcef"
+    ],
+    "metrics": {
+      "loc": 13,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_23ef7b3a1e",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "init",
+    "kind": "method",
+    "signature_hash": "sha1:f0107e3cabd",
+    "calls": [],
+    "called_by": [
+      "sym_7996a9b361",
+      "sym_e3281641f0"
+    ],
+    "metrics": {
+      "loc": 5,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_2418b57bbf",
+    "file": "apps/web/src/app/api/feedback/[[...path]]/route.ts",
+    "name": "handle",
+    "kind": "function",
+    "signature_hash": "sha1:64b827738b3",
+    "calls": [
+      "sym_5059f1bcef"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_29cfb77969",
@@ -233,12 +459,31 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_29f73432b0",
+    "file": "apps/web/src/components/feedback/capture.ts",
+    "name": "selectorFor",
+    "kind": "function",
+    "signature_hash": "sha1:fe79aff2753",
+    "calls": [],
+    "called_by": [
+      "sym_aa11e0934f"
+    ],
+    "metrics": {
+      "loc": 25,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_2b22ce11fa",
@@ -258,6 +503,57 @@
     "last_changed": "commit:c67aa83"
   },
   {
+    "id": "sym_2b82958579",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "close",
+    "kind": "method",
+    "signature_hash": "sha1:57d918609e9",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_2b82958579_1",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "close",
+    "kind": "method",
+    "signature_hash": "sha1:dc1ad0a0cdd",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_2b82958579_2",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "close",
+    "kind": "method",
+    "signature_hash": "sha1:eb20670734f",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
     "id": "sym_2bb1d9d5f2",
     "file": "apps/web/src/components/studio.tsx",
     "name": "api",
@@ -272,12 +568,12 @@
     ],
     "metrics": {
       "loc": 11,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 4,
       "fan_out": 0
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_308480ea2b",
@@ -310,12 +606,31 @@
     "called_by": [],
     "metrics": {
       "loc": 41,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 3
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_33c65b122a",
+    "file": "apps/web/src/lib/feedback/api.ts",
+    "name": "readBody",
+    "kind": "function",
+    "signature_hash": "sha1:b811af53ffb",
+    "calls": [],
+    "called_by": [
+      "sym_5059f1bcef"
+    ],
+    "metrics": {
+      "loc": 23,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_3681195f5b",
@@ -352,12 +667,33 @@
     ],
     "metrics": {
       "loc": 8,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 2
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_3701d308e2",
+    "file": "apps/web/src/components/feedback/capture.ts",
+    "name": "pageTarget",
+    "kind": "function",
+    "signature_hash": "sha1:b8659d2c5a9",
+    "calls": [
+      "sym_aa11e0934f"
+    ],
+    "called_by": [
+      "sym_690822f2c8"
+    ],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_371c013f11",
@@ -373,32 +709,68 @@
     ],
     "metrics": {
       "loc": 4,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_3d00e3467a",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "FeedbackStore",
+    "kind": "class",
+    "signature_hash": "sha1:9759d350051",
+    "calls": [],
+    "called_by": [
+      "sym_7996a9b361",
+      "sym_e3281641f0"
+    ],
+    "metrics": {
+      "loc": 72,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_3e3509dde3",
     "file": "packages/domain/src/index.ts",
     "name": "restore",
     "kind": "method",
+    "signature_hash": "sha1:2529847cd47",
+    "calls": [
+      "sym_0b7658d5c7"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 5,
+      "churn_90d": 4,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_3e3509dde3_1",
+    "file": "packages/domain/src/index.ts",
+    "name": "restore",
+    "kind": "method",
     "signature_hash": "sha1:a078757782b",
     "calls": [],
-    "called_by": [
-      "sym_b52416f60e",
-      "sym_e4658e7c42"
-    ],
+    "called_by": [],
     "metrics": {
       "loc": 9,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
-      "fan_in": 2,
+      "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_3eb3620cd5",
@@ -452,6 +824,23 @@
     "last_changed": "commit:2273d4e"
   },
   {
+    "id": "sym_4302d25790",
+    "file": "packages/contracts/src/feedback.ts",
+    "name": "FeedbackItem",
+    "kind": "type",
+    "signature_hash": "sha1:cc362121178",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 5,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:ef76e3d"
+  },
+  {
     "id": "sym_477765f8d2",
     "file": "apps/web/src/components/studio.tsx",
     "name": "activeJob",
@@ -463,12 +852,91 @@
     ],
     "metrics": {
       "loc": 1,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_482ff63353",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "Sql",
+    "kind": "interface",
+    "signature_hash": "sha1:27f2d202788",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 4,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_487c000ac0",
+    "file": "apps/web/src/lib/postgres.ts",
+    "name": "postgresPool",
+    "kind": "function",
+    "signature_hash": "sha1:c5e26b38d92",
+    "calls": [],
+    "called_by": [
+      "sym_e3281641f0",
+      "sym_48aa5beb46"
+    ],
+    "metrics": {
+      "loc": 18,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_48aa5beb46",
+    "file": "apps/web/src/lib/workspace-store.ts",
+    "name": "withWorkspace",
+    "kind": "function",
+    "signature_hash": "sha1:5f6912065a0",
+    "calls": [
+      "sym_9c5ca25e3b",
+      "sym_512da2af61",
+      "sym_487c000ac0"
+    ],
+    "called_by": [
+      "sym_fd92a4bd50"
+    ],
+    "metrics": {
+      "loc": 25,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 3
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_4a203fd35b",
+    "file": "apps/web/src/lib/workspace-store.ts",
+    "name": "initialize",
+    "kind": "function",
+    "signature_hash": "sha1:366d47ff8a0",
+    "calls": [],
+    "called_by": [
+      "sym_512da2af61"
+    ],
+    "metrics": {
+      "loc": 16,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_4d516f691e",
@@ -480,12 +948,12 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_4f6c55b70d",
@@ -517,12 +985,41 @@
     "called_by": [],
     "metrics": {
       "loc": 11,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 2
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_5059f1bcef",
+    "file": "apps/web/src/lib/feedback/api.ts",
+    "name": "feedbackDispatch",
+    "kind": "function",
+    "signature_hash": "sha1:8ddea4ad190",
+    "calls": [
+      "sym_c9e73ed096",
+      "sym_6f5a9608d7",
+      "sym_582beb718b",
+      "sym_5a34a6d7e7",
+      "sym_9f9454ab2d",
+      "sym_33c65b122a",
+      "sym_dfcd0d42d3",
+      "sym_2270eef2db"
+    ],
+    "called_by": [
+      "sym_2418b57bbf",
+      "sym_8033309692"
+    ],
+    "metrics": {
+      "loc": 149,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 8
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_50ff3c39cf",
@@ -542,6 +1039,65 @@
     "last_changed": "commit:2273d4e"
   },
   {
+    "id": "sym_512da2af61",
+    "file": "apps/web/src/lib/workspace-store.ts",
+    "name": "withPostgresWorkspace",
+    "kind": "function",
+    "signature_hash": "sha1:5af9da55405",
+    "calls": [
+      "sym_4a203fd35b"
+    ],
+    "called_by": [
+      "sym_48aa5beb46"
+    ],
+    "metrics": {
+      "loc": 57,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_53d15a62ea",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "get",
+    "kind": "method",
+    "signature_hash": "sha1:2f82938be0b",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 10,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_56052ad23f",
+    "file": "apps/web/src/components/feedback/annotation-editor.tsx",
+    "name": "download",
+    "kind": "function",
+    "signature_hash": "sha1:a0c047253f1",
+    "calls": [
+      "sym_697faafb91"
+    ],
+    "called_by": [
+      "sym_14427e62f4"
+    ],
+    "metrics": {
+      "loc": 23,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
     "id": "sym_565d8d37ff",
     "file": "apps/web/src/components/studio.tsx",
     "name": "exportPack",
@@ -555,12 +1111,50 @@
     ],
     "metrics": {
       "loc": 35,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_582beb718b",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "list",
+    "kind": "method",
+    "signature_hash": "sha1:bad9ae27a0d",
+    "calls": [],
+    "called_by": [
+      "sym_5059f1bcef"
+    ],
+    "metrics": {
+      "loc": 9,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_58667b8405",
+    "file": "packages/domain/src/feedback.ts",
+    "name": "triageFeedback",
+    "kind": "function",
+    "signature_hash": "sha1:41afcc99d6e",
+    "calls": [
+      "sym_5a3be9886a"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 45,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_596777fa81",
@@ -572,12 +1166,31 @@
     "called_by": [],
     "metrics": {
       "loc": 9,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_5a34a6d7e7",
+    "file": "apps/web/src/lib/feedback/api.ts",
+    "name": "publicItem",
+    "kind": "function",
+    "signature_hash": "sha1:df246cef6b4",
+    "calls": [],
+    "called_by": [
+      "sym_5059f1bcef"
+    ],
+    "metrics": {
+      "loc": 5,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_5a3be9886a",
@@ -587,6 +1200,9 @@
     "signature_hash": "sha1:44f14a77388",
     "calls": [],
     "called_by": [
+      "sym_58667b8405",
+      "sym_a2355e16ad",
+      "sym_00903c29e9",
       "sym_e78fcbf9ca",
       "sym_837814e880",
       "sym_4fa89a4963",
@@ -599,12 +1215,12 @@
     ],
     "metrics": {
       "loc": 9,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
-      "fan_in": 9,
+      "fan_in": 12,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_5b4b5c701d",
@@ -616,12 +1232,12 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_5e7171df4b",
@@ -633,12 +1249,12 @@
     "called_by": [],
     "metrics": {
       "loc": 12,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_619b7b92f7",
@@ -650,12 +1266,12 @@
     "called_by": [],
     "metrics": {
       "loc": 11,
-      "churn_90d": 4,
+      "churn_90d": 5,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_61e0035362",
@@ -693,30 +1309,114 @@
     ],
     "called_by": [],
     "metrics": {
-      "loc": 1076,
-      "churn_90d": 6,
+      "loc": 1083,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 9
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_6478a04084",
+    "file": "packages/contracts/src/feedback.ts",
+    "name": "FeedbackPatch",
+    "kind": "type",
+    "signature_hash": "sha1:cc2dc73f64c",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:ef76e3d"
   },
   {
     "id": "sym_66f8b427d0",
     "file": "apps/web/src/app/layout.tsx",
     "name": "RootLayout",
     "kind": "function",
-    "signature_hash": "sha1:cf550ee13d4",
+    "signature_hash": "sha1:368c240fe0b",
     "calls": [],
     "called_by": [],
     "metrics": {
-      "loc": 7,
-      "churn_90d": 1,
+      "loc": 10,
+      "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:9706a33"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_67f1988520",
+    "file": "apps/web/src/components/feedback/annotation-editor.tsx",
+    "name": "annotatedJpeg",
+    "kind": "function",
+    "signature_hash": "sha1:f404ec2f39c",
+    "calls": [
+      "sym_697faafb91"
+    ],
+    "called_by": [
+      "sym_e8ec725370"
+    ],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_690822f2c8",
+    "file": "apps/web/src/components/feedback/launcher.tsx",
+    "name": "FeedbackLauncher",
+    "kind": "function",
+    "signature_hash": "sha1:8cd1d86cb89",
+    "calls": [
+      "sym_7632454491",
+      "sym_acaefbd95f",
+      "sym_c7443673e4",
+      "sym_ce3502f1e7",
+      "sym_3701d308e2",
+      "sym_aa11e0934f",
+      "sym_c68aab2d4b"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 475,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 7
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
+    "id": "sym_697faafb91",
+    "file": "apps/web/src/components/feedback/annotation-editor.tsx",
+    "name": "paintImage",
+    "kind": "function",
+    "signature_hash": "sha1:20fd6e202d4",
+    "calls": [],
+    "called_by": [
+      "sym_67f1988520",
+      "sym_14427e62f4",
+      "sym_56052ad23f"
+    ],
+    "metrics": {
+      "loc": 54,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 3,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_6b0cc3375d",
@@ -736,21 +1436,201 @@
     "last_changed": "commit:9706a33"
   },
   {
-    "id": "sym_77d0e87748",
-    "file": "pnpm-lock.yaml",
-    "name": "pnpm-lock.yaml",
-    "kind": "file",
-    "signature_hash": "sha1:298fc3353c2",
+    "id": "sym_6efaf18805",
+    "file": "packages/contracts/src/feedback.ts",
+    "name": "FeedbackSummary",
+    "kind": "type",
+    "signature_hash": "sha1:7511b06df2f",
     "calls": [],
     "called_by": [],
     "metrics": {
-      "loc": 3858,
+      "loc": 4,
       "churn_90d": 2,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:c67aa83"
+    "last_changed": "commit:ef76e3d"
+  },
+  {
+    "id": "sym_6f5a9608d7",
+    "file": "apps/web/src/lib/feedback/api.ts",
+    "name": "respond",
+    "kind": "function",
+    "signature_hash": "sha1:36ef977a1b6",
+    "calls": [],
+    "called_by": [
+      "sym_5059f1bcef"
+    ],
+    "metrics": {
+      "loc": 14,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_6fdaa6187d",
+    "file": "apps/web/src/components/feedback/board.tsx",
+    "name": "FeedbackDetail",
+    "kind": "function",
+    "signature_hash": "sha1:f382442dc33",
+    "calls": [
+      "sym_7632454491",
+      "sym_86924f89e8",
+      "sym_1b38a20455",
+      "sym_aceb20296c",
+      "sym_91128cd3cc",
+      "sym_938d568f31"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 388,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 6
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
+    "id": "sym_7185cc73af",
+    "file": "apps/web/src/components/feedback/capture.ts",
+    "name": "safeText",
+    "kind": "function",
+    "signature_hash": "sha1:94f49498766",
+    "calls": [],
+    "called_by": [
+      "sym_aa11e0934f"
+    ],
+    "metrics": {
+      "loc": 5,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_725a901d6d",
+    "file": "apps/web/src/lib/mock-api.ts",
+    "name": "route",
+    "kind": "function",
+    "signature_hash": "sha1:6391c85d64c",
+    "calls": [
+      "sym_8839d47266"
+    ],
+    "called_by": [
+      "sym_fd92a4bd50"
+    ],
+    "metrics": {
+      "loc": 94,
+      "churn_90d": 4,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_7632454491",
+    "file": "apps/web/src/components/feedback/client.ts",
+    "name": "readName",
+    "kind": "function",
+    "signature_hash": "sha1:58129493b10",
+    "calls": [],
+    "called_by": [
+      "sym_6fdaa6187d",
+      "sym_690822f2c8"
+    ],
+    "metrics": {
+      "loc": 7,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_77d0e87748",
+    "file": "pnpm-lock.yaml",
+    "name": "pnpm-lock.yaml",
+    "kind": "file",
+    "signature_hash": "sha1:97e5e33f97d",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 3988,
+      "churn_90d": 3,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_7996a9b361",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "sqliteFeedback",
+    "kind": "function",
+    "signature_hash": "sha1:7de7e786c00",
+    "calls": [
+      "sym_3d00e3467a",
+      "sym_23ef7b3a1e"
+    ],
+    "called_by": [
+      "sym_c9e73ed096"
+    ],
+    "metrics": {
+      "loc": 17,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 2
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_7ad31f0ea3",
+    "file": "apps/web/src/components/feedback/launcher.tsx",
+    "name": "locate",
+    "kind": "function",
+    "signature_hash": "sha1:b2dca2d1a87",
+    "calls": [],
+    "called_by": [
+      "sym_c7443673e4"
+    ],
+    "metrics": {
+      "loc": 13,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
+    "id": "sym_8033309692",
+    "file": "apps/web/src/lib/feedback/feedback.test.ts",
+    "name": "call",
+    "kind": "function",
+    "signature_hash": "sha1:82d7e8af1f3",
+    "calls": [
+      "sym_5059f1bcef"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 18,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_8236e01638",
@@ -766,12 +1646,12 @@
     ],
     "metrics": {
       "loc": 9,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 1
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_837814e880",
@@ -792,12 +1672,49 @@
     ],
     "metrics": {
       "loc": 6,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 5,
       "fan_out": 2
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_84559df9fa",
+    "file": "apps/web/src/components/feedback/launcher.tsx",
+    "name": "guard",
+    "kind": "function",
+    "signature_hash": "sha1:acfe1b593e5",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
+    "id": "sym_86924f89e8",
+    "file": "apps/web/src/components/feedback/client.ts",
+    "name": "readable",
+    "kind": "function",
+    "signature_hash": "sha1:83795e220ee",
+    "calls": [],
+    "called_by": [
+      "sym_6fdaa6187d",
+      "sym_20af674c9a"
+    ],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_8839d47266",
@@ -807,16 +1724,73 @@
     "signature_hash": "sha1:de277d4bb19",
     "calls": [],
     "called_by": [
-      "sym_fd92a4bd50"
+      "sym_725a901d6d"
     ],
     "metrics": {
       "loc": 23,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_91128cd3cc",
+    "file": "apps/web/src/components/feedback/client.ts",
+    "name": "downloadFile",
+    "kind": "function",
+    "signature_hash": "sha1:e88a26df211",
+    "calls": [],
+    "called_by": [
+      "sym_6fdaa6187d"
+    ],
+    "metrics": {
+      "loc": 8,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_938d568f31",
+    "file": "apps/web/src/components/feedback/board.tsx",
+    "name": "mutate",
+    "kind": "function",
+    "signature_hash": "sha1:11a8ecc97ed",
+    "calls": [
+      "sym_9eccd86b50"
+    ],
+    "called_by": [
+      "sym_6fdaa6187d"
+    ],
+    "metrics": {
+      "loc": 52,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
+    "id": "sym_93a762a061",
+    "file": "apps/web/src/components/feedback/launcher.tsx",
+    "name": "move",
+    "kind": "function",
+    "signature_hash": "sha1:0038046a3be",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 13,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:a5b3169"
   },
   {
     "id": "sym_94c182e073",
@@ -828,12 +1802,12 @@
     "called_by": [],
     "metrics": {
       "loc": 1,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_96458c5ec7",
@@ -853,6 +1827,25 @@
       "fan_out": 1
     },
     "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_98a6e43fd5",
+    "file": "apps/web/src/components/feedback/launcher.tsx",
+    "name": "select",
+    "kind": "function",
+    "signature_hash": "sha1:443a0579230",
+    "calls": [
+      "sym_aa11e0934f"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 15,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "last_changed": "commit:a5b3169"
   },
   {
     "id": "sym_98bdb963e8",
@@ -881,17 +1874,34 @@
     "file": ".github/workflows/ci.yml",
     "name": "ci.yml",
     "kind": "file",
-    "signature_hash": "sha1:141b7896f89",
+    "signature_hash": "sha1:0db20f8cdbd",
     "calls": [],
     "called_by": [],
     "metrics": {
-      "loc": 44,
-      "churn_90d": 2,
+      "loc": 60,
+      "churn_90d": 3,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:dc719e9"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_9a9447c645",
+    "file": "apps/web/src/components/feedback/dialog.tsx",
+    "name": "FeedbackDialog",
+    "kind": "function",
+    "signature_hash": "sha1:72ba03e8220",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 50,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_9b46929566",
@@ -908,12 +1918,71 @@
     "called_by": [],
     "metrics": {
       "loc": 21,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 4
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_9c5ca25e3b",
+    "file": "apps/web/src/lib/postgres.ts",
+    "name": "databaseUrl",
+    "kind": "function",
+    "signature_hash": "sha1:fc13946e623",
+    "calls": [],
+    "called_by": [
+      "sym_c9e73ed096",
+      "sym_48aa5beb46"
+    ],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_9eccd86b50",
+    "file": "apps/web/src/components/feedback/client.ts",
+    "name": "saveName",
+    "kind": "function",
+    "signature_hash": "sha1:35eebecdc35",
+    "calls": [],
+    "called_by": [
+      "sym_938d568f31",
+      "sym_e8ec725370"
+    ],
+    "metrics": {
+      "loc": 7,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 2,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_9f9454ab2d",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "rateLimit",
+    "kind": "method",
+    "signature_hash": "sha1:84df81f5f34",
+    "calls": [],
+    "called_by": [
+      "sym_5059f1bcef"
+    ],
+    "metrics": {
+      "loc": 9,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_9fefdd8334",
@@ -931,6 +2000,25 @@
       "fan_out": 0
     },
     "last_changed": "commit:2273d4e"
+  },
+  {
+    "id": "sym_a2355e16ad",
+    "file": "packages/domain/src/feedback.ts",
+    "name": "replyToFeedback",
+    "kind": "function",
+    "signature_hash": "sha1:3fb312d45e4",
+    "calls": [
+      "sym_5a3be9886a"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 24,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_a3fec7dd86",
@@ -988,6 +2076,40 @@
     "last_changed": "commit:c67aa83"
   },
   {
+    "id": "sym_a5f5b93a66",
+    "file": "packages/contracts/src/feedback.ts",
+    "name": "FeedbackComment",
+    "kind": "interface",
+    "signature_hash": "sha1:29e86d66ee3",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 7,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:ef76e3d"
+  },
+  {
+    "id": "sym_a7e7d4d65d",
+    "file": "apps/web/src/lib/feedback/feedback.test.ts",
+    "name": "input",
+    "kind": "function",
+    "signature_hash": "sha1:8f4c57c14e6",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 21,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
     "id": "sym_a900a28d3a",
     "file": "apps/web/src/lib/mock-api.test.ts",
     "name": "call",
@@ -1021,12 +2143,36 @@
     "called_by": [],
     "metrics": {
       "loc": 16,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 3
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_aa11e0934f",
+    "file": "apps/web/src/components/feedback/capture.ts",
+    "name": "targetFor",
+    "kind": "function",
+    "signature_hash": "sha1:f0cff973c7a",
+    "calls": [
+      "sym_29f73432b0",
+      "sym_7185cc73af"
+    ],
+    "called_by": [
+      "sym_3701d308e2",
+      "sym_690822f2c8",
+      "sym_98a6e43fd5"
+    ],
+    "metrics": {
+      "loc": 23,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 3,
+      "fan_out": 2
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_aac96e5ae6",
@@ -1069,6 +2215,63 @@
     "last_changed": "commit:dc719e9"
   },
   {
+    "id": "sym_acaefbd95f",
+    "file": "apps/web/src/components/feedback/client.ts",
+    "name": "feedbackRequest",
+    "kind": "function",
+    "signature_hash": "sha1:837178d2ae0",
+    "calls": [],
+    "called_by": [
+      "sym_690822f2c8"
+    ],
+    "metrics": {
+      "loc": 10,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_aceb20296c",
+    "file": "apps/web/src/components/feedback/board.tsx",
+    "name": "copy",
+    "kind": "function",
+    "signature_hash": "sha1:351bc16334a",
+    "calls": [],
+    "called_by": [
+      "sym_6fdaa6187d"
+    ],
+    "metrics": {
+      "loc": 8,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
+    "id": "sym_ada0d86a7f",
+    "file": "apps/web/src/components/feedback/annotation-editor.tsx",
+    "name": "point",
+    "kind": "function",
+    "signature_hash": "sha1:2baa10c6364",
+    "calls": [],
+    "called_by": [
+      "sym_14427e62f4"
+    ],
+    "metrics": {
+      "loc": 7,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
     "id": "sym_afcdc27d56",
     "file": "packages/contracts/src/social.ts",
     "name": "SocialExport",
@@ -1098,12 +2301,29 @@
     "called_by": [],
     "metrics": {
       "loc": 4,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 2
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_b1b55480c1",
+    "file": "packages/contracts/src/feedback.ts",
+    "name": "FeedbackTarget",
+    "kind": "type",
+    "signature_hash": "sha1:fe5b78f5537",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:ef76e3d"
   },
   {
     "id": "sym_b3bd9e1a7d",
@@ -1118,12 +2338,12 @@
     "called_by": [],
     "metrics": {
       "loc": 20,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 2
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_b4a28f6741",
@@ -1135,12 +2355,12 @@
     "called_by": [],
     "metrics": {
       "loc": 12,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_b52416f60e",
@@ -1152,18 +2372,17 @@
       "sym_e4658e7c42",
       "sym_5a3be9886a",
       "sym_038f8c7076",
-      "sym_837814e880",
-      "sym_3e3509dde3"
+      "sym_837814e880"
     ],
     "called_by": [],
     "metrics": {
       "loc": 10,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
-      "fan_out": 5
+      "fan_out": 4
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_b57b703a1f",
@@ -1180,12 +2399,12 @@
     "called_by": [],
     "metrics": {
       "loc": 38,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 4
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_bc087f2197",
@@ -1200,12 +2419,46 @@
     "called_by": [],
     "metrics": {
       "loc": 15,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 2
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_bf28d43794",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "query",
+    "kind": "method",
+    "signature_hash": "sha1:3988d4cd3ee",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_bf28d43794_1",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "query",
+    "kind": "method",
+    "signature_hash": "sha1:a337b248c6e",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_c03f447942",
@@ -1223,12 +2476,29 @@
     ],
     "metrics": {
       "loc": 1,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 5,
       "fan_out": 0
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_c1ebb5dd75",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "Row",
+    "kind": "type",
+    "signature_hash": "sha1:49ff2551cce",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_c49cd54e0c",
@@ -1250,6 +2520,25 @@
     "last_changed": "commit:2273d4e"
   },
   {
+    "id": "sym_c68aab2d4b",
+    "file": "apps/web/src/components/feedback/launcher.tsx",
+    "name": "close",
+    "kind": "function",
+    "signature_hash": "sha1:544a76bbfb2",
+    "calls": [],
+    "called_by": [
+      "sym_690822f2c8"
+    ],
+    "metrics": {
+      "loc": 10,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
     "id": "sym_c6e0167e7a",
     "file": "packages/contracts/src/social.ts",
     "name": "suggestSocialCopy",
@@ -1269,6 +2558,27 @@
     "last_changed": "commit:2273d4e"
   },
   {
+    "id": "sym_c7443673e4",
+    "file": "apps/web/src/components/feedback/launcher.tsx",
+    "name": "reveal",
+    "kind": "function",
+    "signature_hash": "sha1:481d91296b5",
+    "calls": [
+      "sym_7ad31f0ea3"
+    ],
+    "called_by": [
+      "sym_690822f2c8"
+    ],
+    "metrics": {
+      "loc": 23,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
     "id": "sym_c83ec5eb7e",
     "file": "tests/domain.test.ts",
     "name": "fixture",
@@ -1286,6 +2596,29 @@
     "last_changed": "commit:c67aa83"
   },
   {
+    "id": "sym_c9e73ed096",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "feedbackStore",
+    "kind": "function",
+    "signature_hash": "sha1:e39a6bfe6fc",
+    "calls": [
+      "sym_9c5ca25e3b",
+      "sym_e3281641f0",
+      "sym_7996a9b361"
+    ],
+    "called_by": [
+      "sym_5059f1bcef"
+    ],
+    "metrics": {
+      "loc": 29,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 3
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
     "id": "sym_ca815975e8",
     "file": "apps/web/src/components/studio.tsx",
     "name": "openScene",
@@ -1297,12 +2630,50 @@
     ],
     "metrics": {
       "loc": 4,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 1,
       "fan_out": 0
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_cdc4930260",
+    "file": "apps/web/src/components/feedback/board.tsx",
+    "name": "open",
+    "kind": "function",
+    "signature_hash": "sha1:958672ce8d9",
+    "calls": [],
+    "called_by": [
+      "sym_20af674c9a"
+    ],
+    "metrics": {
+      "loc": 4,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:a5b3169"
+  },
+  {
+    "id": "sym_ce3502f1e7",
+    "file": "apps/web/src/components/feedback/capture.ts",
+    "name": "screenshotSection",
+    "kind": "function",
+    "signature_hash": "sha1:66378836861",
+    "calls": [],
+    "called_by": [
+      "sym_690822f2c8"
+    ],
+    "metrics": {
+      "loc": 29,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_cf80ba8e55",
@@ -1314,12 +2685,12 @@
     "called_by": [],
     "metrics": {
       "loc": 59,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_d03415e3ba",
@@ -1331,12 +2702,88 @@
     "called_by": [],
     "metrics": {
       "loc": 13,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_d4fa474b96",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "constructor",
+    "kind": "method",
+    "signature_hash": "sha1:59530bb47d0",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 4,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_da5ef6b846",
+    "file": "apps/web/src/app/feedback/page.tsx",
+    "name": "FeedbackPage",
+    "kind": "function",
+    "signature_hash": "sha1:7c42bf60ec5",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 3,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_dfcd0d42d3",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "create",
+    "kind": "method",
+    "signature_hash": "sha1:4ae96465db4",
+    "calls": [],
+    "called_by": [
+      "sym_5059f1bcef"
+    ],
+    "metrics": {
+      "loc": 17,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_e3281641f0",
+    "file": "apps/web/src/lib/feedback/store.ts",
+    "name": "postgresFeedback",
+    "kind": "function",
+    "signature_hash": "sha1:d1e56d5b82a",
+    "calls": [
+      "sym_487c000ac0",
+      "sym_3d00e3467a",
+      "sym_23ef7b3a1e"
+    ],
+    "called_by": [
+      "sym_c9e73ed096"
+    ],
+    "metrics": {
+      "loc": 14,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 1,
+      "fan_out": 3
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_e4658e7c42",
@@ -1345,8 +2792,7 @@
     "kind": "method",
     "signature_hash": "sha1:f77ff98d6ad",
     "calls": [
-      "sym_837814e880",
-      "sym_3e3509dde3"
+      "sym_837814e880"
     ],
     "called_by": [
       "sym_371c013f11",
@@ -1358,12 +2804,12 @@
     ],
     "metrics": {
       "loc": 33,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 6,
-      "fan_out": 2
+      "fan_out": 1
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_e4e31d7b4b",
@@ -1377,12 +2823,12 @@
     "called_by": [],
     "metrics": {
       "loc": 44,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 1
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_e5522ad0b2",
@@ -1399,12 +2845,12 @@
     "called_by": [],
     "metrics": {
       "loc": 23,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 4
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_e5701c0afb",
@@ -1422,12 +2868,12 @@
     ],
     "metrics": {
       "loc": 13,
-      "churn_90d": 6,
+      "churn_90d": 7,
       "bug_count": 0,
       "fan_in": 5,
       "fan_out": 0
     },
-    "last_changed": "commit:26eb507"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_e752817097",
@@ -1463,12 +2909,49 @@
     ],
     "metrics": {
       "loc": 5,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 4,
       "fan_out": 1
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_e85ec8f74d",
+    "file": "packages/contracts/src/feedback.ts",
+    "name": "FeedbackReply",
+    "kind": "type",
+    "signature_hash": "sha1:4602b2d07c1",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:ef76e3d"
+  },
+  {
+    "id": "sym_e8ec725370",
+    "file": "apps/web/src/components/feedback/launcher.tsx",
+    "name": "submit",
+    "kind": "function",
+    "signature_hash": "sha1:b59ed787dc0",
+    "calls": [
+      "sym_9eccd86b50",
+      "sym_67f1988520"
+    ],
+    "called_by": [],
+    "metrics": {
+      "loc": 36,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 2
+    },
+    "last_changed": "commit:a5b3169"
   },
   {
     "id": "sym_ecfa41841d",
@@ -1485,12 +2968,29 @@
     ],
     "metrics": {
       "loc": 53,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 2,
       "fan_out": 1
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_ee45c66d4d",
+    "file": "packages/domain/src/feedback.ts",
+    "name": "createFeedback",
+    "kind": "function",
+    "signature_hash": "sha1:26cd2b65e5c",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 16,
+      "churn_90d": 1,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_f038625ea6",
@@ -1521,12 +3021,29 @@
     "called_by": [],
     "metrics": {
       "loc": 3,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 1
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
+  },
+  {
+    "id": "sym_f3cfd00cab",
+    "file": "packages/contracts/src/feedback.ts",
+    "name": "FeedbackCreate",
+    "kind": "type",
+    "signature_hash": "sha1:b2df05fdda3",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 1,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:ef76e3d"
   },
   {
     "id": "sym_f561b4a2eb",
@@ -1544,6 +3061,23 @@
       "fan_out": 0
     },
     "last_changed": "commit:dc719e9"
+  },
+  {
+    "id": "sym_f7492bbfc3",
+    "file": "packages/contracts/src/feedback.ts",
+    "name": "FeedbackList",
+    "kind": "interface",
+    "signature_hash": "sha1:ddbf058e924",
+    "calls": [],
+    "called_by": [],
+    "metrics": {
+      "loc": 6,
+      "churn_90d": 2,
+      "bug_count": 0,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "last_changed": "commit:ef76e3d"
   },
   {
     "id": "sym_f7bce30b9d",
@@ -1577,12 +3111,12 @@
     ],
     "metrics": {
       "loc": 21,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 2,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_fa327b71bf",
@@ -1611,12 +3145,12 @@
     "called_by": [],
     "metrics": {
       "loc": 7,
-      "churn_90d": 3,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 0,
       "fan_out": 0
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_fb861c5e52",
@@ -1644,21 +3178,22 @@
     "file": "apps/web/src/lib/mock-api.ts",
     "name": "dispatch",
     "kind": "function",
-    "signature_hash": "sha1:882547f41b6",
+    "signature_hash": "sha1:01f310bcf43",
     "calls": [
-      "sym_8839d47266"
+      "sym_48aa5beb46",
+      "sym_725a901d6d"
     ],
     "called_by": [
       "sym_a900a28d3a"
     ],
     "metrics": {
-      "loc": 138,
-      "churn_90d": 3,
+      "loc": 48,
+      "churn_90d": 4,
       "bug_count": 0,
       "fan_in": 1,
-      "fan_out": 1
+      "fan_out": 2
     },
-    "last_changed": "commit:2273d4e"
+    "last_changed": "commit:c1d4766"
   },
   {
     "id": "sym_ffa5fe612e",

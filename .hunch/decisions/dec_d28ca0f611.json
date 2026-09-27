@@ -1,0 +1,33 @@
+{
+  "id": "dec_d28ca0f611",
+  "title": "Deployed demo workspaces use a Postgres row lock per browser session. Hydrate, apply domain rules, and save in one transaction so Vercel instances cannot lose approvals, social drafts, or generation updates. Local development retains the keyless in-memory adapter.",
+  "topic": null,
+  "status": "accepted",
+  "context": "Captured from an inline hunch-why comment (apps/web/src/lib/workspace-store.ts:29).",
+  "decision": "Deployed demo workspaces use a Postgres row lock per browser session. Hydrate, apply domain rules, and save in one transaction so Vercel instances cannot lose approvals, social drafts, or generation updates. Local development retains the keyless in-memory adapter.",
+  "consequences": [],
+  "alternatives_rejected": [],
+  "rejected_tripwires": [],
+  "related_components": [],
+  "related_files": [
+    "apps/web/src/lib/workspace-store.ts"
+  ],
+  "supersedes": null,
+  "superseded_by": null,
+  "caused_by_bug": null,
+  "commit": null,
+  "valid_from": "2026-09-27T13:03:53.672Z",
+  "valid_to": null,
+  "retired": {
+    "symbols": [],
+    "deps": []
+  },
+  "provenance": {
+    "source": "human_confirmed",
+    "confidence": 0.9,
+    "evidence": [
+      "apps/web/src/lib/workspace-store.ts:29"
+    ]
+  },
+  "date": "2026-09-27T13:03:53.672Z"
+}

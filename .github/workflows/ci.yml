@@ -13,6 +13,22 @@ jobs:
     name: quality
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: wishscene
+          POSTGRES_PASSWORD: wishscene-ci-only
+          POSTGRES_DB: wishscene
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U wishscene"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      WISHSCENE_TEST_PG_URL: postgres://wishscene:wishscene-ci-only@localhost:5432/wishscene
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

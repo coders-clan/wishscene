@@ -18,7 +18,7 @@ export default defineConfig({
     command: 'pnpm start',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    env: { WISHSCENE_MOCK: '1' },
+    env: { WISHSCENE_MOCK: '1', DATABASE_URL: process.env.WISHSCENE_TEST_PG_URL || '' },
     timeout: 120000,
   },
 });

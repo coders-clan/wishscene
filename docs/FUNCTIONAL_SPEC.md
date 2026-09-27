@@ -78,3 +78,7 @@ Keyboard accessible editor controls, labelled upload errors, reduced-motion mode
 ## 9. Functional acceptance walkthrough
 
 A consenting adult uploads usable images, creates a fictional Tokyo evening, edits the storyboard, generates four photos, rejects one face mismatch, repairs a hand on another, approves four, changes a caption, exports a carousel and Stories, and deletes the profile. The system shows exactly which outputs are stale, exports no unapproved asset, and removes source and derived data according to documented retention. Video extension: animate two approved frames, reject one clip, replace it, assemble a short Reel, and export it without changing the approved photos.
+
+## 10. Developer feedback
+
+The floating Feedback action supports element selection, rectangular section capture and general notes. Reporters can draw, add arrows/boxes/text, hide areas, copy or download the section, and submit a titled comment with category and priority. Submitted reports are visible to all visitors on `/feedback`, with search/filter/sort, replies, one vote per browser, assignees, status transitions and activity history. Shareable links reopen reports; element context links attempt to highlight the source. Updates poll every 10 seconds. Stale triage is rejected; failed submissions retain drafts. Mock resets do not remove feedback. See [FEEDBACK.md](FEEDBACK.md) for full behavior, storage, API, limits and capture boundaries.

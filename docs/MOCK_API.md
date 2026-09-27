@@ -1,6 +1,6 @@
 # Mock API v1
 
-Base: `/api/v1`. All responses are JSON; all request bodies use `Content-Type: application/json`. A random `wishscene-demo` HttpOnly, SameSite=Strict cookie identifies an in-memory demo workspace. This is not authentication. Cookie is Secure when accessed over HTTPS. Responses use `Cache-Control: no-store` and `X-Wishscene-Mode: mock`.
+Base: `/api/v1`. All responses are JSON; all request bodies use `Content-Type: application/json`. A random `wishscene-demo` HttpOnly, SameSite=Strict cookie identifies a browser-isolated demo workspace: in memory locally, or persisted in Postgres when `DATABASE_URL`/`WISHSCENE_DATABASE_URL` is configured. This is not authentication. Cookie is Secure when accessed over HTTPS. Responses use `Cache-Control: no-store` and `X-Wishscene-Mode: mock`.
 
 | Method | Path | Input | Response |
 | --- | --- | --- | --- |
@@ -26,7 +26,7 @@ Errors are `{ "error": { "code": "...", "message": "..." } }`:
 - 404 `NOT_FOUND`
 - 409 `STALE_VERSION`, `KEY_REUSED`, `ALREADY_RUNNING`, `NOT_READY`, `LIMIT`, `STALE_SOCIAL`
 - 413 `BODY_TOO_LARGE`, 415 `JSON_REQUIRED`
-- 503 `MOCK_DISABLED` in production unless `WISHSCENE_MOCK=1`; `CAPACITY` after 100 active sessions
+- 503 `MOCK_DISABLED` in production unless `WISHSCENE_MOCK=1`; `CAPACITY` after 100 local or 1,000 Postgres sessions; `STORAGE_REQUIRED` on Vercel without a database URL; `STORAGE` when database access fails
 
 ```sh
 curl -c /tmp/wishscene.cookies http://localhost:3000/api/v1/workspace
@@ -44,3 +44,7 @@ The UI builds the ZIP from the returned manifest and same-origin image assets as
 Every Scene includes `social: { platform, revision, drafts }`. Supported platform IDs: `instagram`, `instagram-story`, `tiktok`, `facebook`, `linkedin`, `x`. Tones: `playful`, `understated`, `cinematic`. Overlay text is at most 80 characters. Caption budgets vary by preset; see [SOCIAL_COMPOSER.md](SOCIAL_COMPOSER.md). Unknown platforms, extra fields and over-budget captions return 400. Version/revision conflicts return 409 and do not mutate saved drafts; scene IDs remain scoped to the experience and session.
 
 Every exported asset adds `social: { platform, caption, overlayText, tone, previewAspectRatio, previewOnly: true }`. The ZIP includes a per-image text file under `posts/`. It still downloads original images: preview crop/overlay are not rendered into output pixels. Other saved platform drafts stay in the workspace; export uses each scene’s selected platform.
+
+## Shared storage and feedback
+
+Postgres workspaces use a row-lock transaction around hydrate/action/save, with 30-day idle expiry; local workspaces retain their one-hour memory expiry. Feedback has a separate `/api/feedback` API, browser identifier and lifecycle; workspace reset/expiry never removes it. See [FEEDBACK.md](FEEDBACK.md) and [DEPLOYMENT.md](DEPLOYMENT.md).

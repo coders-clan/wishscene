@@ -33,7 +33,7 @@ Suggestions describe an imagined scene and include AI/fictional context. Preview
 
 - Each scene owns `social: { platform, revision, drafts }`; every platform has independent `{ caption, overlayText, tone }` values.
 - Edits stay in the open studio while moving between images, platforms and output tabs. **Save post** persists the currently selected platform only. The UI blocks pack export and experience/story changes while post drafts are unsaved. Browser unload warns; unsaved edits do not survive reload.
-- Saved drafts use the existing cookie-isolated, process-local store. Restart, expiry or reset clears them. This is not durable storage.
+- Saved drafts remain cookie-isolated. With `DATABASE_URL`, they persist in Postgres across restarts and deployments; expiry after 30 inactive days or an explicit reset clears the workspace. Without a database URL, local process-memory behavior remains (restart or one-hour expiry clears it). See [DEPLOYMENT.md](DEPLOYMENT.md).
 - Saves validate both Story Bible version and scene social revision. Stale writes return `STALE_VERSION` or `STALE_SOCIAL` and leave edited text visible. Copy it before reloading to resolve a conflict.
 - Saving one platform preserves all others. It does not approve an image or change the story version.
 - Story edits retain saved copy but invalidate image approvals. Review retained text for the new mood/look. Export still requires current approved images.

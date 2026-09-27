@@ -355,6 +355,9 @@ export default function Studio() {
         </a>
         <div className="workspace-label">YOUR CREATIVE SPACE</div>
         <nav aria-label="Main navigation">
+          <a className="nav-item" href="/feedback">
+            Team feedback
+          </a>
           <button
             className="nav-item active"
             onClick={() => {
@@ -416,7 +419,7 @@ export default function Studio() {
           </button>
         </header>
         <main id="main">
-          <section className="greeting">
+          <section className="greeting" data-feedback-id="studio-greeting">
             <div>
               <p className="eyebrow">
                 <span className="violet-star">✳</span> A WORLD OF WHAT IF
@@ -477,7 +480,7 @@ export default function Studio() {
                   Story settings
                 </button>
               </section>
-              <div className="story-strip">
+              <div className="story-strip" data-feedback-id="story-settings">
                 <div className="story-title">
                   <BookOpen size={17} />
                   <strong>Story Bible</strong>
@@ -618,7 +621,11 @@ export default function Studio() {
                         currentAssets.at(photoPreset ? -1 : -2);
                       const job = jobs.find((j) => j.sceneId === item.id);
                       return (
-                        <article className={`scene-card ${item.status}`} key={item.id}>
+                        <article
+                          className={`scene-card ${item.status}`}
+                          key={item.id}
+                          data-feedback-id={`scene-${item.id}`}
+                        >
                           <button
                             className="scene-image-button"
                             onClick={() => openScene(item)}

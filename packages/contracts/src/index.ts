@@ -92,3 +92,4 @@ export interface ExportManifest {
   provenance: string;
   assets: Array<Asset & { title: string; filename: string; social: SocialExport }>;
 }
+export * from './feedback';

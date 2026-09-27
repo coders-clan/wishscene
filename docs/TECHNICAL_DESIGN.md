@@ -90,3 +90,9 @@ Per-user and per-experience spend limits; quote an estimated range before expens
 ## 10. Testing and delivery
 
 Contract tests for provider adapters with recorded redacted fixtures; transactional tests for ownership/version conflict, idempotency, deletion during running jobs and stale result rejection. Golden tests for crop/render and export manifest. E2E happy path with deterministic fake providers, no paid calls in CI. Real-provider benchmark runs on consented test set only. CI: lint, typecheck, tests, migration validation, dependency scanning and secret scanning. Preview environments use synthetic fixtures. Roll out behind feature flags and quota caps.
+
+## Implemented developer collaboration / persistence adapter
+
+The sandbox now includes a shared feedback subsystem (contracts in `packages/contracts/src/feedback.ts`, business transitions in `packages/domain/src/feedback.ts`, storage/HTTP boundary in `apps/web/src/lib/feedback`). SQLite supports local development; scoped Postgres tables support multi-instance hosting. Optimistic revisions prevent stale triage; retries merge comments/votes. Screenshots are flattened JPEGs and never include the original under a hidden area.
+
+`apps/web/src/lib/workspace-store.ts` persists anonymous demo workspace snapshots in Postgres with a row-lock transaction and schema version, preserving the existing domain invariants. This is not the future authenticated product ownership model. Local no-key behavior remains in memory. See [ADR 0001](adr/0001-shared-demo-persistence.md), [feedback contract](FEEDBACK.md), and [deployment runbook](DEPLOYMENT.md).

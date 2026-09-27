@@ -26,14 +26,14 @@ VS Code users can reopen this repo in the included dev container. It installs de
 | Review | One fixed photo per scene for a matching preset; two illustrated grades for custom settings; previous candidates retained |
 | Retry/cancel | Idempotent request keys; one active job per scene; safe cancellation; previous choice retained |
 | Social pack | Per-image Instagram/Story, TikTok, Facebook, LinkedIn and X previews; editable tone templates, captions and overlays; saved drafts and per-image text files in ZIP |
-| Isolation | Random HttpOnly session cookie; separate in-memory workspace per browser |
+| Isolation | Random HttpOnly session cookie; separate workspace per browser; optional Postgres persistence |
 | Hunch | Pinned CLI/MCP configs, project memory, explicit task and verification workflow |
 
-**This is a developer sandbox, not the production backend.** Mock state is lost on server restart, expires after one hour without API activity, and is not shared across server processes. Maximum 100 active sessions, 20 experiences per session, and 500 jobs per session. Use Developer tools → Reset demo workspace to reseed. Session expiry silently starts a new seeded workspace on the next request. Multiple tabs in one browser share the session.
+**This is a developer sandbox, not the production backend.** Without `DATABASE_URL`, mock state is lost on server restart, expires after one hour without API activity, and is not shared across server processes. Maximum 100 active sessions, 20 experiences per session, and 500 jobs per session. Use Developer tools → Reset demo workspace to reseed. Session expiry silently starts a new seeded workspace on the next request. Multiple tabs in one browser share the session.
 
 Jobs advance when the API is read; there is no queue consumer or background execution. The UI polls while jobs are active. Exact destination/outfit/mood presets select pre-generated matching photos; custom settings fall back to labeled illustrations whose appearance does not change with free text. Regeneration reuses the same photo. No live generation or automated likeness checks occur. Preview art for a draft is inspirational; approval still requires loading a mock candidate. See [DEMO_PHOTOS.md](DEMO_PHOTOS.md).
 
-Real authentication/ownership, Postgres/Prisma, BullMQ/Redis workers, private object storage, photo upload, paid image generation, actual photo/social resizing, and video are **not implemented**. The chosen production stack remains in [STACK.md](STACK.md). Do not deploy the mock as a real user service.
+Real authentication/ownership, the product Prisma schema, BullMQ/Redis workers, private object storage, photo upload, paid image generation, actual photo/social resizing, and video are **not implemented**. The chosen production stack remains in [STACK.md](STACK.md). Do not deploy the mock as a real user service.
 
 ## Try the important flows
 
@@ -54,7 +54,8 @@ Real authentication/ownership, Postgres/Prisma, BullMQ/Redis workers, private ob
 | `apps/web/src/components/studio.tsx` | Interactive studio and dialogs |
 | `apps/web/src/components/social-composer.tsx` | Per-image platform, text and preview editor |
 | `packages/contracts/src/social.ts` | Social formats, draft schemas, types and copy templates |
-| `apps/web/src/lib/mock-api.ts` | JSON validation, session registry, HTTP errors |
+| `apps/web/src/lib/mock-api.ts` | JSON validation, domain dispatch, HTTP errors |
+| `apps/web/src/lib/workspace-store.ts` | Local session registry and transactional Postgres snapshot adapter |
 | `packages/contracts/src/` | Zod inputs and shared response types |
 | `packages/domain/src/` | Mock state machine, versioning, approvals, export readiness |
 | `packages/providers/src/` | Minimal deterministic fixture adapter; production provider contract is still a follow-up |
@@ -64,7 +65,7 @@ Real authentication/ownership, Postgres/Prisma, BullMQ/Redis workers, private ob
 | `tests/` | Domain regression cases and Playwright journeys |
 | `apps/web/src/lib/mock-api.test.ts` | HTTP/session/validation boundary cases |
 
-The current domain store is intentionally synchronous and process-local. The next backend slice must introduce a repository interface, transactions, durable jobs/outbox and owner checks. Do not swap an external network call into `MockImageProvider.candidates()`; workers need an asynchronous submit/poll/cancel contract and tests of provider failures.
+Domain operations remain synchronous inside a hydrated workspace. The optional Postgres adapter wraps them in a transaction; local no-database state remains process-local. The next product backend slice must introduce authenticated ownership, normalized product models and durable jobs/outbox. Do not swap an external network call into `MockImageProvider.candidates()`; workers need an asynchronous submit/poll/cancel contract and tests of provider failures.
 
 ## Checks
 
@@ -100,3 +101,9 @@ Pick an unassigned issue and make a feature branch. Keep mock flows usable while
 4. **#8** — Image benchmark adapter after #5; compare actual likeness/session consistency.
 5. **#10** — Real image derivatives, verified provenance and social export layouts beyond original fixture files.
 6. **#13–14** — Video and reel rendering after the photo quality gate.
+
+## Shared feedback and durable previews
+
+Use **Team feedback** or the floating **Feedback** button to capture/annotate elements and sections. The list is shared across visitors, with replies, triage and votes. Local feedback is saved in `apps/web/.data/`; never commit it. With `DATABASE_URL`, feedback and cookie-isolated studio workspaces use Postgres, supporting Neon + Vercel. Feedback survives mock resets; durable workspace expiry is 30 inactive days. See [FEEDBACK.md](FEEDBACK.md) and [DEPLOYMENT.md](DEPLOYMENT.md).
+
+CI starts a real Postgres service for persistence/HTTP tests and browser journeys. Set `WISHSCENE_TEST_PG_URL` locally to include these integration tests; otherwise the Postgres-specific tests are explicitly skipped while SQLite/API/domain checks still run.

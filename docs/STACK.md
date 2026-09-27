@@ -25,7 +25,7 @@ This document resolves the implementation options in the earlier technical desig
 | CI | GitHub Actions: lint, typecheck, test, build, migration check | PR gate once checks exist |
 | Logs and metrics | Structured JSON logs with request/job IDs; OpenTelemetry-compatible traces | Diagnose provider failures and cost per approved experience |
 
-The production vendor and cloud region remain a deployment ADR before beta. The architecture is fixed: **one web container, one or more worker containers, managed Postgres, managed Redis, private S3-compatible bucket**. No GPU is required in our infrastructure while generation uses model APIs. Local development uses Docker Compose for Postgres, Redis and an S3-compatible local object store; web and worker run with pnpm or in containers.
+The selected developer deployment is **Vercel + Neon**, requested on 27 September 2026. See [DEPLOYMENT.md](DEPLOYMENT.md) and [ADR 0001](adr/0001-shared-demo-persistence.md). The web/API may run on Vercel; future generation/rendering workers remain separate containers, with managed Postgres, managed Redis and private S3-compatible storage. Cloud region and real-user retention remain release decisions before beta. No GPU is required in our infrastructure while generation uses model APIs. Local development uses Docker Compose for Postgres, Redis and an S3-compatible local object store; web and worker run with pnpm or in containers.
 
 ## 2. Monorepo structure
 
@@ -58,7 +58,7 @@ The worker checks owner, identity profile version, scene version and deletion to
 
 Required secrets/config: `DATABASE_URL`, `REDIS_URL`, `AUTH_SECRET`, email provider credentials, S3 endpoint/bucket/access credentials, `IMAGE_PROVIDER_KEY` (only when enabled), `VIDEO_PROVIDER_KEY` (Phase 2). Provide `.env.example` with names and safe placeholders, never values.
 
-**Current scaffold:** `pnpm dev` starts the web app with an isolated in-memory mock service; it needs no Docker or credentials. See [DEVELOPMENT.md](DEVELOPMENT.md). **Target durable environment:** web and worker will run after Docker Compose starts local dependencies; that integration is not implemented yet. `pnpm test` and `pnpm typecheck` must run with fake providers. CI and preview deploys use synthetic fixtures, no paid calls. Production runs web and worker as separately scalable containers, with HTTPS, private network connections to Postgres/Redis, restricted bucket IAM, encrypted backups and deletion jobs. The deployment ADR selects provider/region/retention before real faces enter beta.
+**Current scaffold:** `pnpm dev` starts the web app with an isolated in-memory mock workspace and shared SQLite feedback; it needs no Docker or credentials. Set `DATABASE_URL` to persist both demo workspaces and feedback in Postgres across instances. See [DEVELOPMENT.md](DEVELOPMENT.md). **Target durable environment:** web and worker will run after Docker Compose starts local dependencies; that integration is not implemented yet. `pnpm test` and `pnpm typecheck` must run with fake providers. CI and preview deploys use synthetic fixtures, no paid calls. The target runs web/API on Vercel and workers as separately scalable containers, with HTTPS, private network connections to Postgres/Redis, restricted bucket IAM, encrypted backups and deletion jobs. The deployment ADR selects provider/region/retention before real faces enter beta.
 
 ## 5. Decisions to avoid re-opening during MVP
 
@@ -85,3 +85,7 @@ Required secrets/config: `DATABASE_URL`, `REDIS_URL`, `AUTH_SECRET`, email provi
 - FFmpeg filters: https://ffmpeg.org/ffmpeg-filters.html
 
 These are implementation references, not guarantees of price, availability or data handling. Confirm terms and region before sending real likeness images to a provider.
+
+## Developer feedback persistence exception
+
+The current developer slice uses scoped `pg` adapters and additive `wishscene_*` tables, with SQLite local feedback. The planned authenticated product model remains Prisma. This exception, transaction boundaries and migration obligations are recorded in [ADR 0001](adr/0001-shared-demo-persistence.md).
