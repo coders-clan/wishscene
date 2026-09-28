@@ -11,7 +11,8 @@
 
 .mobile-app-nav,
 .mobile-brand,
-.mobile-story-chevron {
+.mobile-story-chevron,
+.mobile-post-views {
   display: none;
 }
 .mobile-more-actions {
@@ -43,21 +44,36 @@
   :root {
     --mobile-nav-height: calc(70px + env(safe-area-inset-bottom));
   }
+  /* App frame: the document never scrolls. Each screen fits between the top bar and the
+     bottom docks; only an oversized panel (tiny screens, the keyboard) scrolls inside. */
+  :root:has(.app-shell),
+  body:has(.app-shell) {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
   .app-shell {
-    min-height: 100dvh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
   }
   .app-shell .sidebar,
   .app-shell .greeting,
   .app-shell .breadcrumb,
-  .app-shell .page-footer {
+  .app-shell .page-footer,
+  .app-shell .section-tabs,
+  .app-shell .board-footer {
     display: none;
   }
   .app-shell .main-shell {
+    display: flex;
+    flex-direction: column;
+    height: calc(100dvh - var(--mobile-nav-height));
     margin: 0;
   }
   .app-shell .topbar {
-    position: sticky;
-    top: 0;
+    position: relative;
+    flex: none;
     z-index: 35;
     min-height: 60px;
     padding: calc(8px + env(safe-area-inset-top)) 18px 8px;
@@ -99,7 +115,32 @@
     height: 18px;
   }
   .app-shell main {
-    padding: 22px 16px calc(var(--mobile-nav-height) + 158px);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+    width: 100%;
+    padding: 10px 16px 0;
+    /* clip, not hidden: scrollIntoView must not shift the fixed frame. */
+    overflow: clip;
+  }
+  .app-shell main > * {
+    flex: none;
+  }
+  .app-shell main > .loading-state,
+  .app-shell main > [role='tabpanel']:not([hidden]) {
+    flex: 1 1 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .app-shell main > .fine-print {
+    order: 1;
+    margin: 4px 0 0;
+    line-height: 1.4;
   }
   .mobile-app-nav {
     position: fixed;
@@ -149,27 +190,31 @@
     box-shadow: 0 3px 12px #6a4bff30;
   }
   .app-shell .experience-heading {
-    gap: 10px;
-    align-items: center;
+    gap: 8px;
+    align-items: flex-start;
     flex-wrap: nowrap;
+    margin: 0 0 10px;
   }
   .app-shell .experience-title {
     flex: 1;
     min-width: 0;
     width: auto;
+    /* Room for the Story Bible chip, which sits beside the settings button. */
+    padding-right: 72px;
   }
   .app-shell .title-button {
     text-align: start;
     min-height: 44px;
   }
   .app-shell .title-button h2 {
-    font-size: clamp(21px, 6vw, 27px);
+    font-size: clamp(20px, 5.6vw, 24px);
     line-height: 1.15;
     overflow-wrap: anywhere;
   }
   .app-shell .experience-title p {
     font-size: 11px;
     flex-wrap: wrap;
+    margin-top: 0;
   }
   .app-shell .experience-heading > .button {
     flex: 0 0 44px;
@@ -182,22 +227,40 @@
     border-radius: 14px;
     background: white;
   }
+  /* Story Bible: a version chip in the heading row; details open over the screen. */
   .app-shell .story-strip {
+    position: absolute;
+    z-index: 30;
+    top: 10px;
+    right: 68px;
     display: flex;
     flex-wrap: wrap;
     gap: 12px 20px;
-    margin-top: 12px;
+    margin: 0;
     padding: 0;
     border: 1px solid #e8e0ef;
     border-radius: 14px;
     background: #f1ecf6;
   }
+  .app-shell .story-strip.is-expanded {
+    left: 16px;
+    right: 16px;
+    background: #f7f3fb;
+    box-shadow: 0 18px 44px #2e164326;
+  }
   .app-shell .story-title {
     width: 100%;
-    min-height: 44px;
-    padding: 10px 14px;
+    min-height: 42px;
+    padding: 0 10px;
+    gap: 5px;
     border: 0;
     text-align: left;
+  }
+  .app-shell .story-strip:not(.is-expanded) .story-title strong {
+    display: none;
+  }
+  .app-shell .story-strip.is-expanded .story-title {
+    padding: 0 14px;
   }
   .mobile-story-chevron {
     display: block;
@@ -246,25 +309,55 @@
     color: #6541c9;
     box-shadow: 0 2px 6px #34205010;
   }
+  /* Storyboard: one action row, then a scene card that fills the rest of the screen. */
+  .app-shell #panel-storyboard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
   .app-shell .board-heading {
-    margin: 16px 0 12px;
+    flex: none;
+    min-height: 44px;
+    margin: 0 0 8px;
     gap: 8px;
     align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
   }
-  .app-shell .board-heading h3 {
-    font-size: 16px;
-  }
-  .app-shell .board-heading p {
-    display: none;
+  .app-shell .board-heading > div {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
   .app-shell .board-heading .button {
     min-height: 44px;
-    padding: 8px 10px;
-    font-size: 11px;
-    gap: 5px;
+    padding: 8px 12px;
+    font-size: 12px;
+    gap: 6px;
   }
-  .app-shell .scene-grid {
-    gap: 14px 12px;
+  /* Grows to fill, never shrinks below one whole card: tiny screens scroll the panel instead. */
+  .app-shell #panel-storyboard .mobile-gallery {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+  }
+  .app-shell #panel-storyboard .mobile-gallery-controls {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 44px;
+    margin: 0;
+    gap: 6px;
+  }
+  .app-shell #panel-storyboard .mobile-gallery-position {
+    width: 56px;
+  }
+  .app-shell #panel-storyboard .mobile-gallery-track {
+    flex: 1 0 auto;
+    padding-block: 0 2px;
   }
   .app-shell .mobile-gallery-track {
     display: flex;
@@ -331,15 +424,24 @@
     background: #7650e8;
   }
   .app-shell .scene-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     overflow: hidden;
     background: #fff;
     border: 1px solid #e8e1ed;
     border-radius: 16px;
   }
   .app-shell .scene-image-button {
-    aspect-ratio: 3 / 4;
-    max-height: 52svh;
+    flex: 1 1 0;
+    min-height: 150px;
+    aspect-ratio: auto;
     border-radius: 0;
+  }
+  .app-shell .scene-image-button > img {
+    object-fit: cover;
+    /* Short cards crop portraits; keep faces in frame. */
+    object-position: 50% 10%;
   }
   .app-shell .scene-number {
     top: 8px;
@@ -359,21 +461,35 @@
   .app-shell .scene-time {
     display: none;
   }
+  /* Title and shot on top; the scene action and Create post share one row. */
   .app-shell .scene-caption {
-    padding: 10px;
+    flex: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 8px;
+    padding: 10px 12px 12px;
+  }
+  .app-shell .scene-caption h4,
+  .app-shell .scene-caption > p {
+    grid-column: 1 / -1;
+    min-height: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .app-shell .scene-caption h4 {
-    font-size: 18px;
-    min-height: 0;
-    line-height: 1.4;
+    font-size: 17px;
+    line-height: 1.3;
   }
   .app-shell .scene-caption > p {
-    font-size: 13px;
-    min-height: 0;
+    font-size: 12px;
+    margin-top: 2px;
   }
   .app-shell .scene-actions {
-    margin-top: 8px;
-    padding-top: 6px;
+    margin-top: 10px;
+    padding-top: 0;
+    border-top: 0;
+    flex-wrap: nowrap;
   }
   .app-shell .scene-actions > span {
     display: none;
@@ -381,13 +497,19 @@
   .app-shell .scene-actions > button {
     width: 100%;
     min-height: 44px;
-    justify-content: space-between;
+    margin: 0;
+    padding: 8px;
+    justify-content: center;
     font-size: 12px;
+    border: 1px solid #ddd4e9;
+    border-radius: 10px;
+    background: #fff;
   }
   .app-shell .scene-compose-button {
-    font-size: 11px;
-    gap: 5px;
-    margin-top: 2px;
+    font-size: 12px;
+    gap: 6px;
+    margin-top: 10px;
+    border-radius: 10px;
   }
   .app-shell .scene-compose-button > svg:last-child {
     display: none;
@@ -402,12 +524,11 @@
   .app-shell .draft-overlay > span:last-child {
     display: none;
   }
+  /* The export dock sits in the frame above navigation, so it never covers a card. */
   .app-shell .export-bar {
-    position: fixed;
-    z-index: 50;
-    inset: auto 0 var(--mobile-nav-height);
+    order: 2;
     min-height: 64px;
-    margin: 0;
+    margin: 8px -16px 0;
     padding: 10px 16px;
     border: 0;
     border-top: 1px solid #e8e1ed;
@@ -571,31 +692,378 @@
     height: min(44svh, 360px);
     object-fit: cover;
   }
-  .app-shell .social-composer {
-    padding-top: 22px;
+  /* Posts: Write, Preview, and Pack caption take turns filling the screen. */
+  .app-shell #panel-social:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
-  .app-shell .composer-intro h3 {
-    font-size: 24px;
+  .mobile-post-views {
+    display: grid;
+    flex: none;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3px;
+    padding: 4px;
+    border: 1px solid #e7e0ef;
+    border-radius: 14px;
+    background: #ece7f2;
+  }
+  .mobile-post-views > button {
+    min-height: 40px;
+    padding: 6px 4px;
+    border-radius: 10px;
+    color: #6f6680;
+    font-size: 12px;
+    font-weight: 600;
+    touch-action: manipulation;
+  }
+  .mobile-post-views > [aria-pressed='true'] {
+    background: #fff;
+    color: #6541c9;
+    box-shadow: 0 2px 6px #34205010;
+  }
+  #panel-social[data-post-view='write'] :is(.composer-preview-column, .pack-caption),
+  #panel-social[data-post-view='preview'] :is(.composer-form, .pack-caption),
+  #panel-social[data-post-view='caption'] .social-composer {
+    display: none;
+  }
+  .app-shell .social-composer {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+    gap: 10px;
+    padding: 0;
+  }
+  .app-shell .composer-intro {
+    display: none;
   }
   .app-shell .composer-scenes {
     display: flex;
+    flex: none;
+    gap: 8px;
+    margin: 0;
+    padding: 2px;
     overflow-x: auto;
-    gap: 10px;
-    padding: 4px 4px 12px;
-    margin-inline: -4px;
     scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+  .app-shell .composer-scenes::-webkit-scrollbar {
+    display: none;
   }
   .app-shell .composer-scene {
-    flex: 0 0 220px;
+    flex: 0 0 172px;
+    gap: 8px;
+    padding: 5px 8px 5px 5px;
     scroll-snap-align: start;
   }
+  .app-shell .composer-scene img {
+    width: 34px;
+    height: 44px;
+  }
+  .app-shell .composer-scene strong {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .app-shell .composer-scene > span > span {
+    font-size: 11px;
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .app-shell .composer-layout {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+    gap: 0;
+  }
   .app-shell .composer-form {
-    padding: 18px 14px;
-    border-radius: 18px;
+    display: grid;
+    flex: 1 1 0;
+    min-height: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto minmax(96px, 1fr);
+    gap: 8px 10px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+  .app-shell .composer-form > * {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+  .app-shell .composer-form > :is(.composer-step, .platform-guidance, .composer-preview-link),
+  .app-shell .suggestion-action > .fine-print {
+    display: none;
+  }
+  .app-shell .composer-form > label {
+    gap: 4px;
+    font-size: 12px;
+  }
+  .app-shell .composer-form > label[for='post-platform'] {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .app-shell .composer-form > label[for='post-tone'] {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .app-shell .composer-form :is(select, textarea) {
+    font-size: 16px;
+  }
+  .app-shell .composer-form select {
+    min-height: 44px;
+  }
+  /* The suggestion button shares the Post text label row. */
+  .app-shell .composer-form > .suggestion-action {
+    grid-row: 2;
+    z-index: 1;
+    justify-self: end;
+    align-self: start;
+  }
+  .app-shell .suggestion-action > .button {
+    min-height: 44px;
+    padding: 6px 10px;
+    gap: 5px;
+    font-size: 12px;
+  }
+  .app-shell .composer-form > .composer-text-field:has(#post-caption) {
+    grid-row: 2;
+    display: grid;
+    grid-template-rows: 44px minmax(0, 1fr);
+    gap: 0;
+    min-height: 0;
+    /* The textarea's rows must not size the form; the 1fr row does. */
+    contain: size;
+  }
+  .app-shell .composer-text-field > label {
+    align-self: center;
+    font-size: 12px;
+    font-weight: 550;
+  }
+  .app-shell #post-caption {
+    height: 100%;
+    min-height: 0;
+    resize: none;
+  }
+  .app-shell .composer-text-field:has(#post-overlay) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: 4px 8px;
+  }
+  .app-shell #post-overlay {
+    grid-column: 1 / -1;
+    height: 60px;
+    padding-block: 8px;
+    resize: none;
+  }
+  .app-shell .composer-form > .caption-budget {
+    margin: -4px 0 0;
+    font-size: 11px;
+  }
+  /* Write and Pack caption grow to fill; if they cannot fit, the panel scrolls
+     and Save stays pinned to its bottom edge. */
+  #panel-social[data-post-view='write'] :is(.social-composer, .composer-layout, .composer-form),
+  #panel-social[data-post-view='caption'] .pack-caption {
+    flex: 1 0 auto;
+  }
+  /* When Write overflows, the error, Save row, and status line stack at the
+     bottom edge (20px status + 52px actions); focused fields scroll clear. */
+  #panel-social[data-post-view='write'] {
+    scroll-padding-bottom: 80px;
+  }
+  .app-shell .composer-form > .modal-error {
+    position: sticky;
+    bottom: 72px;
+    z-index: 2;
+    margin: 0;
+  }
+  .app-shell .composer-actions {
+    position: sticky;
+    bottom: 20px;
+    z-index: 2;
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin: -4px -12px;
+    padding: 4px 12px;
+    background: #fffdf9;
   }
   .app-shell .composer-actions .button {
     flex: 1;
-    min-height: 48px;
+    min-height: 44px;
+  }
+  .app-shell .composer-form .composer-message {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    height: 20px;
+    margin: 0 -12px;
+    padding: 0 12px;
+    background: #fffdf9;
+    font-size: 11px;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .app-shell .composer-preview-column {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    min-height: 0;
+    gap: 6px;
+    max-width: none;
+  }
+  .app-shell :is(.composer-preview-heading, .composer-next) {
+    display: none;
+  }
+  .app-shell .preview-description {
+    flex: none;
+    margin: 0;
+    font-size: 12px;
+  }
+  /* The preview keeps the platform's crop ratio and scales to the available height. */
+  .app-shell .platform-preview {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    min-height: 0;
+    border-radius: 14px;
+  }
+  .app-shell .platform-preview > :not(.platform-preview-image) {
+    flex: none;
+  }
+  .app-shell .platform-preview-header {
+    padding: 8px 12px;
+  }
+  .app-shell .platform-preview-image {
+    flex: 1 1 0;
+    min-height: 96px;
+    width: auto;
+    max-width: 100%;
+    align-self: center;
+  }
+  .app-shell .preview-social-icons {
+    padding: 8px 12px 0;
+  }
+  /* Flex items ignore line-clamp's height, so cap it explicitly; the image gets the rest. */
+  .app-shell .preview-caption {
+    display: -webkit-box;
+    /* overflow clips at the padding box, so the bottom gap is a margin. */
+    max-height: calc(4.5em + 8px);
+    margin-bottom: 10px;
+    padding: 8px 12px 0;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+  .app-shell .preview-note {
+    flex: none;
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  .app-shell .pack-caption {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    min-height: 0;
+    max-width: none;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #fffdf9;
+  }
+  .app-shell .pack-caption h3 {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .app-shell .pack-caption > p {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  .app-shell .pack-caption label {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .app-shell .pack-caption textarea {
+    flex: 1 1 0;
+    min-height: 96px;
+    font-size: 16px;
+    resize: none;
+  }
+  .app-shell .caption-actions {
+    position: sticky;
+    bottom: 0;
+    flex-wrap: nowrap;
+    margin: 2px -14px 0;
+    padding: 6px 14px;
+    background: #fffdf9;
+  }
+  .app-shell .pack-caption .fine-print {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  .app-shell :is(.motion-panel, .loading-state) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+    gap: 10px;
+    padding: 12px 8px;
+  }
+  .app-shell .motion-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+  }
+  .app-shell .motion-panel h3 {
+    font-size: 24px;
+  }
+  .app-shell .motion-panel p:not(.eyebrow) {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .app-shell .motion-steps {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 8px;
+  }
+  .app-shell .motion-steps svg {
+    transform: none;
+  }
+}
+
+/* Real phone browsers leave roughly 640–760px under their toolbars. */
+@media (max-width: 600px) and (max-height: 760px) {
+  .app-shell main:has(> #panel-social:not([hidden])) > :is(.experience-heading, .story-strip) {
+    display: none;
+  }
+  .app-shell .motion-icon {
+    display: none;
+  }
+  /* Preview trades the image rail for a larger post; pick images in Write. */
+  #panel-social[data-post-view='preview'] .composer-scenes {
+    display: none;
+  }
+  .app-shell .preview-caption {
+    max-height: calc(3em + 8px);
+    -webkit-line-clamp: 2;
+  }
+}
+@media (max-width: 359px) {
+  .app-shell .board-heading .button {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+    font-size: 0;
   }
 }
 

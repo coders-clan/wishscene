@@ -1,6 +1,23 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import JSZip from 'jszip';
 import { readFile } from 'node:fs/promises';
+
+// Phones switch screens from the bottom navigation and show one part of Posts at a time.
+async function openScreen(page: Page, testInfo: TestInfo, tab: 'Storyboard' | 'Social pack') {
+  if (testInfo.project.name !== 'mobile') return page.getByRole('tab', { name: tab }).click();
+  await page
+    .getByRole('navigation', { name: 'Mobile navigation' })
+    .getByRole('button', { name: tab === 'Storyboard' ? 'Studio' : 'Posts', exact: true })
+    .click();
+}
+async function showPostView(
+  page: Page,
+  testInfo: TestInfo,
+  view: 'Write post' | 'Preview' | 'Pack caption',
+) {
+  if (testInfo.project.name === 'mobile')
+    await page.getByRole('button', { name: view, exact: true }).click();
+}
 
 test('complete an experience, download it, then invalidate old approvals', async ({
   page,
@@ -86,12 +103,14 @@ test('complete an experience, download it, then invalidate old approvals', async
     expect(bytes.subarray(0, 3).toString('hex')).toBe('ffd8ff');
     expect(bytes.subarray(-2).toString('hex')).toBe('ffd9');
   }
+  // Story settings live on the phone's Studio screen.
+  if (testInfo.project.name === 'mobile') await openScreen(page, testInfo, 'Storyboard');
   await page.getByRole('button', { name: 'Story settings' }).click();
   await page.getByLabel('Your look').fill('Blue linen suit');
   await expect(page.getByText('Custom developer settings', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Save story' }).click();
   await expect(page.getByText('v2', { exact: true })).toBeVisible();
-  await page.getByRole('tab', { name: 'Storyboard' }).click();
+  await openScreen(page, testInfo, 'Storyboard');
   await expect(page.getByText('Story updated', { exact: true })).toHaveCount(4);
   await expect(page.getByRole('button', { name: 'Export demo pack' })).toBeDisabled();
   await page.getByRole('button', { name: 'Story settings' }).click();
@@ -109,9 +128,11 @@ test('preview platforms, retain per-image drafts, and reload saved text', async 
   await page.getByLabel('Platform & format').selectOption('instagram-story');
   await page.getByLabel('Post text', { exact: true }).fill('An imagined evening in Tokyo.');
   await page.getByLabel('Text on image').fill('לילה של דמיון');
+  await showPostView(page, testInfo, 'Preview');
   await expect(page.getByRole('article', { name: 'Instagram Story preview' })).toContainText(
     'לילה של דמיון',
   );
+  await showPostView(page, testInfo, 'Write post');
   await page.getByRole('button', { name: 'Compose post for A table for daydreams' }).click();
   await page.getByLabel('Platform & format').selectOption('linkedin');
   await page
@@ -148,7 +169,7 @@ test('preview platforms, retain per-image drafts, and reload saved text', async 
     page.getByText('Instagram Story saved for this image.', { exact: true }),
   ).toBeVisible();
   await page.reload();
-  await page.getByRole('tab', { name: 'Social pack' }).click();
+  await openScreen(page, testInfo, 'Social pack');
   await expect(page.getByLabel('Platform & format')).toHaveValue('instagram-story');
   await expect(page.getByLabel('Post text', { exact: true })).toHaveValue(
     'An imagined evening in Tokyo.',
@@ -163,6 +184,7 @@ test('preview platforms, retain per-image drafts, and reload saved text', async 
   await expect(page.getByLabel('Post text', { exact: true })).toHaveValue(
     'A separate visual concept for image two.',
   );
+  await showPostView(page, testInfo, 'Preview');
   await expect(page.getByRole('article', { name: 'LinkedIn post preview' })).toContainText(
     'A separate visual concept for image two.',
   );
@@ -171,16 +193,17 @@ test('preview platforms, retain per-image drafts, and reload saved text', async 
     fullPage: true,
     scale: 'css',
   });
+  await showPostView(page, testInfo, 'Write post');
   if (testInfo.project.name === 'mobile') await page.setViewportSize({ width: 320, height: 700 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   );
-  await page.getByRole('tab', { name: 'Storyboard' }).click();
+  await openScreen(page, testInfo, 'Storyboard');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   );
   // A refreshed snapshot must not turn an old unsaved draft into a valid overwrite.
-  await page.getByRole('tab', { name: 'Social pack' }).click();
+  await openScreen(page, testInfo, 'Social pack');
   await page.getByLabel('Post text', { exact: true }).fill('Unsaved local copy.');
   const workspace = await (await page.request.get('/api/v1/workspace')).json();
   const current = workspace.experiences[0].scenes[1];
@@ -196,9 +219,11 @@ test('preview platforms, retain per-image drafts, and reload saved text', async 
     },
   );
   expect(competing.ok()).toBe(true);
+  await showPostView(page, testInfo, 'Pack caption');
   await page.getByLabel('Your caption', { exact: true }).fill('Refresh the workspace snapshot.');
   await page.getByRole('button', { name: 'Save caption', exact: true }).click();
   await expect(page.getByText('Caption saved.', { exact: true })).toBeVisible();
+  await showPostView(page, testInfo, 'Write post');
   await page.getByRole('button', { name: 'Save post', exact: true }).click();
   await expect(
     page.getByRole('region', { name: 'Per-image social composer' }).getByRole('alert'),
@@ -225,14 +250,16 @@ test('create a fresh experience and edit the social caption', async ({ page }, t
     'src',
     '/demo/photos/kyoto-garden.jpg',
   );
-  await page.getByRole('tab', { name: 'Social pack' }).click();
+  await openScreen(page, testInfo, 'Social pack');
+  await showPostView(page, testInfo, 'Pack caption');
   await page.getByLabel('Your caption').fill('A fictional daydream. #wishscene');
   await page.getByRole('button', { name: 'Save caption' }).click();
   await page.reload();
   // Experience selection is local UI state; select the new workspace after reload.
   await page.getByRole('button', { name: /Tokyo, after hours/ }).click();
   await page.getByRole('button', { name: /Kyoto at first light/ }).click();
-  await page.getByRole('tab', { name: 'Social pack' }).click();
+  await openScreen(page, testInfo, 'Social pack');
+  await showPostView(page, testInfo, 'Pack caption');
   await expect(page.getByLabel('Your caption')).toHaveValue('A fictional daydream. #wishscene');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
