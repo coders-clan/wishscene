@@ -1,0 +1,49 @@
+{
+  "id": "htask_9f20ac3d55b735b4c05f8f46",
+  "title": "Social composer: drag + pinch-zoom crop with bigger crop view",
+  "state": "completed",
+  "started_at": "2026-09-28T09:37:07.148Z",
+  "finished_at": "2026-09-28T10:08:22.226Z",
+  "coverage": "no-relevant-memory",
+  "lessons": [],
+  "applied": [],
+  "saved": [
+    {
+      "kind": "decisions",
+      "record_id": "dec_02a56d6bff",
+      "content_hash": "sha256:33541a7cccf0f7577a9d5e99d1b19b1ffe77c9e3e3c5016ff2a257565fa691fc",
+      "home": "public",
+      "operation": "created",
+      "durability": "committed"
+    }
+  ],
+  "checks": [],
+  "conformance": [],
+  "refusals": 0,
+  "files": [
+    "packages/contracts/src/social.ts",
+    "apps/web/src/app/globals.css",
+    "apps/web/src/app/mobile.css",
+    "apps/web/src/components/crop-editor.tsx",
+    "apps/web/src/components/social-composer.tsx",
+    "docs/MOBILE_EXPERIENCE.md",
+    "docs/MOCK_API.md",
+    "docs/SOCIAL_COMPOSER.md",
+    "packages/domain/src/index.ts",
+    "tests/e2e/crop.spec.ts",
+    "tests/e2e/mobile-app.spec.ts",
+    "tests/e2e/studio.spec.ts",
+    "tests/social-pack.test.ts"
+  ],
+  "supersedes": [],
+  "source_snapshot": null,
+  "report_hash": "sha256:d339cf1c27dc60c0a75a1588f79d5e66c18fc152b2d95a22cd72ab2d238c2927",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_9f20ac3d55b735b4c05f8f46"
+    ],
+    "last_verified": "2026-09-28T10:08:22.226Z"
+  }
+}
