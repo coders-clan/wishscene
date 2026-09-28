@@ -1,0 +1,23 @@
+{
+  "name": "@wishscene/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "scripts": {
+    "generate": "prisma generate",
+    "typecheck": "prisma generate && tsc --noEmit",
+    "migrate:deploy": "prisma migrate deploy"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "@wishscene/contracts": "workspace:*",
+    "@wishscene/domain": "workspace:*",
+    "pg": "8.16.3"
+  },
+  "devDependencies": {
+    "@types/pg": "8.15.5",
+    "prisma": "7.10.0"
+  }
+}

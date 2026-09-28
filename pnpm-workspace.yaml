@@ -2,6 +2,8 @@ packages:
   - apps/*
   - packages/*
 allowBuilds:
+  '@prisma/engines': true
+  prisma: true
   sharp: true
   esbuild: true
   tree-sitter: true

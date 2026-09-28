@@ -1,0 +1,334 @@
+// Product schema for issue #2. See docs/adr/0002-product-persistence-and-ownership.md.
+// Append-only triggers for story_bibles, approval_events and audit_events live in the
+// hand-edited init migration; Prisma diffs ignore them.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- Better Auth (model names are the adapter's; tables are plural) ----------
+
+model User {
+  id            String       @id
+  name          String
+  email         String       @unique
+  emailVerified Boolean      @default(false) @map("email_verified")
+  image         String?
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  deletedAt     DateTime?    @map("deleted_at")
+  sessions      Session[]
+  accounts      Account[]
+  experiences   Experience[]
+  jobs          Job[]
+  uploads       Upload[]
+  auditEvents   AuditEvent[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime @map("expires_at")
+  token     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String    @map("account_id")
+  providerId            String    @map("provider_id")
+  userId                String    @map("user_id")
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?   @map("access_token")
+  refreshToken          String?   @map("refresh_token")
+  idToken               String?   @map("id_token")
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime @map("expires_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([identifier])
+  @@map("verifications")
+}
+
+model RateLimit {
+  id          String @id
+  key         String @unique
+  count       Int
+  lastRequest BigInt @map("last_request")
+
+  @@map("rate_limits")
+}
+
+// ---------- Product ----------
+
+enum ExperienceStatus {
+  active
+  deleted
+}
+
+enum JobKind {
+  scene_generation
+  upload_validation
+  export_render
+}
+
+enum JobState {
+  queued
+  running
+  ready
+  failed
+  cancelled
+}
+
+enum AssetType {
+  candidate
+  export
+}
+
+enum AssetStatus {
+  pending
+  ready
+  failed
+  rejected
+}
+
+enum ApprovalKind {
+  approved
+  revoked
+}
+
+enum ApprovalReason {
+  user
+  superseded
+  bible_changed
+}
+
+enum UploadStatus {
+  pending
+  uploaded
+  rejected
+  expired
+}
+
+model Experience {
+  id                  String           @id @default(uuid(7)) @db.Uuid
+  userId              String           @map("user_id")
+  user                User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title               String
+  status              ExperienceStatus @default(active)
+  currentBibleVersion Int              @default(1) @map("current_bible_version")
+  createdAt           DateTime         @default(now()) @map("created_at")
+  updatedAt           DateTime         @updatedAt @map("updated_at")
+  deletedAt           DateTime?        @map("deleted_at")
+  bibles              StoryBible[]
+  scenes              Scene[]
+  assets              Asset[]
+  approvals           ApprovalEvent[]
+  jobs                Job[]
+  exports             Export[]
+
+  @@index([userId, status])
+  @@map("experiences")
+}
+
+model StoryBible {
+  id            String     @id @default(uuid(7)) @db.Uuid
+  experienceId  String     @map("experience_id") @db.Uuid
+  experience    Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  version       Int
+  parentVersion Int?       @map("parent_version")
+  facts         Json
+  createdAt     DateTime   @default(now()) @map("created_at")
+
+  @@unique([experienceId, version])
+  @@map("story_bibles")
+}
+
+model Scene {
+  id           String          @id @default(uuid(7)) @db.Uuid
+  experienceId String          @map("experience_id") @db.Uuid
+  experience   Experience      @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  ordinal      Int
+  spec         Json
+  bibleVersion Int             @map("bible_version")
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @updatedAt @map("updated_at")
+  assets       Asset[]
+  approvals    ApprovalEvent[]
+  jobs         Job[]
+
+  @@unique([experienceId, ordinal])
+  // Target of the composite FK from approval_events.
+  @@unique([id, experienceId])
+  @@map("scenes")
+}
+
+model Asset {
+  id            String          @id @default(uuid(7)) @db.Uuid
+  experienceId  String          @map("experience_id") @db.Uuid
+  experience    Experience      @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  sceneId       String?         @map("scene_id") @db.Uuid
+  scene         Scene?          @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  jobId         String?         @map("job_id") @db.Uuid
+  job           Job?            @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  parentAssetId String?         @map("parent_asset_id") @db.Uuid
+  parent        Asset?          @relation("AssetLineage", fields: [parentAssetId], references: [id], onDelete: SetNull)
+  children      Asset[]         @relation("AssetLineage")
+  type          AssetType
+  status        AssetStatus     @default(pending)
+  objectKey     String?         @unique @map("object_key")
+  contentType   String?         @map("content_type")
+  bibleVersion  Int             @map("bible_version")
+  providerJobId String?         @map("provider_job_id")
+  checks        Json?
+  createdAt     DateTime        @default(now()) @map("created_at")
+  approvals     ApprovalEvent[]
+
+  // Target of the composite FK from approval_events.
+  @@unique([id, sceneId])
+  @@index([experienceId, status])
+  @@index([sceneId])
+  @@map("assets")
+}
+
+model ApprovalEvent {
+  id           String          @id @default(uuid(7)) @db.Uuid
+  seq          BigInt          @unique @default(autoincrement())
+  experienceId String          @map("experience_id") @db.Uuid
+  experience   Experience      @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  sceneId      String          @map("scene_id") @db.Uuid
+  scene        Scene           @relation(fields: [sceneId, experienceId], references: [id, experienceId], onDelete: Cascade)
+  assetId      String          @map("asset_id") @db.Uuid
+  asset        Asset           @relation(fields: [assetId, sceneId], references: [id, sceneId], onDelete: Cascade)
+  kind         ApprovalKind
+  reason       ApprovalReason
+  bibleVersion Int             @map("bible_version")
+  supersedesId String?         @map("supersedes_id") @db.Uuid
+  supersedes   ApprovalEvent?  @relation("ApprovalLineage", fields: [supersedesId], references: [id], onDelete: Cascade)
+  supersededBy ApprovalEvent[] @relation("ApprovalLineage")
+  actorUserId  String?         @map("actor_user_id")
+  createdAt    DateTime        @default(now()) @map("created_at")
+
+  @@index([sceneId, seq])
+  @@index([experienceId])
+  @@map("approval_events")
+}
+
+model Job {
+  id            String     @id @default(uuid(7)) @db.Uuid
+  userId        String     @map("user_id")
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  experienceId  String?    @map("experience_id") @db.Uuid
+  // Trigger jobs_owner_guard (init migration) requires experience.user_id = jobs.user_id.
+  experience    Experience? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  sceneId       String?    @map("scene_id") @db.Uuid
+  scene         Scene?     @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  uploadId      String?    @map("upload_id") @db.Uuid
+  upload        Upload?    @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+  kind          JobKind
+  inputHash     String     @map("input_hash")
+  state         JobState   @default(queued)
+  bibleVersion  Int?       @map("bible_version")
+  attempts      Int        @default(0)
+  leaseUntil    DateTime?  @map("lease_until")
+  provider      String
+  providerJobId String?    @map("provider_job_id")
+  errorCode     String?    @map("error_code")
+  costEstimate  Decimal?   @map("cost_estimate") @db.Decimal(12, 4)
+  costActual    Decimal?   @map("cost_actual") @db.Decimal(12, 4)
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  assets        Asset[]
+
+  @@unique([userId, inputHash])
+  @@index([userId, state])
+  @@index([experienceId, state])
+  @@map("jobs")
+}
+
+model OutboxEvent {
+  id           BigInt    @id @default(autoincrement())
+  topic        String
+  aggregateId  String    @map("aggregate_id") @db.Uuid
+  payload      Json
+  createdAt    DateTime  @default(now()) @map("created_at")
+  dispatchedAt DateTime? @map("dispatched_at")
+  attempts     Int       @default(0)
+
+  @@index([dispatchedAt, id])
+  @@map("outbox_events")
+}
+
+model Upload {
+  id          String       @id @default(uuid(7)) @db.Uuid
+  userId      String       @map("user_id")
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  objectKey   String       @unique @map("object_key")
+  contentType String       @map("content_type")
+  maxBytes    Int          @map("max_bytes")
+  byteSize    Int?         @map("byte_size")
+  status      UploadStatus @default(pending)
+  expiresAt   DateTime     @map("expires_at")
+  completedAt DateTime?    @map("completed_at")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  jobs        Job[]
+
+  @@index([userId, status])
+  @@index([userId, createdAt])
+  @@map("uploads")
+}
+
+model Export {
+  id           String     @id @default(uuid(7)) @db.Uuid
+  experienceId String     @map("experience_id") @db.Uuid
+  experience   Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  bibleVersion Int        @map("bible_version")
+  manifest     Json
+  objectKey    String?    @unique @map("object_key")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  expiresAt    DateTime   @map("expires_at")
+
+  @@index([experienceId])
+  @@map("exports")
+}
+
+model AuditEvent {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  userId    String?  @map("user_id")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  targetId  String?  @map("target_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, createdAt])
+  @@map("audit_events")
+}
