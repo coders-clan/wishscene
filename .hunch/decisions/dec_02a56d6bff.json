@@ -1,0 +1,57 @@
+{
+  "id": "dec_02a56d6bff",
+  "title": "Social post crop is position plus zoom, edited in a full-screen drag/pinch editor; export never upscales",
+  "topic": "social-crop-zoom",
+  "status": "accepted",
+  "context": "Users could only slide the crop along the one trimmed axis, so a face cut off at the top of a 4:5 post could not be fixed, and the small preview made it hard to see. The user asked for the usual Facebook/WhatsApp crop UX: drag to move, pinch/scroll to zoom, a big crop view with the trimmed area dimmed.",
+  "decision": "SocialFocus is { x, y, zoom }: x/y are 0-100 object-position percentages (decimals allowed), zoom is 1-3 (maxSocialZoom), defaulting to 1 when omitted on PATCH and filled on load for older workspaces. cropRect() in packages/contracts/src/social.ts is the single crop geometry for exportFrame, the crop editor (image positioned in % of the crop) and the inline preview (object-fit cover at x% y%, scaled by zoom from the same origin). Output never upscales: zooming in lowers the export size (Instagram 2x = 540x675), shown live in the editor and under the preview. Editing happens in a full-screen (phone) or large side-panel (desktop) dialog with pointer drag, two-finger pinch around the midpoint, wheel/ctrl-wheel zoom around the cursor; Zoom, Horizontal position and Vertical position sliders are the keyboard and single-pointer alternative. Done applies to the unsaved draft; Save post persists it.",
+  "consequences": [
+    "Manifest social.focus now carries zoom and output.crop/size reflect it",
+    "x/y are no longer integers; clients should round to 0.01",
+    "Postgres snapshots load without migration via upgrade() filling zoom = 1",
+    "Real iOS Safari pinch behaviour relies on touch-action: none plus cancelling gesturestart/gesturechange and needs device verification"
+  ],
+  "alternatives_rejected": [
+    "Drag only along the trimmed axis without zoom: cannot recover a face that is cut because the crop already spans the full width",
+    "Dragging directly on the inline preview: too small on phones and conflicts with page scroll and gallery swipes",
+    "Upscaling zoomed crops to keep 1080 px output: blurry exports",
+    "Capping zoom so the export stays full size: 1086 px wide photos would allow almost no zoom",
+    "Keeping the single Crop position slider as the only non-gesture control: it covers one axis only once zoom allows both axes to move"
+  ],
+  "rejected_tripwires": [],
+  "related_components": [],
+  "related_files": [
+    "packages/contracts/src/social.ts",
+    "apps/web/src/components/crop-editor.tsx",
+    "apps/web/src/components/social-composer.tsx",
+    "packages/domain/src/index.ts",
+    "apps/web/src/app/globals.css",
+    "apps/web/src/app/mobile.css",
+    "docs/SOCIAL_COMPOSER.md"
+  ],
+  "supersedes": null,
+  "superseded_by": null,
+  "caused_by_bug": null,
+  "commit": null,
+  "valid_from": "2026-09-28T09:54:03.848Z",
+  "valid_to": null,
+  "retired": {
+    "symbols": [],
+    "deps": []
+  },
+  "premises": [],
+  "provenance": {
+    "source": "agent_recorded",
+    "confidence": 0.75,
+    "evidence": [
+      "packages/contracts/src/social.ts",
+      "apps/web/src/components/crop-editor.tsx",
+      "apps/web/src/components/social-composer.tsx",
+      "packages/domain/src/index.ts",
+      "apps/web/src/app/globals.css",
+      "apps/web/src/app/mobile.css",
+      "docs/SOCIAL_COMPOSER.md"
+    ]
+  },
+  "date": "2026-09-28T09:54:03.848Z"
+}
