@@ -460,3 +460,61 @@ test('simulate a failed job and reset the demo', async ({ page }) => {
   await page.getByRole('button', { name: 'Reset demo workspace' }).click();
   await expect(page.getByText('Ready to create', { exact: true })).toBeVisible();
 });
+
+test('desktop storyboard fits the viewport without page scrolling', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'Desktop layout; phones have their own frame');
+  const pageScrolls = () =>
+    page.evaluate(
+      () =>
+        document.documentElement.scrollHeight > innerHeight ||
+        document.documentElement.scrollWidth > innerWidth,
+    );
+  const titles = [
+    'Neon kind of night',
+    'A table for daydreams',
+    'Above the ordinary',
+    'The long way home',
+  ];
+  const exportButton = page.getByRole('button', { name: 'Export demo pack' });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Tokyo, after hours' })).toBeVisible();
+  // The reported screen, laptop browser heights (under toolbars), and tall monitors.
+  for (const [width, height] of [
+    [1890, 889],
+    [1920, 1080],
+    [1600, 900],
+    [1536, 730],
+    [1440, 790],
+    [1366, 657],
+    [1280, 720],
+    [2560, 1300],
+  ]) {
+    await page.setViewportSize({ width, height });
+    const size = `${width}x${height}`;
+    expect(await pageScrolls(), size).toBe(false);
+    for (const target of [
+      page.getByRole('button', { name: 'New experience', exact: true }),
+      page.getByRole('button', { name: 'Story settings' }),
+      page.getByRole('button', { name: 'Generate remaining' }),
+      ...titles.flatMap((title) => [
+        page.getByRole('button', { name: `Review ${title}` }),
+        page.getByRole('button', { name: `Create post for ${title}` }),
+      ]),
+      exportButton,
+    ])
+      await expect(target, size).toBeInViewport({ ratio: 1 });
+    // The fixed Feedback button sits beside the export dock, never on its button.
+    const feedback = (await page.locator('.feedback-launch-button').boundingBox())!;
+    const exporter = (await exportButton.boundingBox())!;
+    expect(feedback.x, size).toBeGreaterThanOrEqual(exporter.x + exporter.width);
+    // Images give up height on short screens but never grow past a 3:4 portrait.
+    const image = (await page.locator('.scene-image-button').first().boundingBox())!;
+    expect(image.height, size).toBeGreaterThanOrEqual(130);
+    expect(image.height / image.width, size).toBeLessThanOrEqual(4 / 3 + 0.02);
+    // The hero keeps its row only when there is height to spare.
+    const hero = (await page.locator('.greeting').boundingBox())!;
+    expect(hero.height > 2, size).toBe(height >= 960);
+  }
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Your imagination, in frame.');
+  await page.screenshot({ path: testInfo.outputPath('desktop-fit.png') });
+});
