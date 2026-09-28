@@ -1616,21 +1616,175 @@ textarea {
 }
 .crop-control {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
   margin-top: 14px;
 }
-.crop-control > label {
+.crop-control > .fine-print {
+  margin: 0;
+}
+/* Full-screen on phones and large on desktop: the frame stays bright, the trimmed rest of the
+   image is dimmed around it, and a thirds grid appears while the image moves. On wider screens
+   the controls sit beside the stage so the frame can use the full height. */
+.crop-dialog {
+  display: none;
+  width: min(1200px, calc(100vw - 32px));
+  height: min(1000px, calc(100dvh - 32px));
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 18px;
+  background: #fcfaf7;
+  color: var(--ink);
+  box-shadow: 0 24px 100px #17102445;
+  overflow: hidden;
+}
+.crop-dialog[open] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min(320px, 40%);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'stage heading' 'stage controls' 'stage actions';
+}
+.crop-dialog::backdrop {
+  background: #171321cc;
+  backdrop-filter: blur(6px);
+}
+.crop-heading {
+  grid-area: heading;
+  display: grid;
+  gap: 4px;
+  padding: 22px 22px 8px;
+}
+.crop-heading h2 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+.crop-heading p {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+.crop-stage {
+  --pad: 32px;
+  grid-area: stage;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #17111f;
+  container-type: size;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+.crop-stage[data-moving] {
+  cursor: grabbing;
+}
+.crop-frame {
+  position: relative;
+  width: min(100cqw - 2 * var(--pad), (100cqh - 2 * var(--pad)) * var(--ratio-w) / var(--ratio-h));
+  aspect-ratio: var(--ratio-w) / var(--ratio-h);
+}
+.crop-frame > img {
+  position: absolute;
+  max-width: none;
+  object-fit: fill;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+.crop-frame::before,
+.crop-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.crop-frame::after {
+  outline: 2px solid #fff;
+  box-shadow: 0 0 0 100vmax #17111fad;
+}
+.crop-frame::before {
+  z-index: 3;
+  opacity: 0;
+  background:
+    linear-gradient(
+      to right,
+      transparent calc(100% / 3 - 0.5px),
+      #ffffff8c 0 calc(100% / 3 + 0.5px),
+      transparent 0 calc(200% / 3 - 0.5px),
+      #ffffff8c 0 calc(200% / 3 + 0.5px),
+      transparent 0
+    ),
+    linear-gradient(
+      to bottom,
+      transparent calc(100% / 3 - 0.5px),
+      #ffffff8c 0 calc(100% / 3 + 0.5px),
+      transparent 0 calc(200% / 3 - 0.5px),
+      #ffffff8c 0 calc(200% / 3 + 0.5px),
+      transparent 0
+    );
+  transition: opacity 150ms;
+}
+.crop-stage[data-moving] .crop-frame::before {
+  opacity: 1;
+}
+.crop-safe-area {
+  position: absolute;
+  z-index: 1;
+  border: 1px dashed #ffffffa6;
+  border-radius: 4px;
+  pointer-events: none;
+}
+.crop-controls {
+  grid-area: controls;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-height: 0;
+  padding: 14px 22px 0;
+  /* Short landscape screens scroll the controls; Done stays visible below them. */
+  overflow: auto;
+}
+.crop-zoom {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  color: #6f5d80;
+}
+.crop-zoom > label,
+.crop-position > label {
   font-size: var(--text-sm);
   font-weight: 550;
+  color: var(--ink);
 }
-.crop-control > input[type='range'] {
+.crop-position {
+  display: grid;
+  gap: 10px;
+}
+.crop-position > label {
+  display: grid;
+}
+.crop-controls input[type='range'] {
   width: 100%;
   min-height: 44px;
   accent-color: #6541c9;
 }
-.crop-control > .fine-print {
-  margin: -6px 0 0;
+.crop-controls > .fine-print {
+  margin: 0;
+}
+.crop-actions {
+  grid-area: actions;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 22px 22px;
+}
+.crop-actions > :first-child {
+  margin-right: auto;
 }
 .composer-form .caption-budget {
   margin-top: -10px;

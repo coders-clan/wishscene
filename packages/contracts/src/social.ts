@@ -100,24 +100,80 @@ export const socialPlatforms = {
   },
 } as const;
 
-/** Crop position as percentages, with the same meaning as CSS `object-position`. */
+/** Zooming in crops a smaller part of the source, so the export shrinks rather than upscales. */
+export const maxSocialZoom = 3;
+/**
+ * Crop position as percentages, with the same meaning as CSS `object-position`, and a zoom
+ * factor over the largest crop of the format that fits the source (1 = no zoom).
+ */
 export const socialFocusSchema = z
   .object({
-    x: z.number().int().min(0).max(100),
-    y: z.number().int().min(0).max(100),
+    x: z.number().min(0).max(100),
+    y: z.number().min(0).max(100),
+    zoom: z.number().min(1).max(maxSocialZoom).default(1),
   })
   .strict();
 export type SocialFocus = z.infer<typeof socialFocusSchema>;
-export const defaultSocialFocus: SocialFocus = { x: 50, y: 45 };
+export const defaultSocialFocus: SocialFocus = { x: 50, y: 45, zoom: 1 };
+
+type Size = { width: number; height: number };
+type Point = { x: number; y: number };
+type Rect = Point & Size;
+/** The part of the source a format shows at this focus, in source pixels. */
+export function cropRect(source: Size, platform: SocialPlatform, focus: SocialFocus): Rect {
+  const [a, b] = socialPlatforms[platform].aspect;
+  const scale = Math.min(source.width / a, source.height / b) / focus.zoom;
+  const width = a * scale;
+  const height = b * scale;
+  return {
+    x: ((source.width - width) * focus.x) / 100,
+    y: ((source.height - height) * focus.y) / 100,
+    width,
+    height,
+  };
+}
+/** The source point at a position in the crop frame, given as fractions of its size. */
+export function cropPoint(
+  source: Size,
+  platform: SocialPlatform,
+  focus: SocialFocus,
+  at: Point,
+): Point {
+  const crop = cropRect(source, platform, focus);
+  return { x: crop.x + at.x * crop.width, y: crop.y + at.y * crop.height };
+}
+/**
+ * The focus at `zoom` that keeps source `point` under frame position `at`, as a drag or pinch
+ * does. Positions clamp at the image edges; an axis with nothing to trim keeps `current`.
+ */
+export function focusAt(
+  source: Size,
+  platform: SocialPlatform,
+  current: SocialFocus,
+  zoom: number,
+  point: Point,
+  at: Point,
+): SocialFocus {
+  const round = (value: number) => Math.round(value * 100) / 100;
+  const next = round(Math.min(maxSocialZoom, Math.max(1, zoom)));
+  const crop = cropRect(source, platform, { x: 0, y: 0, zoom: next });
+  const percent = (start: number, room: number, fallback: number) =>
+    room < 0.01 ? fallback : round(Math.min(100, Math.max(0, (start / room) * 100)));
+  return {
+    x: percent(point.x - at.x * crop.width, source.width - crop.width, current.x),
+    y: percent(point.y - at.y * crop.height, source.height - crop.height, current.y),
+    zoom: next,
+  };
+}
 
 export interface ExportFrame {
   width: number;
   height: number;
-  crop: { x: number; y: number; width: number; height: number };
+  crop: Rect;
 }
-// hunch-why: The preview (object-fit: cover at the focus) and the export renderer share this geometry, so a downloaded crop matches what the user saw. Output sizes are exact multiples of the aspect ratio and never upscale the source.
+// hunch-why: The preview (object-fit: cover at the focus, scaled from the same origin), the crop editor and the export renderer share this geometry, so a downloaded crop matches what the user saw. Output sizes are exact multiples of the aspect ratio and never upscale the source, so zooming in lowers the export size instead.
 export function exportFrame(
-  source: { width: number; height: number },
+  source: Size,
   platform: SocialPlatform,
   focus: SocialFocus,
 ): ExportFrame {
@@ -125,20 +181,18 @@ export function exportFrame(
     aspect: [a, b],
     output,
   } = socialPlatforms[platform];
-  const scale = Math.min(source.width / a, source.height / b);
-  const cropWidth = a * scale;
-  const cropHeight = b * scale;
-  const unit = Math.floor(Math.min(output.width, cropWidth) / a);
+  const crop = cropRect(source, platform, focus);
+  const unit = Math.floor(Math.min(output.width, crop.width) / a);
   if (unit < 1) throw new RangeError('The source image is too small to export.');
   const round = (value: number) => Math.round(value * 100) / 100;
   return {
     width: unit * a,
     height: unit * b,
     crop: {
-      x: round(((source.width - cropWidth) * focus.x) / 100),
-      y: round(((source.height - cropHeight) * focus.y) / 100),
-      width: round(cropWidth),
-      height: round(cropHeight),
+      x: round(crop.x),
+      y: round(crop.y),
+      width: round(crop.width),
+      height: round(crop.height),
     },
   };
 }

@@ -6,15 +6,16 @@ import {
   Bookmark,
   Check,
   Copy,
+  Crop,
   Heart,
   MessageCircle,
   Send,
   Sparkles,
 } from 'lucide-react';
 import {
-  cropAxis,
   demoPreview,
   demoSourceSize,
+  exportFrame,
   hasPhotoPreset,
   socialPlatformSchema,
   socialPlatforms,
@@ -27,8 +28,10 @@ import {
   type SocialPlatform,
   type SocialUpdate,
 } from '@wishscene/contracts';
+import { CropEditor } from './crop-editor';
 
-const sameFocus = (a: SocialFocus, b: SocialFocus) => a.x === b.x && a.y === b.y;
+const sameFocus = (a: SocialFocus, b: SocialFocus) =>
+  a.x === b.x && a.y === b.y && a.zoom === b.zoom;
 
 interface Props {
   experience: Experience;
@@ -54,6 +57,7 @@ export function SocialComposer({
   const [saved, setSaved] = useState<Record<string, SceneSocial>>({});
   const [editRevisions, setEditRevisions] = useState<Record<string, number>>({});
   const [saving, setSaving] = useState(false);
+  const [cropping, setCropping] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const scene =
@@ -143,7 +147,19 @@ export function SocialComposer({
   const image = asset?.image ?? demoPreview(experience, scene);
   const overBudget = draft.caption.length > preset.draftLimit;
   const source = asset ?? demoSourceSize[hasPhotoPreset(experience) ? 'photo' : 'illustration'];
-  const axis = cropAxis(source, platform);
+  let exportSize = '';
+  try {
+    const frame = exportFrame(source, platform, focus);
+    exportSize = `${frame.width} × ${frame.height} px`;
+  } catch {
+    exportSize = 'too small to export';
+  }
+  // object-fit: cover at the focus, then scaled from that same point, shows exportFrame's crop.
+  const imageStyle: CSSProperties = {
+    objectPosition: `${focus.x}% ${focus.y}%`,
+    transformOrigin: `${focus.x}% ${focus.y}%`,
+    transform: focus.zoom > 1 ? `scale(${focus.zoom})` : undefined,
+  };
   const safe = preset.safeArea;
   const coverTitle = cover.sceneId === scene.id ? cover.title : '';
   // The export sizes text in units of 1% of the image's shorter side. Express that unit in the
@@ -384,7 +400,7 @@ export function SocialComposer({
                 alt={`Post preview: ${scene.title}`}
                 width={600}
                 height={800}
-                style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
+                style={imageStyle}
               />
               {preset.vertical && <span className="preview-story-label">{preset.format}</span>}
               {/* Text sits inside the format's safe area, as it does in the exported image. */}
@@ -415,28 +431,35 @@ export function SocialComposer({
             )}
           </article>
           {/* Beside the image it moves; on phones this keeps Write post's text field tall. */}
-          {axis && (
-            <div className="crop-control">
-              <label htmlFor="post-crop">Crop position</label>
-              <input
-                id="post-crop"
-                type="range"
-                min={0}
-                max={100}
-                step={1}
-                value={focus[axis]}
-                disabled={saving}
-                aria-describedby="post-crop-hint"
-                aria-valuetext={
-                  axis === 'y' ? `${focus.y}% from the top` : `${focus.x}% from the left`
-                }
-                onChange={(event) => updateFocus({ ...focus, [axis]: Number(event.target.value) })}
-              />
-              <p id="post-crop-hint" className="fine-print">
-                {preset.ratioLabel} trims the {axis === 'y' ? 'top and bottom' : 'sides'}. Slide to
-                choose what stays in the exported image, then save the post.
-              </p>
-            </div>
+          <div className="crop-control">
+            <button
+              type="button"
+              className="button"
+              disabled={saving}
+              aria-describedby="post-crop-state"
+              onClick={() => setCropping(true)}
+            >
+              <Crop size={18} /> Adjust crop
+            </button>
+            <p id="post-crop-state" className="fine-print">
+              Zoom {Math.round(focus.zoom * 100)}% · exports {exportSize}
+            </p>
+          </div>
+          {cropping && (
+            <CropEditor
+              image={image}
+              alt={`Crop for ${scene.title}`}
+              source={source}
+              platform={platform}
+              focus={focus}
+              onApply={(next) => {
+                setCropping(false);
+                if (sameFocus(next, focus)) return;
+                updateFocus(next);
+                setMessage('Crop updated. Save the post to keep it.');
+              }}
+              onClose={() => setCropping(false)}
+            />
           )}
           <p className="preview-note">
             The dashed line marks a suggested safe area for text. The export draws this crop, its

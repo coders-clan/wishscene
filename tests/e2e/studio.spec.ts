@@ -90,8 +90,11 @@ test('complete an experience, download it, then invalidate old approvals', async
   await page.getByLabel('Text on image').fill('Meet me in a daydream');
   // 9:16 trims the sides of a 3:4 photo; Home moves the crop to the left edge.
   await showPostView(page, testInfo, 'Preview');
-  await page.getByLabel('Crop position').press('Home');
-  await expect(page.getByLabel('Crop position')).toHaveValue('0');
+  await page.getByRole('button', { name: 'Adjust crop', exact: true }).click();
+  const crop = page.getByRole('dialog', { name: 'Adjust crop' });
+  await crop.getByLabel('Horizontal position').press('Home');
+  await expect(crop.getByLabel('Horizontal position')).toHaveValue('0');
+  await crop.getByRole('button', { name: 'Done' }).click();
   await showPostView(page, testInfo, 'Write post');
   await page.getByRole('button', { name: 'Save post', exact: true }).click();
   await expect(
@@ -152,7 +155,7 @@ test('complete an experience, download it, then invalidate old approvals', async
   expect(manifest.assets[0].output).toMatchObject({ width: 1080, height: 1080 });
   expect(manifest.assets[1].social).toMatchObject({
     platform: 'instagram-story',
-    focus: { x: 0 },
+    focus: { x: 0, zoom: 1 },
   });
   expect(manifest.assets[1].output).toMatchObject({
     filename: 'images/02-tokyo-instagram-story.jpg',

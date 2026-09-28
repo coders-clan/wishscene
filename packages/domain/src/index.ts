@@ -7,6 +7,7 @@ import type {
   Job,
   PackUpdate,
   Scene,
+  SocialFocus,
   SocialUpdate,
   StoryUpdate,
   Workspace,
@@ -64,12 +65,14 @@ type SavedExperience = Omit<Experience, 'pack' | 'scenes'> & {
   pack?: Experience['pack'];
   scenes: Array<
     Omit<Scene, 'social' | 'assets'> & {
-      social: Omit<Scene['social'], 'focus'> & { focus?: Scene['social']['focus'] };
+      social: Omit<Scene['social'], 'focus'> & {
+        focus?: Omit<SocialFocus, 'zoom'> & { zoom?: number };
+      };
       assets: Array<Omit<Scene['assets'][number], 'width' | 'height'> & Partial<Size>>;
     }
   >;
 };
-// hunch-why: Saved demo workspaces predate carousel order, crop focus and asset sizes. Filling defaults on load keeps existing Postgres rows (schema_version 1) usable without a migration.
+// hunch-why: Saved demo workspaces predate carousel order, crop focus, crop zoom and asset sizes. Filling defaults on load keeps existing Postgres rows (schema_version 1) usable without a migration.
 function upgrade(snapshot: Omit<Workspace, 'experiences'> & { experiences: SavedExperience[] }) {
   for (const experience of snapshot.experiences) {
     experience.pack ??= {
@@ -79,6 +82,7 @@ function upgrade(snapshot: Omit<Workspace, 'experiences'> & { experiences: Saved
     };
     for (const scene of experience.scenes) {
       scene.social.focus ??= { ...defaultSocialFocus };
+      scene.social.focus.zoom ??= 1;
       for (const asset of scene.assets)
         if (!asset.width || !asset.height) Object.assign(asset, demoSourceSize[asset.media]);
     }

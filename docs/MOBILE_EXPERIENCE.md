@@ -14,7 +14,7 @@ At 600px and below, Wishscene uses a dedicated app-style web workspace. Desktop 
 - Posts retains its mounted composer and unsaved per-image drafts across Studio/Posts switches.
 - Posts shows one part at a time on phones, chosen with a segmented control: Write post, Preview, Carousel, Pack caption. Create post on a scene card opens Write post. Desktop shows all four together.
   - Write post: scene rail, platform and tone side by side, and a post text field that fills the remaining height. Save and Copy, the save status line, and any error stay pinned at the bottom. Story formats add a Text on image field and may scroll inside the screen on short phones; focused fields scroll clear of the pinned row.
-  - Preview: the platform preview scales to the available height and keeps its crop ratio. Formats that trim the image add a one-row Crop position slider below it; Save post stays on Write post.
+  - Preview: the platform preview scales to the available height and keeps its crop ratio. An Adjust crop row below it shows the zoom and export size and opens the full-screen crop editor (drag to move, pinch to zoom, with sliders as the alternative); Save post stays on Write post.
   - Carousel: cover title and one row per image (title, Cover badge, earlier/later buttons), with Save carousel pinned at the bottom; the list scrolls inside the screen on short phones.
   - Pack caption: the caption field fills the screen with Save pinned below it.
 - Short phones (760px tall or less, typical under browser toolbars) hide secondary chrome: the experience heading and Story Bible chip on Posts, the Motion icon, and the scene rail in Preview. Below 360px wide, Generate remaining becomes icon-only.
