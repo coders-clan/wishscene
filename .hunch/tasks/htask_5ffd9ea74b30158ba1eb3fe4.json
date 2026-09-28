@@ -1,0 +1,78 @@
+{
+  "id": "htask_5ffd9ea74b30158ba1eb3fe4",
+  "title": "Audit open GitHub issues against main; close done ones; pick next issue",
+  "state": "completed",
+  "started_at": "2026-09-28T07:48:22.105Z",
+  "finished_at": "2026-09-28T09:13:06.195Z",
+  "coverage": "no-relevant-memory",
+  "lessons": [],
+  "applied": [],
+  "saved": [
+    {
+      "kind": "decisions",
+      "record_id": "dec_c02b29c291",
+      "content_hash": "sha256:4a89740a05dab264f57c1024d515572f4f0b1a65f8a424ce4fa49ef52af27623",
+      "home": "public",
+      "operation": "created",
+      "durability": "committed"
+    }
+  ],
+  "checks": [
+    {
+      "label": "Verification command",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Verification command",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Verification command",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Verification command",
+      "state": "passed",
+      "exit_code": 0
+    }
+  ],
+  "conformance": [],
+  "refusals": 0,
+  "files": [
+    "apps/web/src/components/mobile-gallery.tsx",
+    "apps/web/src/app/globals.css",
+    "apps/web/src/app/mobile.css",
+    "apps/web/src/components/pack-editor.tsx",
+    "apps/web/src/components/social-composer.tsx",
+    "apps/web/src/components/studio.tsx",
+    "apps/web/src/lib/mock-api.test.ts",
+    "apps/web/src/lib/mock-api.ts",
+    "apps/web/src/lib/social-render.ts",
+    "docs/DEVELOPMENT.md",
+    "docs/MOBILE_EXPERIENCE.md",
+    "docs/MOCK_API.md",
+    "docs/SOCIAL_COMPOSER.md",
+    "packages/contracts/src/demo.ts",
+    "packages/contracts/src/index.ts",
+    "packages/contracts/src/social.ts",
+    "packages/domain/src/index.ts",
+    "packages/providers/src/index.ts",
+    "tests/e2e/mobile-app.spec.ts",
+    "tests/e2e/studio.spec.ts",
+    "tests/social-pack.test.ts"
+  ],
+  "supersedes": [],
+  "source_snapshot": "sha256:b0c87f60e1a9ea8d4c127e1165f6d1c1158ac19730a777e50cab3845d004d03e",
+  "report_hash": "sha256:d4bc57069398e4fd32fd8503a86747b6a170b1d09d6f386c88b86d3e030c958e",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_5ffd9ea74b30158ba1eb3fe4"
+    ],
+    "last_verified": "2026-09-28T09:13:06.195Z"
+  }
+}
