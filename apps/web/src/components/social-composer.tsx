@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import {
   ArrowRight,
   Bookmark,
@@ -12,7 +12,10 @@ import {
   Sparkles,
 } from 'lucide-react';
 import {
+  cropAxis,
   demoPreview,
+  demoSourceSize,
+  hasPhotoPreset,
   socialPlatformSchema,
   socialPlatforms,
   socialToneSchema,
@@ -20,12 +23,17 @@ import {
   type Experience,
   type SceneSocial,
   type SocialDraft,
+  type SocialFocus,
   type SocialPlatform,
   type SocialUpdate,
 } from '@wishscene/contracts';
 
+const sameFocus = (a: SocialFocus, b: SocialFocus) => a.x === b.x && a.y === b.y;
+
 interface Props {
   experience: Experience;
+  /** The carousel cover as the carousel editor shows it, unsaved edits included. */
+  cover: { sceneId: string; title: string };
   selectedSceneId: string | null;
   onSelectScene: (id: string) => void;
   onDirtyChange: (dirty: boolean) => void;
@@ -34,12 +42,14 @@ interface Props {
 
 export function SocialComposer({
   experience,
+  cover,
   selectedSceneId,
   onSelectScene,
   onDirtyChange,
   onSave,
 }: Props) {
   const [edits, setEdits] = useState<Record<string, SocialDraft>>({});
+  const [focusEdits, setFocusEdits] = useState<Record<string, SocialFocus>>({});
   const [choices, setChoices] = useState<Record<string, SocialPlatform>>({});
   const [saved, setSaved] = useState<Record<string, SceneSocial>>({});
   const [editRevisions, setEditRevisions] = useState<Record<string, number>>({});
@@ -55,13 +65,16 @@ export function SocialComposer({
   const preset = socialPlatforms[platform];
   const key = `${scene.id}:${platform}`;
   const draft = edits[key] ?? social.drafts[platform];
+  const focus = focusEdits[scene.id] ?? social.focus;
   const changed =
     platform !== social.platform ||
+    !sameFocus(focus, social.focus) ||
     JSON.stringify(draft) !== JSON.stringify(social.drafts[platform]);
   const isSceneDirty = (item: Experience['scenes'][number]) => {
     const base = baseFor(item.id, item.social);
     return (
       (choices[item.id] ?? base.platform) !== base.platform ||
+      !sameFocus(focusEdits[item.id] ?? base.focus, base.focus) ||
       socialPlatformSchema.options.some((target) => {
         const edit = edits[`${item.id}:${target}`];
         return edit && JSON.stringify(edit) !== JSON.stringify(base.drafts[target]);
@@ -82,6 +95,11 @@ export function SocialComposer({
     setEdits((previous) => ({ ...previous, [key]: { ...draft, ...patch } }));
     setMessage('');
   }
+  function updateFocus(next: SocialFocus) {
+    rememberRevision();
+    setFocusEdits((previous) => ({ ...previous, [scene.id]: next }));
+    setMessage('');
+  }
   function rememberRevision() {
     // A refresh may deliver another tab's save while our draft is still being edited.
     if (!isSceneDirty(scene))
@@ -97,12 +115,18 @@ export function SocialComposer({
         expectedRevision: editRevisions[scene.id] ?? social.revision,
         platform,
         draft,
+        focus,
       });
       setSaved((previous) => ({ ...previous, [scene.id]: result }));
       setEditRevisions((previous) => ({ ...previous, [scene.id]: result.revision }));
       setEdits((previous) => {
         const next = { ...previous };
         delete next[key];
+        return next;
+      });
+      setFocusEdits((previous) => {
+        const next = { ...previous };
+        delete next[scene.id];
         return next;
       });
       setMessage(`${preset.label} saved for this image.`);
@@ -118,6 +142,17 @@ export function SocialComposer({
     ) ?? scene.assets.filter((item) => item.bibleVersion === experience.bibleVersion).at(-1);
   const image = asset?.image ?? demoPreview(experience, scene);
   const overBudget = draft.caption.length > preset.draftLimit;
+  const source = asset ?? demoSourceSize[hasPhotoPreset(experience) ? 'photo' : 'illustration'];
+  const axis = cropAxis(source, platform);
+  const safe = preset.safeArea;
+  const coverTitle = cover.sceneId === scene.id ? cover.title : '';
+  // The export sizes text in units of 1% of the image's shorter side. Express that unit in the
+  // safe zone's container width so preview text keeps the export's proportions at any size.
+  const [ratioWidth, ratioHeight] = preset.aspect;
+  const safeZoneStyle = {
+    inset: `${safe.top}% ${safe.right}% ${safe.bottom}% ${safe.left}%`,
+    '--u': `${((Math.min(1, ratioHeight / ratioWidth) * 100) / (100 - safe.left - safe.right)).toFixed(3)}cqw`,
+  } as CSSProperties;
 
   return (
     <section className="social-composer" aria-label="Per-image social composer">
@@ -344,19 +379,28 @@ export function SocialComposer({
               </p>
             )}
             <div className="platform-preview-image" style={{ aspectRatio: preset.ratio }}>
-              <img src={image} alt={`Post preview: ${scene.title}`} width={600} height={800} />
-              {preset.vertical && (
-                <>
-                  <div className="preview-safe-zone" aria-hidden="true" />
-                  <span className="preview-story-label">{preset.format}</span>
-                  {draft.overlayText && (
-                    <p className="preview-overlay" dir="auto">
-                      {draft.overlayText}
-                    </p>
-                  )}
-                </>
-              )}
-              <span className="preview-disclosure">AI-created · Fictional scene</span>
+              <img
+                src={image}
+                alt={`Post preview: ${scene.title}`}
+                width={600}
+                height={800}
+                style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
+              />
+              {preset.vertical && <span className="preview-story-label">{preset.format}</span>}
+              {/* Text sits inside the format's safe area, as it does in the exported image. */}
+              <div className="preview-safe-zone" style={safeZoneStyle}>
+                {coverTitle && (
+                  <p className="preview-cover-title" dir="auto">
+                    {coverTitle}
+                  </p>
+                )}
+                {preset.vertical && draft.overlayText && (
+                  <p className="preview-overlay" dir="auto">
+                    {draft.overlayText}
+                  </p>
+                )}
+                <span className="preview-disclosure">AI-created · Fictional scene</span>
+              </div>
             </div>
             <div className="preview-social-icons" aria-hidden="true">
               <Heart size={20} />
@@ -370,9 +414,34 @@ export function SocialComposer({
               </p>
             )}
           </article>
+          {/* Beside the image it moves; on phones this keeps Write post's text field tall. */}
+          {axis && (
+            <div className="crop-control">
+              <label htmlFor="post-crop">Crop position</label>
+              <input
+                id="post-crop"
+                type="range"
+                min={0}
+                max={100}
+                step={1}
+                value={focus[axis]}
+                disabled={saving}
+                aria-describedby="post-crop-hint"
+                aria-valuetext={
+                  axis === 'y' ? `${focus.y}% from the top` : `${focus.x}% from the left`
+                }
+                onChange={(event) => updateFocus({ ...focus, [axis]: Number(event.target.value) })}
+              />
+              <p id="post-crop-hint" className="fine-print">
+                {preset.ratioLabel} trims the {axis === 'y' ? 'top and bottom' : 'sides'}. Slide to
+                choose what stays in the exported image, then save the post.
+              </p>
+            </div>
+          )}
           <p className="preview-note">
-            Illustrative preview. Crop and on-image text are preview only; your download keeps the
-            original image and saves text separately.
+            The dashed line marks a suggested safe area for text. The export draws this crop, its
+            text and the AI label into a {preset.ratioLabel} JPEG; the original image is included
+            too.
           </p>
           {scene.status !== 'approved' && (
             <p className="preview-note">

@@ -31,6 +31,12 @@ export const demoPresets = {
   }
 >;
 
+/** Export source size per fixture type. SVGs rasterize at 2× their 600×800 viewBox. */
+export const demoSourceSize = {
+  photo: { width: 1086, height: 1448 },
+  illustration: { width: 1200, height: 1600 },
+} as const;
+
 type StoryLook = Pick<ExperienceInput, 'destination' | 'outfit' | 'mood'>;
 
 // hunch-why: Photo fixtures only represent their recorded destination, outfit and mood. Custom inputs must fall back to labeled illustrations instead of claiming the same photos follow arbitrary settings.

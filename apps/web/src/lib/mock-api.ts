@@ -4,6 +4,7 @@ import {
   approvalInput,
   experienceInput,
   generationInput,
+  packUpdate,
   storyUpdate,
   socialUpdate,
 } from '@wishscene/contracts';
@@ -110,6 +111,13 @@ async function route(request: NextRequest, path: string[], studio: MockStudio) {
         .parse(await body(request));
       studio.caption(path[1], input.caption);
       result = { saved: true };
+    } else if (
+      request.method === 'PATCH' &&
+      path.length === 3 &&
+      path[0] === 'experiences' &&
+      path[2] === 'pack'
+    ) {
+      result = studio.updatePack(path[1], packUpdate.parse(await body(request)));
     } else if (
       request.method === 'PATCH' &&
       path.length === 5 &&

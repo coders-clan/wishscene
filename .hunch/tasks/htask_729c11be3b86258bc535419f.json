@@ -1,0 +1,28 @@
+{
+  "id": "htask_729c11be3b86258bc535419f",
+  "title": "Add PWA support with install popup, ship and deploy",
+  "state": "completed",
+  "started_at": "2026-09-28T06:50:17.415Z",
+  "finished_at": "2026-09-28T07:32:36.752Z",
+  "coverage": "no-relevant-memory",
+  "lessons": [],
+  "applied": [],
+  "saved": [],
+  "checks": [],
+  "conformance": [],
+  "refusals": 0,
+  "files": [
+    "apps/web/src/app/layout.tsx"
+  ],
+  "supersedes": [],
+  "source_snapshot": null,
+  "report_hash": "sha256:7cfe673373cc2f00f5792db2db6bda778548774b2ebbbbd7f5d52834f58f02a3",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_729c11be3b86258bc535419f"
+    ],
+    "last_verified": "2026-09-28T07:32:36.752Z"
+  }
+}

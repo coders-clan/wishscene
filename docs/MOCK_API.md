@@ -10,7 +10,8 @@ Base: `/api/v1`. All responses are JSON; all request bodies use `Content-Type: a
 | PATCH | `/experiences/:id/caption` | caption | `{ saved: true }` |
 | POST | `/experiences/:id/scenes/:sceneId/generations` | requestKey, scenario | 202 `Job` |
 | POST | `/experiences/:id/scenes/:sceneId/approval` | assetId, expectedVersion | `{ approved: true }` |
-| PATCH | `/experiences/:id/scenes/:sceneId/social` | expectedVersion, expectedRevision, platform, draft: { caption, overlayText, tone } | updated `SceneSocial`; saves only this platform and selects it for the image |
+| PATCH | `/experiences/:id/scenes/:sceneId/social` | expectedVersion, expectedRevision, platform, draft: { caption, overlayText, tone }, optional focus: { x, y } | updated `SceneSocial`; saves only this platform and selects it for the image; `focus` (0–100 each) sets the image's crop position |
+| PATCH | `/experiences/:id/pack` | expectedRevision, order (every scene ID once), coverTitle (≤ 64) | updated `SocialPack`; stale revision is 409 `STALE_PACK`, an incomplete or foreign order is 400 `INVALID_ORDER`; does not change the Story Bible version |
 | POST | `/jobs/:id/cancel` | `{}` | `{ cancelled: true }` |
 | POST | `/experiences/:id/exports` | `{}` | `ExportManifest` when every scene is approved at the current version |
 | POST | `/mock/reset` | `{}` | reseeded Workspace for the current cookie |
@@ -41,9 +42,11 @@ The UI builds the ZIP from the returned manifest and same-origin image assets as
 
 ## Per-image social drafts
 
-Every Scene includes `social: { platform, revision, drafts }`. Supported platform IDs: `instagram`, `instagram-story`, `tiktok`, `facebook`, `linkedin`, `x`. Tones: `playful`, `understated`, `cinematic`. Overlay text is at most 80 characters. Caption budgets vary by preset; see [SOCIAL_COMPOSER.md](SOCIAL_COMPOSER.md). Unknown platforms, extra fields and over-budget captions return 400. Version/revision conflicts return 409 and do not mutate saved drafts; scene IDs remain scoped to the experience and session.
+Every Scene includes `social: { platform, revision, drafts, focus }`. Supported platform IDs: `instagram`, `instagram-story`, `tiktok`, `facebook`, `linkedin`, `x`. Tones: `playful`, `understated`, `cinematic`. Overlay text is at most 80 characters. Caption budgets vary by preset; see [SOCIAL_COMPOSER.md](SOCIAL_COMPOSER.md). Unknown platforms, extra fields and over-budget captions return 400. Version/revision conflicts return 409 and do not mutate saved drafts; scene IDs remain scoped to the experience and session.
 
-Every exported asset adds `social: { platform, caption, overlayText, tone, previewAspectRatio, previewOnly: true }`. The ZIP includes a per-image text file under `posts/`. It still downloads original images: preview crop/overlay are not rendered into output pixels. Other saved platform drafts stay in the workspace; export uses each scene’s selected platform.
+Every Experience includes `pack: { order, coverTitle, revision }`. `order` lists every scene ID once; the first is the carousel cover. New experiences use story order and the experience title as the cover title. Every Asset records `width`/`height`, the pixel size the export renders from (photos 1086×1448; SVG illustrations 1200×1600, 2× their viewBox).
+
+The manifest (`schema: 'wishscene.mock-export/2'`) lists assets in carousel order with `position` (1 = cover), `cover`, top-level `coverTitle`, and `social: { platform, caption, overlayText, tone, focus, previewAspectRatio, previewOnly: true }`. `previewOnly` means nothing was posted. `filename` is the unedited original under `originals/`. `output: { filename, type: 'image/jpeg', aspectRatio, width, height, crop }` describes the rendered post image under `images/`: `width`/`height` are its exact pixels and `crop` is the source rectangle. The browser draws that crop, the cover title (cover only), Story/TikTok text on image, and an `AI-created · Fictional scene` label inside the format's safe area. Output sizes are exact multiples of the aspect ratio, capped at 1080 px wide (1600 for X), and never upscale the source. The ZIP also holds one `posts/<image>.txt` per image. Other saved platform drafts stay in the workspace; export uses each scene’s selected platform.
 
 ## Shared storage and feedback
 

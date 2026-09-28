@@ -1,0 +1,50 @@
+{
+  "id": "dec_c02b29c291",
+  "title": "Render social export images in the browser from server-computed crop geometry",
+  "topic": "social-pack-export",
+  "status": "proposed",
+  "context": "Issue #10 needed real 1:1/4:5/9:16/16:9 crops, a cover title and exact pixel sizes in the export manifest. The demo has no server image pipeline or object storage; images are bundled fixtures (photos 1086x1448, SVGs 600x800 viewBox). Saved workspaces live as JSON in Postgres with schema_version 1.",
+  "decision": "The server (MockStudio.export) computes every crop rectangle and exact output size with a pure exportFrame() in packages/contracts; the browser draws the JPEGs on a canvas from that manifest (apps/web/src/lib/social-render.ts). The preview uses the same geometry (object-fit cover + object-position = focus) and container-unit text sizes. Older saved workspaces are upgraded on restore (default pack, focus, fixture sizes) instead of a schema migration.",
+  "consequences": [
+    "Manifest sizes are exact by construction; e2e checks JPEG headers against them.",
+    "Export needs a browser with canvas, roundRect and container units.",
+    "A future server renderer must reuse exportFrame so sizes stay identical."
+  ],
+  "alternatives_rejected": [
+    "Server-side rendering with sharp/canvas in a route: adds a native dependency and CPU work on Vercel for a mock demo; deferred to the real export renderer.",
+    "Recording crop settings only and shipping originals: fails the 'actual dimensions' acceptance criterion.",
+    "Bumping schema_version with a SQL migration: the change is additive, and the current store returns 503 for any other version, which would lock out existing sessions."
+  ],
+  "rejected_tripwires": [],
+  "related_components": [],
+  "related_files": [
+    "packages/contracts/src/social.ts",
+    "packages/domain/src/index.ts",
+    "apps/web/src/lib/social-render.ts",
+    "apps/web/src/components/social-composer.tsx",
+    "apps/web/src/components/pack-editor.tsx"
+  ],
+  "supersedes": null,
+  "superseded_by": null,
+  "caused_by_bug": null,
+  "commit": "db846eb",
+  "valid_from": "2026-09-28T08:32:15.882Z",
+  "valid_to": null,
+  "retired": {
+    "symbols": [],
+    "deps": []
+  },
+  "premises": [],
+  "provenance": {
+    "source": "agent_recorded",
+    "confidence": 0.75,
+    "evidence": [
+      "packages/contracts/src/social.ts",
+      "packages/domain/src/index.ts",
+      "apps/web/src/lib/social-render.ts",
+      "apps/web/src/components/social-composer.tsx",
+      "apps/web/src/components/pack-editor.tsx"
+    ]
+  },
+  "date": "2026-09-28T08:32:15.882Z"
+}

@@ -123,6 +123,17 @@ test('phone screens fit the viewport without page scrolling', async ({ page }, t
       ratio: 1,
     });
     await expect(page.getByRole('button', { name: 'Save post', exact: true })).toBeHidden();
+    await page.getByRole('button', { name: 'Carousel', exact: true }).click();
+    for (const target of [
+      page.getByLabel('Cover title', { exact: true }),
+      page.getByRole('button', { name: 'Move Neon kind of night later' }),
+      page.getByRole('button', { name: 'Save carousel', exact: true }),
+    ])
+      await expect(target).toBeInViewport({ ratio: 1 });
+    expect(await onTop(page.getByRole('button', { name: 'Save carousel', exact: true }))).toBe(
+      true,
+    );
+    expect(await pageScrolls()).toBe(false);
     await page.getByRole('button', { name: 'Pack caption', exact: true }).click();
     for (const target of [
       page.getByLabel('Your caption', { exact: true }),
@@ -213,6 +224,16 @@ test('phone gallery swipes browse scenes and choices without approving them', as
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await cdp.detach();
   await expect(gallery.getByRole('status')).toHaveText('3 of 4');
+  // The swipe's snap animation ignores reduced motion; let it land before tapping Next.
+  await expect
+    .poll(() =>
+      track.evaluate((element) =>
+        Math.abs(
+          element.children[2].getBoundingClientRect().left - element.getBoundingClientRect().left,
+        ),
+      ),
+    )
+    .toBeLessThan(1);
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Export demo pack' })).toBeDisabled();
   await gallery.getByRole('button', { name: 'Next image in Scene gallery' }).click();

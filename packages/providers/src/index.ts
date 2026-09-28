@@ -1,5 +1,6 @@
 import {
   demoPreview,
+  demoSourceSize,
   hasPhotoPreset,
   type Asset,
   type Scene,
@@ -34,6 +35,7 @@ export class MockImageProvider implements ImageProvider {
       image: photo ? demoPreview(story, scene) : `/demo/${scene.art}${variant ? '-warm' : ''}.svg`,
       media: photo ? 'photo' : 'illustration',
       variant,
+      ...demoSourceSize[photo ? 'photo' : 'illustration'],
     }));
   }
 }
