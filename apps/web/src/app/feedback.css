@@ -826,13 +826,61 @@
   }
 }
 @media (max-width: 600px) {
+  /* Screen-sized board: the page stays put and only the report list scrolls. */
+  :root:has(.feedback-board),
+  body:has(.feedback-board) {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
   .feedback-board {
-    padding: 12px 14px 84px;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    padding: 0 14px;
+    overflow: clip;
+  }
+  .feedback-board > * {
+    flex: none;
+  }
+  .feedback-board > :is(.feedback-list, .feedback-empty) {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .feedback-board > .feedback-list:empty {
+    display: none;
+  }
+  .feedback-board > .feedback-list {
+    align-content: start;
+    margin-inline: -14px;
+    padding: 2px 14px 12px;
+  }
+  .feedback-board > .feedback-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+    padding: 16px;
+  }
+  .feedback-empty > svg {
+    width: 32px;
+    height: 32px;
+  }
+  .feedback-empty h3 {
+    font-size: 18px;
+    margin: 10px 0 6px;
+  }
+  .feedback-empty p {
+    font-size: 13px;
+  }
+  .feedback-board > .feedback-board-footer {
+    margin: 8px 0 calc(12px + env(safe-area-inset-bottom));
+    font-size: 11px;
+    line-height: 1.45;
   }
   .feedback-board-header {
-    position: sticky;
-    top: 0;
-    z-index: 20;
     margin-inline: -14px;
     padding: 8px 14px 10px;
     background: #fbfafced;
@@ -855,15 +903,15 @@
   }
   .feedback-board-intro {
     display: grid;
-    gap: 18px;
-    padding: 24px 0 20px;
+    gap: 12px;
+    padding: 12px 0;
   }
   .feedback-board-intro h1 {
-    margin-top: 8px;
-    font-size: 31px;
+    margin-top: 4px;
+    font-size: 27px;
   }
   .feedback-board-intro > div > p:last-child {
-    font-size: 14px;
+    font-size: 13px;
   }
   .feedback-new-button {
     width: 100%;
@@ -882,7 +930,7 @@
   }
   .feedback-filters {
     padding: 10px;
-    margin: 14px 0;
+    margin: 10px 0;
     border-radius: 14px;
   }
   .feedback-filter-top {
@@ -1056,5 +1104,11 @@
   }
   .feedback-capture-bar span {
     line-height: 1.35;
+  }
+}
+/* Short phone viewports (under browser toolbars) keep the list area usable. */
+@media (max-width: 600px) and (max-height: 760px) {
+  .feedback-board-intro > div > p:last-child {
+    display: none;
   }
 }

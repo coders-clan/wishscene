@@ -1,0 +1,35 @@
+{
+  "id": "htask_6673f0f39bd4e8853523b32b",
+  "title": "Mobile no-scroll app-style UX",
+  "state": "interrupted",
+  "started_at": "2026-09-28T05:35:20.310Z",
+  "finished_at": "2026-09-28T05:56:45.356Z",
+  "coverage": "no-relevant-memory",
+  "lessons": [],
+  "applied": [],
+  "saved": [],
+  "checks": [],
+  "conformance": [],
+  "refusals": 0,
+  "files": [
+    "apps/web/AGENTS.md",
+    "apps/web/CLAUDE.md",
+    "apps/web/next-env.d.ts",
+    "apps/web/src/app/feedback.css",
+    "apps/web/src/app/mobile.css",
+    "apps/web/src/components/studio.tsx",
+    "tests/e2e/mobile-app.spec.ts",
+    "tests/e2e/studio.spec.ts"
+  ],
+  "supersedes": [],
+  "source_snapshot": null,
+  "report_hash": "sha256:830bbee21e950fd3ac1d3ea026e38b316a75675bade08a7e3f7701b14ebe40c6",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_6673f0f39bd4e8853523b32b"
+    ],
+    "last_verified": "2026-09-28T05:56:45.356Z"
+  }
+}

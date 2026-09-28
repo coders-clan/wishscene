@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator } from '@playwright/test';
 
 test('phone workspace has app navigation, swipeable scenes, and focused screens', async ({
   page,
@@ -66,11 +66,98 @@ test('phone workspace has app navigation, swipeable scenes, and focused screens'
     'aria-current',
     'page',
   );
-  await expect(page.getByRole('tab', { name: 'Storyboard' })).toHaveAttribute(
-    'aria-selected',
-    'true',
-  );
+  // Phones hide the section tabs; the bottom navigation switches screens instead.
+  await expect(page.getByRole('tab', { name: 'Storyboard' })).toBeHidden();
+  await expect(page.getByRole('tabpanel', { name: 'Storyboard' })).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath('mobile-app-home.png'), scale: 'css' });
+});
+
+test('phone screens fit the viewport without page scrolling', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'Phone-specific layout');
+  const pageScrolls = () =>
+    page.evaluate(
+      () =>
+        document.documentElement.scrollHeight > innerHeight ||
+        document.documentElement.scrollWidth > innerWidth,
+    );
+  // In-viewport checks cannot see a sticky row painted on top; hit-test the centre.
+  const onTop = (target: Locator) =>
+    target.evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      const hit = document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2);
+      return !!hit && element.contains(hit);
+    });
+  const nav = page.getByRole('navigation', { name: 'Mobile navigation' });
+  const exportButton = page.getByRole('button', { name: 'Export demo pack' });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Tokyo, after hours' })).toBeVisible();
+  // Typical in-browser phone heights (under toolbars) and a tall phone.
+  for (const [width, height] of [
+    [390, 664],
+    [360, 640],
+    [430, 932],
+  ]) {
+    await page.setViewportSize({ width, height });
+    await nav.getByRole('button', { name: 'Studio', exact: true }).click();
+    expect(await pageScrolls()).toBe(false);
+    for (const target of [
+      page.getByRole('button', { name: 'Generate remaining' }),
+      page.getByRole('button', { name: 'Review Neon kind of night' }),
+      page.getByRole('button', { name: 'Create post for Neon kind of night' }),
+      exportButton,
+      nav,
+    ])
+      await expect(target).toBeInViewport({ ratio: 1 });
+    await nav.getByRole('button', { name: 'Posts', exact: true }).click();
+    await page.getByRole('button', { name: 'Write post', exact: true }).click();
+    expect(await pageScrolls()).toBe(false);
+    for (const target of [
+      page.getByLabel('Platform & format'),
+      page.getByLabel('Post text', { exact: true }),
+      page.getByRole('button', { name: 'Save post', exact: true }),
+      exportButton,
+    ])
+      await expect(target).toBeInViewport({ ratio: 1 });
+    await page.getByRole('button', { name: 'Preview', exact: true }).click();
+    await expect(page.getByRole('article', { name: 'Instagram post preview' })).toBeInViewport({
+      ratio: 1,
+    });
+    await expect(page.getByRole('button', { name: 'Save post', exact: true })).toBeHidden();
+    await page.getByRole('button', { name: 'Pack caption', exact: true }).click();
+    for (const target of [
+      page.getByLabel('Your caption', { exact: true }),
+      page.getByRole('button', { name: 'Save caption', exact: true }),
+    ])
+      await expect(target).toBeInViewport({ ratio: 1 });
+    expect(await pageScrolls()).toBe(false);
+  }
+  await page.screenshot({ path: testInfo.outputPath('mobile-fit-caption.png'), scale: 'css' });
+  await page.setViewportSize({ width: 360, height: 640 });
+  await page.getByRole('button', { name: 'Write post', exact: true }).click();
+  // Formats with on-image text scroll inside the panel; Save and status stay pinned on screen.
+  await page.getByLabel('Platform & format').selectOption('instagram-story');
+  const overlay = page.getByLabel('Text on image');
+  await overlay.focus();
+  expect(await onTop(overlay)).toBe(true);
+  await overlay.fill('Meet me in a daydream');
+  const save = page.getByRole('button', { name: 'Save post', exact: true });
+  await expect(save).toBeInViewport({ ratio: 1 });
+  expect(await onTop(save)).toBe(true);
+  expect(await pageScrolls()).toBe(false);
+  await save.click();
+  const saved = page.getByText('Instagram Story saved for this image.', { exact: true });
+  await expect(saved).toBeInViewport({ ratio: 1 });
+  expect(await onTop(saved)).toBe(true);
+  await nav.getByRole('button', { name: 'More', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Your workspace' })
+    .getByRole('button', { name: /^Motion/ })
+    .click();
+  await expect(page.getByRole('tabpanel', { name: 'Motion' })).toBeVisible();
+  expect(await pageScrolls()).toBe(false);
+  await page.goto('/feedback');
+  await expect(page.getByRole('heading', { name: /Team feedback/ })).toBeVisible();
+  expect(await pageScrolls()).toBe(false);
 });
 
 test('desktop keeps the full studio navigation', async ({ page }, testInfo) => {

@@ -209,6 +209,8 @@ export default function Studio() {
   const [captionDirty, setCaptionDirty] = useState(false);
   const [socialDirty, setSocialDirty] = useState(false);
   const [socialSceneId, setSocialSceneId] = useState<string | null>(null);
+  // Phones show one part of Posts at a time so each fits the screen; desktop shows all three.
+  const [postView, setPostView] = useState<'write' | 'preview' | 'caption'>('write');
   const [workspaceReset, setWorkspaceReset] = useState(0);
   const [newDestination, setNewDestination] = useState<ExperienceInput['destination']>('Tokyo');
   const mounted = useRef(true);
@@ -764,6 +766,7 @@ export default function Studio() {
                               aria-label={`Create post for ${item.title}`}
                               onClick={() => {
                                 setSocialSceneId(item.id);
+                                setPostView('write');
                                 setTab('social');
                                 requestAnimationFrame(() =>
                                   document
@@ -795,7 +798,26 @@ export default function Studio() {
                 role="tabpanel"
                 id="panel-social"
                 aria-labelledby="tab-social"
+                data-post-view={postView}
               >
+                <div className="mobile-post-views" role="group" aria-label="Post view">
+                  {(
+                    [
+                      ['write', 'Write post'],
+                      ['preview', 'Preview'],
+                      ['caption', 'Pack caption'],
+                    ] as const
+                  ).map(([view, label]) => (
+                    <button
+                      key={view}
+                      type="button"
+                      aria-pressed={postView === view}
+                      onClick={() => setPostView(view)}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
                 <SocialComposer
                   key={`${experience.id}:${experience.bibleVersion}:${workspaceReset}`}
                   experience={experience}
@@ -921,9 +943,7 @@ export default function Studio() {
               </section>
               {captionDirty && <p className="fine-print">Save your caption before exporting.</p>}
               {socialDirty && (
-                <p className="fine-print">
-                  Save your per-image post drafts in Social pack before exporting.
-                </p>
+                <p className="fine-print">Save your per-image post drafts before exporting.</p>
               )}
               <footer className="page-footer">
                 <span>
