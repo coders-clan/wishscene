@@ -457,10 +457,16 @@ export default function Studio() {
             Workspace <ChevronRight size={14} />
             <strong>My studio</strong>
           </div>
-          <button className="demo-pill" onClick={() => setModal('developer')}>
-            <span />
-            Mock mode <Code2 size={14} />
-          </button>
+          <div className="topbar-actions">
+            <button className="button primary" onClick={() => setModal('new')}>
+              <Plus size={18} />
+              New experience
+            </button>
+            <button className="demo-pill" onClick={() => setModal('developer')}>
+              <span />
+              Mock mode <Code2 size={14} />
+            </button>
+          </div>
         </header>
         <main id="main">
           <section className="greeting" data-feedback-id="studio-greeting">
@@ -473,10 +479,6 @@ export default function Studio() {
               </h1>
               <p>Turn a somewhere into your kind of story.</p>
             </div>
-            <button className="button primary" onClick={() => setModal('new')}>
-              <Plus size={18} />
-              New experience
-            </button>
           </section>
           {error && (
             <div className="error-banner" role="alert">

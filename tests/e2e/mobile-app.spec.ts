@@ -179,7 +179,8 @@ test('desktop keeps the full studio navigation', async ({ page }, testInfo) => {
   await expect(page.getByRole('heading', { name: 'Tokyo, after hours' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toBeHidden();
   await expect(page.locator('.sidebar')).toBeVisible();
-  await expect(page.locator('.greeting')).toBeVisible();
+  // Short desktop screens keep the hero heading for screen readers only.
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Your imagination, in frame.');
   await expect(page.getByRole('button', { name: 'Next image in Scene gallery' })).toBeHidden();
   await expect(page.locator('.scene-grid')).toHaveCSS('display', 'grid');
   const cards = page.locator('.scene-card');
