@@ -2,11 +2,15 @@ import { describe, expect, it } from 'vitest';
 import { DomainError, MockStudio } from '@wishscene/domain';
 import {
   cropAxis,
+  cropPoint,
   demoSourceSize,
   exportFrame,
+  focusAt,
+  maxSocialZoom,
   packUpdate,
   socialPlatformSchema,
   socialPlatforms,
+  socialUpdate,
   type Workspace,
 } from '@wishscene/contracts';
 
@@ -28,9 +32,12 @@ describe('export crop geometry', () => {
     for (const source of Object.values(demoSourceSize))
       for (const platform of socialPlatformSchema.options)
         for (const focus of [
-          { x: 0, y: 0 },
-          { x: 50, y: 45 },
-          { x: 100, y: 100 },
+          { x: 0, y: 0, zoom: 1 },
+          { x: 50, y: 45, zoom: 1 },
+          { x: 100, y: 100, zoom: 1 },
+          { x: 0, y: 100, zoom: 2 },
+          { x: 37.5, y: 62.25, zoom: maxSocialZoom },
+          { x: 100, y: 0, zoom: maxSocialZoom },
         ]) {
           const { aspect, output } = socialPlatforms[platform];
           const frame = exportFrame(source, platform, focus);
@@ -48,7 +55,7 @@ describe('export crop geometry', () => {
   it('produces the documented photo sizes and moves only the trimmed axis', () => {
     const photo = demoSourceSize.photo;
     const size = (platform: Parameters<typeof exportFrame>[1]) => {
-      const { width, height } = exportFrame(photo, platform, { x: 50, y: 50 });
+      const { width, height } = exportFrame(photo, platform, { x: 50, y: 50, zoom: 1 });
       return `${width}x${height}`;
     };
     expect(size('instagram')).toBe('1080x1350');
@@ -58,12 +65,72 @@ describe('export crop geometry', () => {
     expect(cropAxis(photo, 'instagram')).toBe('y');
     expect(cropAxis(photo, 'tiktok')).toBe('x');
     expect(cropAxis({ width: 800, height: 1000 }, 'instagram')).toBeNull();
-    const top = exportFrame(photo, 'instagram', { x: 50, y: 0 }).crop;
-    const bottom = exportFrame(photo, 'instagram', { x: 50, y: 100 }).crop;
+    const top = exportFrame(photo, 'instagram', { x: 50, y: 0, zoom: 1 }).crop;
+    const bottom = exportFrame(photo, 'instagram', { x: 50, y: 100, zoom: 1 }).crop;
     expect(top).toMatchObject({ x: 0, y: 0 });
     expect(bottom.y + bottom.height).toBeCloseTo(photo.height, 1);
-    const left = exportFrame(photo, 'tiktok', { x: 0, y: 50 }).crop;
+    const left = exportFrame(photo, 'tiktok', { x: 0, y: 50, zoom: 1 }).crop;
     expect(left).toMatchObject({ x: 0, y: 0 });
+  });
+
+  it('zooms into a smaller crop and lowers the export size instead of upscaling', () => {
+    const photo = demoSourceSize.photo;
+    const whole = exportFrame(photo, 'instagram', { x: 50, y: 50, zoom: 1 });
+    const zoomed = exportFrame(photo, 'instagram', { x: 50, y: 50, zoom: 2 });
+    expect(zoomed.crop.width).toBeCloseTo(whole.crop.width / 2, 1);
+    expect(zoomed.crop.x + zoomed.crop.width / 2).toBeCloseTo(photo.width / 2, 1);
+    expect(`${zoomed.width}x${zoomed.height}`).toBe('540x675');
+    const corner = exportFrame(photo, 'instagram', { x: 100, y: 100, zoom: maxSocialZoom }).crop;
+    expect(corner.x + corner.width).toBeCloseTo(photo.width, 1);
+    expect(corner.y + corner.height).toBeCloseTo(photo.height, 1);
+  });
+
+  it('keeps the image point under a drag or pinch there, and stops at the edges', () => {
+    const photo = demoSourceSize.photo;
+    const start = { x: 50, y: 45, zoom: 1 };
+    const face = cropPoint(photo, 'instagram', start, { x: 0.5, y: 0.2 });
+    // Pinch to 2x around the face, then drag it further down the frame.
+    const pinched = focusAt(photo, 'instagram', start, 2, face, { x: 0.5, y: 0.2 });
+    expect(pinched.zoom).toBe(2);
+    const moved = cropPoint(photo, 'instagram', pinched, { x: 0.5, y: 0.2 });
+    expect(moved.x).toBeCloseTo(face.x, 0);
+    expect(moved.y).toBeCloseTo(face.y, 0);
+    const dragged = focusAt(photo, 'instagram', pinched, 2, face, { x: 0.5, y: 0.35 });
+    expect(cropPoint(photo, 'instagram', dragged, { x: 0.5, y: 0.35 }).y).toBeCloseTo(face.y, 0);
+    // Centering it would need image above the photo's top edge, so the crop stops there.
+    expect(focusAt(photo, 'instagram', pinched, 2, face, { x: 0.5, y: 0.5 }).y).toBe(0);
+    // A 3:4 photo fills 4:5 across, so at 1x only the vertical position can change.
+    expect(focusAt(photo, 'instagram', start, 1, face, { x: 0.9, y: 5 })).toEqual({
+      x: 50,
+      y: 0,
+      zoom: 1,
+    });
+    expect(focusAt(photo, 'instagram', start, 10, face, { x: 0.5, y: 0.5 }).zoom).toBe(
+      maxSocialZoom,
+    );
+    expect(focusAt(photo, 'instagram', start, 0.2, face, { x: 0.5, y: 0.5 }).zoom).toBe(1);
+  });
+
+  it('accepts saves without a zoom as 1x and rejects zoom outside 1–3', () => {
+    const input = (focus: unknown) => ({
+      expectedVersion: 1,
+      expectedRevision: 0,
+      platform: 'instagram',
+      draft: { caption: 'Hi', overlayText: '', tone: 'playful' },
+      focus,
+    });
+    expect(socialUpdate.parse(input({ x: 12.5, y: 40 })).focus).toEqual({
+      x: 12.5,
+      y: 40,
+      zoom: 1,
+    });
+    for (const focus of [
+      { x: 50, y: 50, zoom: 0.5 },
+      { x: 50, y: 50, zoom: 3.5 },
+      { x: 50, y: 101, zoom: 1 },
+      { x: 50, y: 50, zoom: 1, scale: 2 },
+    ])
+      expect(socialUpdate.safeParse(input(focus)).success).toBe(false);
   });
 });
 
@@ -119,7 +186,7 @@ describe('carousel pack', () => {
       expectedRevision: 0,
       platform: 'tiktok',
       draft: { caption: 'Night walk.', overlayText: 'Home, the long way', tone: 'cinematic' },
-      focus: { x: 20, y: 45 },
+      focus: { x: 20, y: 45, zoom: 1.5 },
     });
     studio.updatePack(exp, {
       expectedRevision: 0,
@@ -142,9 +209,12 @@ describe('carousel pack', () => {
       [4, false],
     ]);
     const [cover, second] = manifest.assets;
-    expect(cover.social).toMatchObject({ platform: 'tiktok', focus: { x: 20, y: 45 } });
+    expect(cover.social).toMatchObject({
+      platform: 'tiktok',
+      focus: { x: 20, y: 45, zoom: 1.5 },
+    });
     expect(cover.output).toEqual({
-      ...exportFrame(demoSourceSize.photo, 'tiktok', { x: 20, y: 45 }),
+      ...exportFrame(demoSourceSize.photo, 'tiktok', { x: 20, y: 45, zoom: 1.5 }),
       filename: 'images/01-street-tiktok.jpg',
       type: 'image/jpeg',
       aspectRatio: '9:16',
@@ -160,13 +230,18 @@ describe('saved workspaces from before carousel support', () => {
     const legacy = structuredClone(approvedStudio().snapshot()) as unknown as {
       experiences: Array<{
         pack?: unknown;
-        scenes: Array<{ social: { focus?: unknown }; assets: Array<Record<string, unknown>> }>;
+        scenes: Array<{
+          social: { focus?: { x: number; y: number; zoom?: number } };
+          assets: Array<Record<string, unknown>>;
+        }>;
       }>;
     };
     for (const experience of legacy.experiences) {
       delete experience.pack;
-      for (const item of experience.scenes) {
-        delete item.social.focus;
+      for (const [index, item] of experience.scenes.entries()) {
+        // The first scene predates crop focus; the second saved a focus before zoom existed.
+        if (index === 0) delete item.social.focus;
+        else item.social.focus = { x: 30, y: 70 };
         for (const asset of item.assets) {
           delete asset.width;
           delete asset.height;
@@ -180,7 +255,8 @@ describe('saved workspaces from before carousel support', () => {
       coverTitle: 'Tokyo, after hours',
       revision: 0,
     });
-    expect(restored.scenes[0].social.focus).toEqual({ x: 50, y: 45 });
+    expect(restored.scenes[0].social.focus).toEqual({ x: 50, y: 45, zoom: 1 });
+    expect(restored.scenes[1].social.focus).toEqual({ x: 30, y: 70, zoom: 1 });
     expect(restored.scenes[0].assets[0]).toMatchObject(demoSourceSize.photo);
     expect(studio.export(exp).assets[0].output).toMatchObject({ width: 1080, height: 1350 });
   });

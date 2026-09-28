@@ -1,18 +1,18 @@
 # Per-image social composer
 
-Implemented in the developer demo · 27 September 2026 · Carousel, crops and rendered export added 28 September 2026 ([#10](https://github.com/coders-clan/wishscene/issues/10)) · Product requirement P11
+Implemented in the developer demo · 27 September 2026 · Carousel, crops and rendered export added 28 September 2026 ([#10](https://github.com/coders-clan/wishscene/issues/10)) · Drag and zoom crop editor added 28 September 2026 · Product requirement P11
 
 ## Where to find it
 
-Click **Create post** on any storyboard image, or open **Social pack** and select an image. Every scene has its own platform choice, crop position and separate text drafts for all six formats. The carousel editor (order and cover title) and an optional whole-pack caption sit below the composer.
+Click **Create post** on any storyboard image, or open **Social pack** and select an image. Every scene has its own platform choice, crop (position and zoom) and separate text drafts for all six formats. The carousel editor (order and cover title) and an optional whole-pack caption sit below the composer.
 
 1. Select an image. Its title and thumbnail identify the scene being edited.
 2. Choose **Platform & format**. The preview changes crop, layout and text placement immediately. Returning to a platform restores its text; switching images preserves other drafts.
 3. Choose playful, understated or cinematic tone. **Use suggested text** explicitly replaces this platform’s caption and overlay with a destination/scene/mood template. It does not call a model. Choosing a tone alone does not replace edited text.
 4. Edit **Post text**. Instagram Stories and TikTok also expose **Text on image** (optional, up to 80 characters). English/Hebrew text uses automatic direction.
-5. When the format trims the image, move **Crop position** (a slider under the preview; arrow keys, Home and End work) to choose what stays. The source photos are 3:4, so 4:5, 1:1 and 16:9 trim the top and bottom and 9:16 trims the sides.
+5. Click **Adjust crop** under the preview to open the crop editor: full screen on phones, a large stage with the controls beside it on desktop. The format's frame stays bright and the trimmed rest of the image is dimmed around it; the dashed line is the safe area. Drag the image to move it, and pinch, scroll (or pinch a trackpad) or use **Zoom** to zoom in up to 3×. **Horizontal position**, **Vertical position** and **Zoom** are sliders, so arrow keys, Home and End and single clicks work without dragging. **Reset** returns to the default crop, **Cancel** (or Escape) keeps the previous one, and **Done** applies it to the preview. The source photos are 3:4, so at 1× the 4:5, 1:1 and 16:9 formats move only up and down and 9:16 only sideways; zoomed in, the image moves both ways. The line under the preview shows the zoom and the export size.
 6. Inspect the live preview. The dashed line marks the format's suggested safe area; the cover title, text on image and AI-created label sit inside it, exactly where the export draws them. It is wishscene guidance, not an official platform guarantee.
-7. **Save post** stores this image’s selected platform, that platform’s draft and the image's crop position. Repeat for other images. **Copy text** copies the currently displayed caption.
+7. **Save post** stores this image’s selected platform, that platform’s draft and the image's crop. Repeat for other images. **Copy text** copies the currently displayed caption.
 8. In **Carousel**, set the **Cover title** and the order with **Move earlier/later** (the first image is the cover), then **Save carousel**. A screen-reader announcement confirms each move, and focus stays on the moved image. The cover image's preview shows the cover title as you edit it, before you save.
 9. Approve all four scenes and **Export demo pack**. See [Export pack](#export-pack).
 
@@ -29,22 +29,22 @@ These are wishscene design choices and conservative **draft writing budgets**, n
 | LinkedIn post | 1:1 | 1080×1080 | 6/6/6/6 | Creative concept and process | 1,500 |
 | X post | 16:9 | 1072×603 | 6/6/6/6 | One concise thought | 240 |
 
-Export sizes are exact multiples of the ratio, capped at 1080 px wide (1600 for X), and never upscale the source. The 1086×1448 photos therefore give 810×1440 for 9:16 and 1072×603 for 16:9; illustrations render from 1200×1600 and give 900×1600 and 1200×675. `exportFrame` in `packages/contracts/src/social.ts` is the single source for these numbers and for the crop rectangle.
+Export sizes are exact multiples of the ratio, capped at 1080 px wide (1600 for X), and never upscale the source. The 1086×1448 photos therefore give 810×1440 for 9:16 and 1072×603 for 16:9; illustrations render from 1200×1600 and give 900×1600 and 1200×675. Zooming in crops fewer source pixels, so the export gets smaller instead of blurrier: an Instagram post at 2× is 540×675, and the 3× limit keeps it at about a third of the source width. The crop editor shows the size before you save. `exportFrame` and `cropRect` in `packages/contracts/src/social.ts` are the single source for these numbers and for the crop rectangle; the preview (`object-fit: cover` at the focus, scaled by the zoom from the same point) and the crop editor draw the same rectangle.
 
 ## Export pack
 
 - `images/NN-<art>-<platform>.jpg`: one post-ready JPEG per scene in carousel order (`01` is the cover), cropped at the saved position and drawn in the browser with the cover title (cover only), Story/TikTok text on image, and an `AI-created · Fictional scene` label, all inside the safe area. The label is in the pixels because social platforms strip file metadata.
 - `originals/`: the unedited approved fixtures.
 - `posts/NN-<art>-<platform>.txt`: platform, scene, image file with its size, caption, and text on image.
-- `manifest.json`: carousel order, cover title, and per image the selected draft, crop position, source size, output file, exact output `width`/`height`, and the crop rectangle. See [Mock API](MOCK_API.md).
+- `manifest.json`: carousel order, cover title, and per image the selected draft, crop position and zoom, source size, output file, exact output `width`/`height`, and the crop rectangle. See [Mock API](MOCK_API.md).
 
 Suggestions describe an imagined scene and include AI/fictional context. Previews retain an AI-created label even when the user edits the caption. No fabricated engagement counts appear.
 
 ## State and failure behavior
 
-- Each scene owns `social: { platform, revision, drafts, focus }`; every platform has independent `{ caption, overlayText, tone }` values, and `focus` is the image's crop position.
+- Each scene owns `social: { platform, revision, drafts, focus }`; every platform has independent `{ caption, overlayText, tone }` values, and `focus: { x, y, zoom }` is the image's crop: `x`/`y` are 0–100 positions with the meaning of CSS `object-position`, and `zoom` is 1–3.
 - Each experience owns `pack: { order, coverTitle, revision }`. Carousel saves check the pack revision (`STALE_PACK`), require every scene exactly once (`INVALID_ORDER`), and do not change the Story Bible version or any approval. Unsaved carousel changes block export, creating an experience and switching experiences, and browser unload warns. Story edits keep them.
-- Workspaces saved before carousel support load with story order, the experience title as cover title, the default crop position, and the fixture sizes.
+- Workspaces saved before carousel support load with story order, the experience title as cover title, the default crop position, and the fixture sizes. Crops saved before zoom load at 1×.
 - Edits stay in the open studio while moving between images, platforms and output tabs. **Save post** persists the currently selected platform only. The UI blocks pack export and experience/story changes while post drafts are unsaved. Browser unload warns; unsaved edits do not survive reload.
 - Saved drafts remain cookie-isolated. With `DATABASE_URL`, they persist in Postgres across restarts and deployments; expiry after 30 inactive days or an explicit reset clears the workspace. Without a database URL, local process-memory behavior remains (restart or one-hour expiry clears it). See [DEPLOYMENT.md](DEPLOYMENT.md).
 - Saves validate both Story Bible version and scene social revision. Stale writes return `STALE_VERSION` or `STALE_SOCIAL` and leave edited text visible. Copy it before reloading to resolve a conflict.

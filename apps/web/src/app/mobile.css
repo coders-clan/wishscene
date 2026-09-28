@@ -966,20 +966,73 @@
   #panel-social[data-post-view='caption'] .pack-caption {
     flex: 1 0 auto;
   }
-  /* Crop position sits under the preview in one row; the hint repeats the preview. */
+  /* Adjust crop sits under the preview in one row with the zoom and export size. */
   .app-shell .crop-control {
-    display: grid;
     flex: none;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
+    flex-wrap: nowrap;
     gap: 10px;
     margin: 0;
   }
-  .app-shell .crop-control > label {
-    font-size: 12px;
+  .app-shell .crop-control > .button {
+    flex: none;
   }
   .app-shell .crop-control > .fine-print {
-    display: none;
+    min-width: 0;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  /* The crop editor takes the whole screen so the frame is as large as the phone allows. */
+  .crop-dialog {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .crop-dialog[open] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    grid-template-areas: 'heading' 'stage' 'controls' 'actions';
+  }
+  .crop-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 10px;
+    padding: max(12px, env(safe-area-inset-top)) 16px 10px;
+  }
+  .crop-heading h2 {
+    font-size: 17px;
+  }
+  .crop-heading p {
+    font-size: 12px;
+  }
+  .crop-stage {
+    --pad: 18px;
+  }
+  .crop-controls {
+    gap: 4px;
+    padding: 8px 16px 0;
+  }
+  .crop-position {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .crop-zoom > label,
+  .crop-position > label {
+    font-size: 12px;
+  }
+  .crop-controls > .fine-print {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .crop-actions {
+    padding: 8px 16px max(12px, env(safe-area-inset-bottom));
+  }
+  .crop-actions > .button {
+    flex: 1;
+  }
+  .crop-actions > :first-child {
+    margin-right: 0;
   }
   /* When Write overflows, the error, Save row, and status line stack at the
      bottom edge (20px status + 52px actions); focused fields scroll clear. */
@@ -1216,6 +1269,9 @@
   }
   /* Preview trades the image rail for a larger post; pick images in Write. */
   #panel-social[data-post-view='preview'] .composer-scenes {
+    display: none;
+  }
+  .crop-controls > .fine-print {
     display: none;
   }
   .app-shell .preview-caption {
