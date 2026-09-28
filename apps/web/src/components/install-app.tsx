@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { Check, Download, Share, SquarePlus, X } from 'lucide-react';
 import { INSTALLABLE_EVENT } from './install-capture';
@@ -84,6 +85,7 @@ export function useInstallApp() {
 export function InstallApp() {
   const { mode, open } = useSyncExternalStore(subscribe, getState, getInitial);
   const ref = useRef<HTMLDialogElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (process.env.NODE_ENV !== 'production' || !('serviceWorker' in navigator)) return;
@@ -112,8 +114,10 @@ export function InstallApp() {
   }, []);
 
   useEffect(() => {
-    // Offer once per visit on phones; automated browsers (tests, crawlers) never get it unasked.
-    if (!mode || offered || navigator.webdriver || !matchMedia(PHONE).matches) return;
+    // Offer once per visit, from the studio on phones, never on sign-in or feedback pages.
+    // Automated browsers (tests, crawlers) never get it unasked.
+    if (!mode || offered || pathname !== '/') return;
+    if (navigator.webdriver || !matchMedia(PHONE).matches) return;
     const timer = window.setInterval(
       () => {
         if (offered || recentlyDismissed()) return window.clearInterval(timer);
@@ -128,7 +132,7 @@ export function InstallApp() {
       mode === 'native' ? 1500 : 4000,
     );
     return () => window.clearInterval(timer);
-  }, [mode]);
+  }, [mode, pathname]);
 
   useEffect(() => {
     const dialog = ref.current;

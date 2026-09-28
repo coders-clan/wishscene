@@ -79,10 +79,21 @@ test('ships a manifest, app icons, and an offline-only service worker', async ({
   await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
   await page.context().setOffline(true);
   await page.goto('/feedback');
-  await expect(page.getByRole('heading', { name: "You're offline" })).toBeVisible();
+  await expect(page.getByRole('heading', { name: "Can't connect right now" })).toBeVisible();
+  await expect(page.locator('img')).toHaveJSProperty('naturalWidth', 192);
+  // API calls are never answered by the worker, so they fail instead of getting the offline page.
+  expect(
+    await page.evaluate(() =>
+      fetch('/api/auth/session').then(
+        () => 'response',
+        () => 'network error',
+      ),
+    ),
+  ).toBe('network error');
   await page.context().setOffline(false);
   await page.getByRole('link', { name: 'Try again' }).click();
-  await expect(page).toHaveURL('/');
+  await expect(page).toHaveURL('/feedback');
+  await expect(page.getByRole('heading', { name: "Can't connect right now" })).toHaveCount(0);
 });
 
 test('phones get an install sheet when the browser can install the app', async ({
