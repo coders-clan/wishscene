@@ -123,6 +123,17 @@ test('phone screens fit the viewport without page scrolling', async ({ page }, t
       ratio: 1,
     });
     await expect(page.getByRole('button', { name: 'Save post', exact: true })).toBeHidden();
+    await page.getByRole('button', { name: 'Carousel', exact: true }).click();
+    for (const target of [
+      page.getByLabel('Cover title', { exact: true }),
+      page.getByRole('button', { name: 'Move Neon kind of night later' }),
+      page.getByRole('button', { name: 'Save carousel', exact: true }),
+    ])
+      await expect(target).toBeInViewport({ ratio: 1 });
+    expect(await onTop(page.getByRole('button', { name: 'Save carousel', exact: true }))).toBe(
+      true,
+    );
+    expect(await pageScrolls()).toBe(false);
     await page.getByRole('button', { name: 'Pack caption', exact: true }).click();
     for (const target of [
       page.getByLabel('Your caption', { exact: true }),

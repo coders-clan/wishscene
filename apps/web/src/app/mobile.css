@@ -785,7 +785,7 @@
     height: min(44svh, 360px);
     object-fit: cover;
   }
-  /* Posts: Write, Preview, and Pack caption take turns filling the screen. */
+  /* Posts: Write, Preview, Carousel, and Pack caption take turns filling the screen. */
   .app-shell #panel-social:not([hidden]) {
     display: flex;
     flex-direction: column;
@@ -794,7 +794,7 @@
   .mobile-post-views {
     display: grid;
     flex: none;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 3px;
     padding: 4px;
     border: 1px solid #e7e0ef;
@@ -815,9 +815,10 @@
     color: #6541c9;
     box-shadow: 0 2px 6px #34205010;
   }
-  #panel-social[data-post-view='write'] :is(.composer-preview-column, .pack-caption),
-  #panel-social[data-post-view='preview'] :is(.composer-form, .pack-caption),
-  #panel-social[data-post-view='caption'] .social-composer {
+  #panel-social[data-post-view='write'] :is(.composer-preview-column, .pack-editor, .pack-caption),
+  #panel-social[data-post-view='preview'] :is(.composer-form, .pack-editor, .pack-caption),
+  #panel-social[data-post-view='carousel'] :is(.social-composer, .pack-caption),
+  #panel-social[data-post-view='caption'] :is(.social-composer, .pack-editor) {
     display: none;
   }
   .app-shell .social-composer {
@@ -961,8 +962,24 @@
   /* Write and Pack caption grow to fill; if they cannot fit, the panel scrolls
      and Save stays pinned to its bottom edge. */
   #panel-social[data-post-view='write'] :is(.social-composer, .composer-layout, .composer-form),
+  #panel-social[data-post-view='carousel'] .pack-editor,
   #panel-social[data-post-view='caption'] .pack-caption {
     flex: 1 0 auto;
+  }
+  /* Crop position sits under the preview in one row; the hint repeats the preview. */
+  .app-shell .crop-control {
+    display: grid;
+    flex: none;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+  }
+  .app-shell .crop-control > label {
+    font-size: 12px;
+  }
+  .app-shell .crop-control > .fine-print {
+    display: none;
   }
   /* When Write overflows, the error, Save row, and status line stack at the
      bottom edge (20px status + 52px actions); focused fields scroll clear. */
@@ -1062,7 +1079,7 @@
     font-size: 11px;
     line-height: 1.45;
   }
-  .app-shell .pack-caption {
+  .app-shell :is(.pack-caption, .pack-editor) {
     display: flex;
     flex: 1 1 0;
     flex-direction: column;
@@ -1072,6 +1089,61 @@
     border: 1px solid var(--line);
     border-radius: 16px;
     background: #fffdf9;
+  }
+  .app-shell .pack-editor h3 {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .app-shell .pack-editor > label {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .app-shell .pack-editor > input {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  .app-shell .pack-editor > .fine-print {
+    margin: 4px 0 10px;
+    font-size: 11px;
+  }
+  .app-shell .pack-order {
+    gap: 6px;
+  }
+  .app-shell .pack-order > li {
+    padding: 4px 6px 4px 4px;
+    gap: 8px;
+  }
+  .app-shell .pack-order img {
+    width: 33px;
+    height: 44px;
+  }
+  /* One line per image: the title truncates and the Cover badge stays beside it. */
+  .app-shell .pack-order-title {
+    flex-wrap: nowrap;
+    font-size: 12px;
+  }
+  .app-shell .pack-order-title > strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .app-shell .pack-cover-badge {
+    flex: none;
+  }
+  .app-shell .pack-editor > p:not(.fine-print, .modal-error) {
+    display: none;
+  }
+  /* Save stays pinned at the bottom; the move announcement gets its own line. */
+  .app-shell .pack-editor .caption-actions {
+    flex-wrap: wrap;
+    margin: auto -14px 0;
+  }
+  .app-shell .pack-editor .caption-actions > [role='status'] {
+    flex-basis: 100%;
+    font-size: 11px;
+  }
+  .app-shell .pack-actions .button {
+    min-height: 44px;
   }
   .app-shell .pack-caption h3 {
     font-size: 16px;

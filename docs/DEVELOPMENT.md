@@ -40,7 +40,7 @@ Real authentication/ownership, the product Prisma schema, BullMQ/Redis workers, 
 1. Tokyo starts with two approved scenes, one review scene, one draft.
 2. Click **Generate remaining**. Review and approve a candidate for scenes 3 and 4.
 3. Click **Create post** on any image or open **Social pack**. Choose an image and platform, edit/suggest text, inspect the preview and save. Repeat per image. The optional whole-pack caption is below. [Complete walkthrough](SOCIAL_COMPOSER.md).
-4. **Export demo pack** downloads four JPGs for a matching photo preset (SVGs for custom settings), plus per-image `posts/*.txt`, `manifest.json`, `caption.txt`, and `README.txt`. Crop and overlay are preview only; originals are preserved.
+4. **Export demo pack** downloads one post-ready JPEG per scene in carousel order under `images/` (cropped to its platform format, with cover title, text on image and an AI-created label), the originals under `originals/` (JPGs for a matching photo preset, SVGs for custom settings), per-image `posts/*.txt`, `manifest.json` with exact image sizes, `caption.txt`, and `README.txt`.
 5. Change the look under **Story settings**. Version increments; every existing approval clears. Old candidates cannot be approved or exported against the new story.
 6. In **Developer tools**, choose Failure or Slow. Generate a scene, observe failure/retry or cancel the slow job. Scenario changes apply to subsequent requests.
 7. Create a new Kyoto experience. Selecting the destination fills its matching photo outfit and mood. Reloading preserves server state; the selected experience defaults to Tokyo after reload. Use the title picker to switch.

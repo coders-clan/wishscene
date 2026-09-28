@@ -57,6 +57,28 @@ describe('mock HTTP boundary', () => {
     expect(own.experiences[0].scenes[0].social.drafts.linkedin.caption).toBe('A creative study.');
     expect(other.experiences[0].scenes[0].social.revision).toBe(0);
   });
+  it('saves the carousel within the session and rejects stale revisions and invalid orders', async () => {
+    const cookie = (await call('workspace')).headers.get('set-cookie')!.split(';')[0];
+    const path = 'experiences/tokyo-after-hours/pack';
+    const scene = (n: number) => `tokyo-after-hours-scene-${n}`;
+    const input = {
+      expectedRevision: 0,
+      order: [scene(2), scene(1), scene(3), scene(4)],
+      coverTitle: 'Tokyo after dark',
+    };
+    const saved = await call(path, 'PATCH', input, cookie);
+    expect(saved.status).toBe(200);
+    expect((await saved.json()).revision).toBe(1);
+    expect((await call(path, 'PATCH', input, cookie)).status).toBe(409);
+    expect(
+      (await call(path, 'PATCH', { ...input, expectedRevision: 1, order: [scene(1)] }, cookie))
+        .status,
+    ).toBe(400);
+    expect((await call(path, 'PATCH', { ...input, extra: true }, cookie)).status).toBe(400);
+    const own = await (await call('workspace', 'GET', undefined, cookie)).json();
+    expect(own.experiences[0].pack).toMatchObject({ order: input.order, revision: 1 });
+    expect((await (await call('workspace')).json()).experiences[0].pack.revision).toBe(0);
+  });
   it('accepts the browser Host even when Next uses a different internal bind URL', async () => {
     const request = new NextRequest('http://0.0.0.0:3000/api/v1/mock/reset', {
       method: 'POST',

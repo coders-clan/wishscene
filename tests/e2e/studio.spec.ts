@@ -13,10 +13,34 @@ async function openScreen(page: Page, testInfo: TestInfo, tab: 'Storyboard' | 'S
 async function showPostView(
   page: Page,
   testInfo: TestInfo,
-  view: 'Write post' | 'Preview' | 'Pack caption',
+  view: 'Write post' | 'Preview' | 'Carousel' | 'Pack caption',
 ) {
   if (testInfo.project.name === 'mobile')
     await page.getByRole('button', { name: view, exact: true }).click();
+}
+// Reads the pixel size from a JPEG's start-of-frame header.
+function jpegSize(bytes: Buffer) {
+  let i = 2;
+  while (i < bytes.length) {
+    if (bytes[i] !== 0xff) {
+      i++;
+      continue;
+    }
+    const marker = bytes[i + 1];
+    if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker))
+      return { width: bytes.readUInt16BE(i + 7), height: bytes.readUInt16BE(i + 5) };
+    i += 2 + bytes.readUInt16BE(i + 2);
+  }
+  throw new Error('No JPEG frame header found.');
+}
+async function checkRenderedImages(zip: JSZip) {
+  const manifest = JSON.parse(await zip.file('manifest.json')!.async('text'));
+  for (const asset of manifest.assets) {
+    const bytes = await zip.file(asset.output.filename)!.async('nodebuffer');
+    expect(bytes.subarray(0, 3).toString('hex')).toBe('ffd8ff');
+    expect(jpegSize(bytes)).toEqual({ width: asset.output.width, height: asset.output.height });
+  }
+  return manifest;
 }
 
 test('complete an experience, download it, then invalidate old approvals', async ({
@@ -64,6 +88,11 @@ test('complete an experience, download it, then invalidate old approvals', async
     .getByLabel('Post text', { exact: true })
     .fill('A fictional Tokyo night, made with wishscene.');
   await page.getByLabel('Text on image').fill('Meet me in a daydream');
+  // 9:16 trims the sides of a 3:4 photo; Home moves the crop to the left edge.
+  await showPostView(page, testInfo, 'Preview');
+  await page.getByLabel('Crop position').press('Home');
+  await expect(page.getByLabel('Crop position')).toHaveValue('0');
+  await showPostView(page, testInfo, 'Write post');
   await page.getByRole('button', { name: 'Save post', exact: true }).click();
   await expect(
     page.getByText('Instagram Story saved for this image.', { exact: true }),
@@ -77,14 +106,29 @@ test('complete an experience, download it, then invalidate old approvals', async
   await expect(
     page.getByText('LinkedIn post saved for this image.', { exact: true }),
   ).toBeVisible();
+  await showPostView(page, testInfo, 'Carousel');
+  await page.getByLabel('Cover title').fill('Tokyo after dark');
+  await page.getByRole('button', { name: 'Move A table for daydreams earlier' }).click();
+  // The moved image is now first, so focus stays with it on its remaining arrow.
+  await expect(
+    page.getByRole('button', { name: 'Move A table for daydreams later' }),
+  ).toBeFocused();
+  await expect(
+    page.getByText('A table for daydreams moved to position 1 of 4. It is now the cover.'),
+  ).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Export demo pack' })).toBeDisabled();
+  await page.getByRole('button', { name: 'Save carousel' }).click();
+  await expect(page.getByText('Carousel saved.', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Export demo pack' })).toBeEnabled();
   const downloadEvent = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export demo pack' }).click();
   const download = await downloadEvent;
   expect(download.suggestedFilename()).toBe('wishscene-tokyo-demo.zip');
   const zip = await JSZip.loadAsync(await readFile((await download.path())!));
-  const photos = Object.values(zip.files).filter((file) => file.name.endsWith('.jpg'));
+  const files = Object.values(zip.files).filter((file) => !file.dir);
+  const photos = files.filter((file) => file.name.startsWith('originals/'));
   expect(photos).toHaveLength(4);
+  expect(files.filter((file) => file.name.startsWith('images/'))).toHaveLength(4);
   const posts = Object.values(zip.files).filter(
     (file) => file.name.startsWith('posts/') && file.name.endsWith('.txt'),
   );
@@ -95,9 +139,27 @@ test('complete an experience, download it, then invalidate old approvals', async
   expect(await posts.find((file) => file.name.endsWith('-linkedin.txt'))!.async('text')).toContain(
     'creative photography',
   );
-  const manifest = JSON.parse(await zip.file('manifest.json')!.async('text'));
-  expect(manifest.assets[0].social.platform).toBe('instagram-story');
-  expect(manifest.assets[1].social.caption).toContain('creative photography');
+  const manifest = await checkRenderedImages(zip);
+  expect(manifest.coverTitle).toBe('Tokyo after dark');
+  expect(manifest.assets.map((asset: { title: string }) => asset.title)).toEqual([
+    'A table for daydreams',
+    'Neon kind of night',
+    'Above the ordinary',
+    'The long way home',
+  ]);
+  expect(manifest.assets[0]).toMatchObject({ cover: true, position: 1 });
+  expect(manifest.assets[0].social.caption).toContain('creative photography');
+  expect(manifest.assets[0].output).toMatchObject({ width: 1080, height: 1080 });
+  expect(manifest.assets[1].social).toMatchObject({
+    platform: 'instagram-story',
+    focus: { x: 0 },
+  });
+  expect(manifest.assets[1].output).toMatchObject({
+    filename: 'images/02-tokyo-instagram-story.jpg',
+    width: 810,
+    height: 1440,
+    crop: { x: 0, y: 0 },
+  });
   for (const photo of photos) {
     const bytes = await photo.async('nodebuffer');
     expect(bytes.subarray(0, 3).toString('hex')).toBe('ffd8ff');
@@ -118,6 +180,73 @@ test('complete an experience, download it, then invalidate old approvals', async
   await expect(page.getByLabel('Your look')).toHaveValue('Ivory jacket · charcoal trousers');
   await page.getByRole('button', { name: 'Save story' }).click();
   await expect(page.getByText('v3', { exact: true })).toBeVisible();
+});
+
+test('exports sharp post-ready crops for illustrated fixtures', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile', 'Export rendering does not depend on the viewport');
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Tokyo, after hours' })).toBeVisible();
+  const title = 'Illustrated export check';
+  // Arrange through the same-origin API: custom settings select the SVG illustrations.
+  await page.evaluate(async (title) => {
+    const send = async (path: string, method: string, body: unknown) => {
+      const response = await fetch(`/api/v1/${path}`, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) throw new Error(`${method} ${path}: ${response.status}`);
+      return response.json();
+    };
+    const created = await send('experiences', 'POST', {
+      title,
+      destination: 'Kyoto',
+      outfit: 'Custom test outfit',
+      mood: 'Adventure',
+    });
+    for (const scene of created.scenes)
+      await send(`experiences/${created.id}/scenes/${scene.id}/generations`, 'POST', {
+        requestKey: `${scene.id}-illustrated`,
+        scenario: 'success',
+      });
+    await new Promise((resolve) => setTimeout(resolve, 2700));
+    const workspace = await (await fetch('/api/v1/workspace')).json();
+    const ready = workspace.experiences.find((item: { id: string }) => item.id === created.id);
+    for (const scene of ready.scenes)
+      await send(`experiences/${created.id}/scenes/${scene.id}/approval`, 'POST', {
+        assetId: scene.assets[0].id,
+        expectedVersion: 1,
+      });
+  }, title);
+  await page.reload();
+  // Experience selection is local UI state: open the library from the current title.
+  await page.getByRole('button', { name: /Tokyo, after hours/ }).click();
+  await page.getByRole('button', { name: new RegExp(title) }).click();
+  await expect(page.getByRole('heading', { name: title })).toBeVisible();
+  const downloadEvent = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export demo pack' }).click();
+  const zip = await JSZip.loadAsync(await readFile((await (await downloadEvent).path())!));
+  const manifest = await checkRenderedImages(zip);
+  expect(manifest.assets[0].media).toBe('illustration');
+  expect(manifest.assets[0].filename).toMatch(/^originals\/01-.+\.svg$/);
+  expect(manifest.assets[0].output).toMatchObject({ width: 1080, height: 1350 });
+  // The illustration fills the frame edge to edge: no empty (black) bars from SVG sizing.
+  const second = await zip.file(manifest.assets[1].output.filename)!.async('base64');
+  const edges = await page.evaluate(async (src) => {
+    const image = new Image();
+    image.src = src;
+    await image.decode();
+    const canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const context = canvas.getContext('2d')!;
+    context.drawImage(image, 0, 0);
+    return [4, canvas.width - 5].map((x) => {
+      const [r, g, b] = context.getImageData(x, Math.round(canvas.height / 3), 1, 1).data;
+      return r + g + b;
+    });
+  }, `data:image/jpeg;base64,${second}`);
+  for (const brightness of edges) expect(brightness).toBeGreaterThan(30);
 });
 
 test('preview platforms, retain per-image drafts, and reload saved text', async ({

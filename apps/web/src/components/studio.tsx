@@ -44,8 +44,10 @@ import {
   hasPhotoPreset,
   socialPlatforms,
   type SceneSocial,
+  type SocialPack,
 } from '@wishscene/contracts';
 import { SocialComposer } from './social-composer';
+import { PackEditor } from './pack-editor';
 import { MobileSheetHandle } from './mobile-sheet-handle';
 import { useInstallApp } from './install-app';
 import { MobileGallery } from './mobile-gallery';
@@ -210,9 +212,10 @@ export default function Studio() {
   const [caption, setCaption] = useState('');
   const [captionDirty, setCaptionDirty] = useState(false);
   const [socialDirty, setSocialDirty] = useState(false);
+  const [packDirty, setPackDirty] = useState(false);
   const [socialSceneId, setSocialSceneId] = useState<string | null>(null);
-  // Phones show one part of Posts at a time so each fits the screen; desktop shows all three.
-  const [postView, setPostView] = useState<'write' | 'preview' | 'caption'>('write');
+  // Phones show one part of Posts at a time so each fits the screen; desktop shows all four.
+  const [postView, setPostView] = useState<'write' | 'preview' | 'carousel' | 'caption'>('write');
   const [workspaceReset, setWorkspaceReset] = useState(0);
   const [newDestination, setNewDestination] = useState<ExperienceInput['destination']>('Tokyo');
   const mounted = useRef(true);
@@ -299,23 +302,28 @@ export default function Studio() {
         'POST',
         {},
       );
-      const { default: JSZip } = await import('jszip');
+      const [{ default: JSZip }, { renderPostImage }] = await Promise.all([
+        import('jszip'),
+        import('../lib/social-render'),
+      ]);
       const zip = new JSZip();
       zip.file('manifest.json', JSON.stringify(manifest, null, 2));
       zip.file('caption.txt', manifest.caption);
       zip.file(
         'README.txt',
-        `${manifest.provenance}\n\nThese are bundled demo fixtures, not newly generated images.\nThe manifest records each approved asset, media type and Story Bible version.\n`,
+        `${manifest.provenance}\n\nThese are bundled demo fixtures, not newly generated images.\nimages/ holds one post-ready JPEG per scene in carousel order (01 is the cover), cropped to its platform format at the pixel size recorded in manifest.json, with an AI-created label drawn on the image.\noriginals/ holds the unedited approved fixtures.\nposts/ holds each image's caption. Nothing was published to a social account.\n`,
       );
       await Promise.all(
         manifest.assets.map(async (asset) => {
           const response = await fetch(asset.image);
           if (!response.ok) throw new Error('Could not fetch a demo image.');
           zip.file(asset.filename, await response.arrayBuffer());
-          const stem = asset.filename.slice(0, asset.filename.lastIndexOf('.'));
+          zip.file(asset.output.filename, await renderPostImage(asset, manifest.coverTitle));
+          const { output, social } = asset;
+          const stem = output.filename.slice(output.filename.lastIndexOf('/') + 1, -'.jpg'.length);
           zip.file(
-            `posts/${stem}-${asset.social.platform}.txt`,
-            `${socialPlatforms[asset.social.platform].label}\nScene: ${asset.title}\n\n${asset.social.caption}\n\n${asset.social.overlayText ? `Preview overlay: ${asset.social.overlayText}\n` : ''}AI-created fictional scene. Image crop and overlay are preview only.\n`,
+            `posts/${stem}.txt`,
+            `${socialPlatforms[social.platform].label}\nScene: ${asset.title}\nImage: ${output.filename} (${output.width}×${output.height}, ${output.aspectRatio})\n\n${social.caption}\n\n${socialPlatforms[social.platform].vertical && social.overlayText ? `Text on image: ${social.overlayText}\n` : ''}AI-created fictional scene.\n`,
           );
         }),
       );
@@ -329,8 +337,8 @@ export default function Studio() {
     });
   const submitExperience = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (socialDirty) {
-      setError('Save your post drafts before creating an experience or changing the story.');
+    if (socialDirty || packDirty) {
+      setError('Save your post drafts and carousel before creating an experience.');
       return;
     }
     const data = new FormData(e.currentTarget);
@@ -359,8 +367,8 @@ export default function Studio() {
     });
   };
   const selectExperience = (id: string) => {
-    if (socialDirty && id !== experienceId) {
-      setError('Save your post drafts before switching experiences.');
+    if ((socialDirty || packDirty) && id !== experienceId) {
+      setError('Save your post drafts and carousel before switching experiences.');
       return;
     }
     setExperienceId(id);
@@ -808,6 +816,7 @@ export default function Studio() {
                     [
                       ['write', 'Write post'],
                       ['preview', 'Preview'],
+                      ['carousel', 'Carousel'],
                       ['caption', 'Pack caption'],
                     ] as const
                   ).map(([view, label]) => (
@@ -830,6 +839,20 @@ export default function Studio() {
                   onSave={async (id, input) => {
                     const result = await api<SceneSocial>(
                       `experiences/${experience.id}/scenes/${id}/social`,
+                      'PATCH',
+                      input,
+                    );
+                    await refresh();
+                    return result;
+                  }}
+                />
+                <PackEditor
+                  key={`${experience.id}:${workspaceReset}`}
+                  experience={experience}
+                  onDirtyChange={setPackDirty}
+                  onSave={async (input) => {
+                    const result = await api<SocialPack>(
+                      `experiences/${experience.id}/pack`,
                       'PATCH',
                       input,
                     );
@@ -873,8 +896,9 @@ export default function Studio() {
                     </button>
                   </div>
                   <p className="fine-print">
-                    The ZIP includes original images, per-image post text, this caption, and a
-                    provenance manifest. Direct posting and rendered social layouts are future work.
+                    The ZIP includes a post-ready crop of each image in carousel order, the
+                    originals, per-image post text, this caption, and a provenance manifest with
+                    exact image sizes. Direct posting is future work.
                   </p>
                 </section>
               </section>
@@ -937,7 +961,7 @@ export default function Studio() {
                 </div>
                 <button
                   className="button primary"
-                  disabled={approved !== 4 || busy || captionDirty || socialDirty}
+                  disabled={approved !== 4 || busy || captionDirty || socialDirty || packDirty}
                   onClick={() => void exportPack()}
                 >
                   <ArrowDownToLine size={16} />
@@ -948,6 +972,7 @@ export default function Studio() {
               {socialDirty && (
                 <p className="fine-print">Save your per-image post drafts before exporting.</p>
               )}
+              {packDirty && <p className="fine-print">Save your carousel before exporting.</p>}
               <footer className="page-footer">
                 <span>
                   wishscene <span className="footer-spark">✳</span> Imagine it. Make the scene.

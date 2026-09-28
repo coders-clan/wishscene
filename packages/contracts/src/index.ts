@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { SceneSocial, SocialExport } from './social';
-export { demoPresets, hasPhotoPreset, demoPreview } from './demo';
+import type { ExportFrame, SceneSocial, SocialExport, SocialPack } from './social';
+export { demoPresets, hasPhotoPreset, demoPreview, demoSourceSize } from './demo';
 export * from './social';
 
 export const destinationSchema = z.enum(['Tokyo', 'Kyoto', 'Amalfi', 'Iceland']);
@@ -41,6 +41,9 @@ export interface Asset {
   media: 'photo' | 'illustration';
   variant: number;
   createdAt: string;
+  /** Pixel size the export renderer draws this asset at before cropping. */
+  width: number;
+  height: number;
 }
 export interface Scene {
   id: string;
@@ -60,6 +63,7 @@ export interface Experience extends ExperienceInput {
   createdAt: string;
   scenes: Scene[];
   caption: string;
+  pack: SocialPack;
 }
 export interface Job {
   id: string;
@@ -79,8 +83,14 @@ export interface Workspace {
   experiences: Experience[];
   jobs: Job[];
 }
+export interface ExportOutput extends ExportFrame {
+  /** Rendered crop inside the ZIP. `width`/`height` are its exact pixel size. */
+  filename: string;
+  type: 'image/jpeg';
+  aspectRatio: string;
+}
 export interface ExportManifest {
-  schema: 'wishscene.mock-export/1';
+  schema: 'wishscene.mock-export/2';
   mock: true;
   experienceId: string;
   title: string;
@@ -89,7 +99,18 @@ export interface ExportManifest {
   outfit: string;
   mood: string;
   caption: string;
+  coverTitle: string;
   provenance: string;
-  assets: Array<Asset & { title: string; filename: string; social: SocialExport }>;
+  /** In carousel order; `position` 1 is the cover. `filename` is the unedited original. */
+  assets: Array<
+    Asset & {
+      title: string;
+      position: number;
+      cover: boolean;
+      filename: string;
+      social: SocialExport;
+      output: ExportOutput;
+    }
+  >;
 }
 export * from './feedback';

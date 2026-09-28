@@ -5,12 +5,21 @@ import type {
   ExportManifest,
   GenerationInput,
   Job,
+  PackUpdate,
   Scene,
   SocialUpdate,
   StoryUpdate,
   Workspace,
 } from '@wishscene/contracts';
-import { makeSceneSocial, socialPlatforms, socialUpdate } from '@wishscene/contracts';
+import {
+  defaultSocialFocus,
+  demoSourceSize,
+  exportFrame,
+  makeSceneSocial,
+  packUpdate,
+  socialPlatforms,
+  socialUpdate,
+} from '@wishscene/contracts';
 import { MockImageProvider, type ImageProvider } from '@wishscene/providers';
 
 export class DomainError extends Error {
@@ -50,6 +59,33 @@ const shotLists = {
 } as const;
 const active = (job: Job) => job.status === 'queued' || job.status === 'running';
 
+type Size = { width: number; height: number };
+type SavedExperience = Omit<Experience, 'pack' | 'scenes'> & {
+  pack?: Experience['pack'];
+  scenes: Array<
+    Omit<Scene, 'social' | 'assets'> & {
+      social: Omit<Scene['social'], 'focus'> & { focus?: Scene['social']['focus'] };
+      assets: Array<Omit<Scene['assets'][number], 'width' | 'height'> & Partial<Size>>;
+    }
+  >;
+};
+// hunch-why: Saved demo workspaces predate carousel order, crop focus and asset sizes. Filling defaults on load keeps existing Postgres rows (schema_version 1) usable without a migration.
+function upgrade(snapshot: Omit<Workspace, 'experiences'> & { experiences: SavedExperience[] }) {
+  for (const experience of snapshot.experiences) {
+    experience.pack ??= {
+      order: experience.scenes.map((scene) => scene.id),
+      coverTitle: experience.title,
+      revision: 0,
+    };
+    for (const scene of experience.scenes) {
+      scene.social.focus ??= { ...defaultSocialFocus };
+      for (const asset of scene.assets)
+        if (!asset.width || !asset.height) Object.assign(asset, demoSourceSize[asset.media]);
+    }
+  }
+  return snapshot as Workspace;
+}
+
 // hunch-why: Keep mock state behind the domain boundary intended for persistence. Each browser gets its own workspace, with no identity uploads or provider calls.
 export class MockStudio {
   private state: Workspace;
@@ -62,17 +98,12 @@ export class MockStudio {
   }
   static restore(snapshot: Workspace): MockStudio {
     const studio = new MockStudio();
-    studio.state = structuredClone(snapshot);
+    studio.state = upgrade(structuredClone(snapshot));
     return studio;
   }
   private makeExperience(input: ExperienceInput, id = this.id()): Experience {
-    return {
-      ...input,
-      id,
-      bibleVersion: 1,
-      createdAt: new Date(this.clock()).toISOString(),
-      caption: `A little daydream from ${input.destination}. ✨\nCreated with wishscene. #AIcreated #wishscene`,
-      scenes: shotLists[input.destination].map(([title, shot, time, art], ordinal) => ({
+    const scenes = shotLists[input.destination].map(
+      ([title, shot, time, art], ordinal): Scene => ({
         id: `${id}-scene-${ordinal + 1}`,
         title,
         shot,
@@ -83,7 +114,16 @@ export class MockStudio {
         assets: [],
         approvedAssetId: null,
         social: makeSceneSocial(input, { title }),
-      })),
+      }),
+    );
+    return {
+      ...input,
+      id,
+      bibleVersion: 1,
+      createdAt: new Date(this.clock()).toISOString(),
+      caption: `A little daydream from ${input.destination}. ✨\nCreated with wishscene. #AIcreated #wishscene`,
+      scenes,
+      pack: { order: scenes.map((scene) => scene.id), coverTitle: input.title, revision: 0 },
     };
   }
   private seed(): Workspace {
@@ -212,8 +252,33 @@ export class MockStudio {
       );
     scene.social.platform = input.platform;
     scene.social.drafts[input.platform] = structuredClone(input.draft);
+    if (input.focus) scene.social.focus = { ...input.focus };
     scene.social.revision += 1;
     return structuredClone(scene.social);
+  }
+  // hunch-why: Carousel order and cover title belong to the whole pack, not a scene or the Story Bible, so they do not bump the Bible version. The order must name every scene exactly once so an export can never drop or repeat an image.
+  updatePack(experienceId: string, raw: PackUpdate) {
+    const input = packUpdate.parse(raw);
+    const experience = this.experience(experienceId);
+    if (input.expectedRevision !== experience.pack.revision)
+      throw new DomainError(
+        409,
+        'STALE_PACK',
+        'The carousel changed in another tab. Reload before saving.',
+      );
+    const ids = new Set(experience.scenes.map((scene) => scene.id));
+    if (
+      input.order.length !== ids.size ||
+      new Set(input.order).size !== ids.size ||
+      !input.order.every((id) => ids.has(id))
+    )
+      throw new DomainError(400, 'INVALID_ORDER', 'List every scene exactly once.');
+    experience.pack = {
+      order: [...input.order],
+      coverTitle: input.coverTitle,
+      revision: experience.pack.revision + 1,
+    };
+    return structuredClone(experience.pack);
   }
   generate(experienceId: string, sceneId: string, input: GenerationInput): Job {
     this.settle();
@@ -331,30 +396,44 @@ export class MockStudio {
   export(experienceId: string): ExportManifest {
     this.settle();
     const experience = this.experience(experienceId);
-    const assets = experience.scenes.map((scene) => {
-      const asset = scene.assets.find(
+    if (new Set(experience.pack.order).size !== experience.scenes.length)
+      throw new DomainError(409, 'NOT_READY', 'Save the carousel order before exporting.');
+    const assets = experience.pack.order.map((sceneId, index) => {
+      const scene = experience.scenes.find((item) => item.id === sceneId);
+      const asset = scene?.assets.find(
         (x) => x.id === scene.approvedAssetId && x.bibleVersion === experience.bibleVersion,
       );
-      if (!asset || scene.status !== 'approved')
+      if (!scene || !asset || scene.status !== 'approved')
         throw new DomainError(
           409,
           'NOT_READY',
           'Approve every scene for the current story before exporting.',
         );
+      const { platform, focus } = scene.social;
+      const stem = `${String(index + 1).padStart(2, '0')}-${scene.art}`;
       return {
         ...asset,
         title: scene.title,
+        position: index + 1,
+        cover: index === 0,
         social: {
-          ...scene.social.drafts[scene.social.platform],
-          platform: scene.social.platform,
-          previewAspectRatio: socialPlatforms[scene.social.platform].ratioLabel,
+          ...scene.social.drafts[platform],
+          platform,
+          focus: { ...focus },
+          previewAspectRatio: socialPlatforms[platform].ratioLabel,
           previewOnly: true as const,
         },
-        filename: `${String(scene.ordinal + 1).padStart(2, '0')}-${scene.art}-variant-${asset.variant + 1}.${asset.media === 'photo' ? 'jpg' : 'svg'}`,
+        filename: `originals/${stem}-variant-${asset.variant + 1}.${asset.media === 'photo' ? 'jpg' : 'svg'}`,
+        output: {
+          ...exportFrame(asset, platform, focus),
+          filename: `images/${stem}-${platform}.jpg`,
+          type: 'image/jpeg' as const,
+          aspectRatio: socialPlatforms[platform].ratioLabel,
+        },
       };
     });
     return {
-      schema: 'wishscene.mock-export/1',
+      schema: 'wishscene.mock-export/2',
       mock: true,
       experienceId,
       title: experience.title,
@@ -363,6 +442,7 @@ export class MockStudio {
       outfit: experience.outfit,
       mood: experience.mood,
       caption: experience.caption,
+      coverTitle: experience.pack.coverTitle,
       provenance: assets.every((asset) => asset.media === 'photo')
         ? 'Pre-generated AI photo fixtures of fictional Alex Morgan. Photos match the recorded destination preset, outfit and mood. No live generation or automated likeness verification took place. Fictional experience created with wishscene.'
         : 'Illustrated developer fixtures. Custom outfit and mood inputs are metadata only and are not rendered into these illustrations. No live generation or likeness verification took place. Fictional experience created with wishscene.',
