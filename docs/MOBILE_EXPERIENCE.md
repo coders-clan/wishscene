@@ -1,6 +1,6 @@
 # Phone-first studio
 
-At 600px and below, Wishscene uses a dedicated app-style web workspace. Desktop retains its sidebar and full studio layout. This is not a native app, offline mode, or a new authentication/storage model.
+At 600px and below, Wishscene uses a dedicated app-style web workspace. Desktop retains its sidebar and full studio layout. It can be installed to the home screen as a Progressive Web App (see below). This is not a native app store app, an offline mode, or a new authentication/storage model.
 
 - Every phone screen fits the viewport: the page itself never scrolls. The app frame is `100dvh`; if content is taller than the screen, it scrolls inside the screen area rather than moving the header, export bar, or navigation.
 - Bottom navigation: Studio, Experiences, Create, Posts, More. It replaces the section tabs on phones; Motion opens from More.
@@ -24,3 +24,15 @@ At 600px and below, Wishscene uses a dedicated app-style web workspace. Desktop 
 Implementation: `apps/web/src/app/mobile.css`, `apps/web/src/app/feedback.css`, `components/mobile-sheet-handle.tsx`, the studio and feedback dialog wrappers, and the root viewport configuration. Studio rules are scoped to its shell; shared sheet rules also cover feedback dialogs. The Posts view state lives in `components/studio.tsx` (`postView`, exposed as `data-post-view` on the Posts panel). Desktop dialogs and sign-in pages retain their layout.
 
 Verification: the existing create, generate, approve, social compose, export, and feedback journeys run on desktop and phone Chromium. `tests/e2e/mobile-app.spec.ts` adds 320/390/430/600px overflow, gallery layout, target sizes, navigation, draft retention, dialog sizing, and focus restoration checks. It also checks that Studio, all three Posts views, and /feedback do not scroll the page at 390x664, 360x640, and 430x932, with primary actions fully on screen. Real-phone keyboard behavior with the locked frame still needs device verification.
+
+## Install as an app (PWA)
+
+- `app/manifest.ts` serves `/manifest.webmanifest`: name, `standalone` display, theme and background `#f7f5f0`, and 192/512 icons plus a maskable 512 icon in `public/icons/`. `app/apple-icon.png` is the iOS home screen icon; `appleWebApp` metadata in the root layout sets the iOS title and status bar.
+- Install sheet (`components/install-app.tsx`, mounted by the root layout): on phones it offers itself once per visit from the studio (never on sign-in or feedback pages), after the page settles and only when no other sheet is open and nobody is typing.
+  - Chrome, Edge and Samsung Internet: an inline `<head>` script (`components/install-capture.ts`) keeps the browser's `beforeinstallprompt` event so the sheet's Install app button opens the browser's own install prompt.
+  - iPhone and iPad (Safari and other iOS browsers, not in-app browsers): the sheet shows the Share, Add to Home Screen, Add steps, because iOS has no install prompt.
+  - Closing it any way (Not now, Got it, close, Escape, backdrop, handle) keeps it from offering itself for 14 days (`localStorage`, `wishscene:install-dismissed-at`). More, then Install app still opens it at any time.
+  - It never offers itself on desktop (browsers show their own install button) or in automated browsers. Opened from the home screen, neither the sheet nor the More entry appears.
+- Service worker (`public/sw.js`, registered in production only): when a page load fails because the device is offline, it shows the static `public/offline.html` (Try again reloads the page that failed). It caches only that page and its icon; bump `CACHE` in `sw.js` when either changes. API calls, assets, form posts and page HTML always go to the network and are never stored. To retire it, ship a `sw.js` that calls `self.registration.unregister()`.
+
+Verification: `tests/e2e/pwa.spec.ts` checks the manifest, icons, theme color, service worker registration and the offline page, the phone install sheet with a simulated `beforeinstallprompt`, the 14-day pause and the More entry, the iPhone steps, and that nothing is offered from the home screen or on desktop. Real-phone installs on Android Chrome and iPhone Safari still need device verification.

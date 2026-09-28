@@ -13,6 +13,7 @@ import {
   Code2,
   Compass,
   Copy,
+  Download,
   Film,
   FolderHeart,
   Image as ImageIcon,
@@ -46,6 +47,7 @@ import {
 } from '@wishscene/contracts';
 import { SocialComposer } from './social-composer';
 import { MobileSheetHandle } from './mobile-sheet-handle';
+import { useInstallApp } from './install-app';
 import { MobileGallery } from './mobile-gallery';
 
 async function api<T>(path: string, method = 'GET', payload?: unknown): Promise<T> {
@@ -271,6 +273,7 @@ export default function Studio() {
     }
   };
   const close = () => setModal(null);
+  const installApp = useInstallApp();
   const openScene = (item: Scene) => {
     setSceneId(item.id);
     setModal('review');
@@ -1035,6 +1038,20 @@ export default function Studio() {
         >
           {modal === 'more' && (
             <div className="mobile-more-actions">
+              {installApp.available && (
+                <button
+                  onClick={() => {
+                    close();
+                    installApp.open();
+                  }}
+                >
+                  <Download />
+                  <span>
+                    Install app<small>Add wishscene to your home screen</small>
+                  </span>
+                  <ChevronRight />
+                </button>
+              )}
               <button onClick={() => setModal('identity')}>
                 <Layers3 />
                 <span>
