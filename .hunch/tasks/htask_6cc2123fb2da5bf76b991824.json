@@ -1,0 +1,74 @@
+{
+  "id": "htask_6cc2123fb2da5bf76b991824",
+  "title": "Mobile no-scroll UX: verify, docs, critic review",
+  "state": "completed",
+  "started_at": "2026-09-28T06:10:24.951Z",
+  "finished_at": "2026-09-28T06:31:18.061Z",
+  "coverage": "no-relevant-memory",
+  "lessons": [],
+  "applied": [],
+  "saved": [],
+  "checks": [
+    {
+      "label": "Verification command",
+      "state": "failed",
+      "exit_code": null
+    },
+    {
+      "label": "Verification command",
+      "state": "failed",
+      "exit_code": null
+    },
+    {
+      "label": "Verification command",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Verification command",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Verification command",
+      "state": "failed",
+      "exit_code": 1
+    },
+    {
+      "label": "Verification command",
+      "state": "failed",
+      "exit_code": 1
+    },
+    {
+      "label": "Verification command",
+      "state": "passed",
+      "exit_code": 0
+    },
+    {
+      "label": "Verification command",
+      "state": "passed",
+      "exit_code": 0
+    }
+  ],
+  "conformance": [],
+  "refusals": 0,
+  "files": [
+    "apps/web/src/app/mobile.css",
+    "apps/web/src/app/feedback.css",
+    "apps/web/src/components/studio.tsx",
+    "docs/MOBILE_EXPERIENCE.md",
+    "tests/e2e/mobile-app.spec.ts",
+    "tests/e2e/studio.spec.ts"
+  ],
+  "supersedes": [],
+  "source_snapshot": "sha256:2703e794fcfdd384f4c91d7fd6d1f22bf5244bb0c06ea3e0aaf978c78477ba5e",
+  "report_hash": "sha256:d96eb7405e6729a38222325c9f22243b0376dd7464732ebbecdafba2606ff887",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_6cc2123fb2da5bf76b991824"
+    ],
+    "last_verified": "2026-09-28T06:31:18.061Z"
+  }
+}
