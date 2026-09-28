@@ -3,7 +3,7 @@
 At 600px and below, Wishscene uses a dedicated app-style web workspace. Desktop retains its sidebar and full studio layout. This is not a native app, offline mode, or a new authentication/storage model.
 
 - Bottom navigation: Studio, Experiences, Create, Posts, More.
-- Compact two-column scene gallery replaces the long full-width photo feed.
+- On phones only, scenes, experience covers, and review image choices use a horizontal swipe gallery: one large card with a peek at the next, position indicators, and previous/next buttons. Native scroll snapping keeps each image in place. Swiping only browses; approval is always an explicit button.
 - Story Bible details expand on demand; its version is always visible.
 - An export dock keeps approval progress and export eligibility accessible above navigation.
 - Create, library, settings, review, More, and feedback dialogs open as bottom sheets with rounded tops and a visible strip of the underlying screen. Short sheets fit their content; long sheets scroll below a sticky heading.

@@ -2,6 +2,12 @@
 .mobile-sheet-handle {
   display: none;
 }
+.mobile-gallery-controls {
+  display: none;
+}
+.mobile-gallery {
+  min-width: 0;
+}
 
 .mobile-app-nav,
 .mobile-brand,
@@ -258,8 +264,71 @@
     gap: 5px;
   }
   .app-shell .scene-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px 12px;
+  }
+  .app-shell .mobile-gallery-track {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    padding-block: 4px 8px;
+  }
+  .app-shell .mobile-gallery-track::-webkit-scrollbar {
+    display: none;
+  }
+  .app-shell .mobile-gallery-track > * {
+    flex: 0 0 calc(100% - 24px);
+    min-width: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .app-shell .mobile-gallery-track > :only-child {
+    flex-basis: 100%;
+  }
+  .mobile-gallery-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .mobile-gallery-controls > button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #eee8f7;
+    color: #6036d0;
+  }
+  .mobile-gallery-controls > button:disabled {
+    opacity: 0.35;
+  }
+  .mobile-gallery-position {
+    width: min(140px, 40vw);
+    text-align: center;
+    color: #756a83;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .mobile-gallery-dots {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .mobile-gallery-dots > span {
+    flex: 1;
+    max-width: 24px;
+    height: 4px;
+    border-radius: 8px;
+    background: #ded5e9;
+  }
+  .mobile-gallery-dots > .active {
+    background: #7650e8;
   }
   .app-shell .scene-card {
     overflow: hidden;
@@ -269,6 +338,7 @@
   }
   .app-shell .scene-image-button {
     aspect-ratio: 3 / 4;
+    max-height: 52svh;
     border-radius: 0;
   }
   .app-shell .scene-number {
@@ -293,13 +363,13 @@
     padding: 10px;
   }
   .app-shell .scene-caption h4 {
-    font-size: 13px;
-    min-height: 38px;
+    font-size: 18px;
+    min-height: 0;
     line-height: 1.4;
   }
   .app-shell .scene-caption > p {
-    font-size: 11px;
-    min-height: 32px;
+    font-size: 13px;
+    min-height: 0;
   }
   .app-shell .scene-actions {
     margin-top: 8px;
@@ -496,6 +566,10 @@
   }
   .app-shell .library-card {
     border-radius: 16px;
+  }
+  .app-shell .library-card > img {
+    height: min(44svh, 360px);
+    object-fit: cover;
   }
   .app-shell .social-composer {
     padding-top: 22px;

@@ -46,6 +46,7 @@ import {
 } from '@wishscene/contracts';
 import { SocialComposer } from './social-composer';
 import { MobileSheetHandle } from './mobile-sheet-handle';
+import { MobileGallery } from './mobile-gallery';
 
 async function api<T>(path: string, method = 'GET', payload?: unknown): Promise<T> {
   const response = await fetch(`/api/v1/${path}`, {
@@ -649,7 +650,7 @@ export default function Studio() {
                       Generate remaining
                     </button>
                   </div>
-                  <div className="scene-grid">
+                  <MobileGallery key={experience.id} className="scene-grid" label="Scene gallery">
                     {experience.scenes.map((item, i) => {
                       const currentAssets = item.assets.filter(
                         (asset) => asset.bibleVersion === experience.bibleVersion,
@@ -777,7 +778,7 @@ export default function Studio() {
                         </article>
                       );
                     })}
-                  </div>
+                  </MobileGallery>
                   <div className="board-footer">
                     <span>
                       <span className="mock-dot" />
@@ -1124,7 +1125,7 @@ export default function Studio() {
             </form>
           )}
           {modal === 'library' && (
-            <div className="library-grid">
+            <MobileGallery className="library-grid" label="Experience gallery">
               {workspace?.experiences.map((item) => (
                 <button
                   className="library-card"
@@ -1148,7 +1149,7 @@ export default function Studio() {
                 <Plus size={24} />
                 Make another wish
               </button>
-            </div>
+            </MobileGallery>
           )}
           {modal === 'identity' && (
             <div className="identity-content">
@@ -1304,7 +1305,7 @@ export default function Studio() {
                   </p>
                 </div>
               )}
-              <div className="candidate-grid">
+              <MobileGallery key={scene.id} className="candidate-grid" label="Image choices">
                 {scene.assets
                   .filter((a) => a.bibleVersion === experience.bibleVersion)
                   .slice(photoPreset ? -1 : -2)
@@ -1339,7 +1340,7 @@ export default function Studio() {
                       </div>
                     </div>
                   ))}
-              </div>
+              </MobileGallery>
               {!scene.assets.some((a) => a.bibleVersion === experience.bibleVersion) && (
                 <div className="empty-candidates">
                   <Sparkles size={35} />

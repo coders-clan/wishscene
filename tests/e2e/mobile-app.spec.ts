@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('phone workspace has app navigation, compact scenes, and focused screens', async ({
+test('phone workspace has app navigation, swipeable scenes, and focused screens', async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile', 'Phone-specific interaction model');
@@ -22,6 +22,7 @@ test('phone workspace has app navigation, compact scenes, and focused screens', 
     const cards = page.locator('.scene-card');
     const first = (await cards.nth(0).boundingBox())!;
     const second = (await cards.nth(1).boundingBox())!;
+    expect(first.width).toBeGreaterThan(width * 0.75);
     expect(Math.abs(first.y - second.y)).toBeLessThan(2);
     expect(second.x).toBeGreaterThan(first.x);
     for (const button of await nav.getByRole('button').all()) {
@@ -79,11 +80,97 @@ test('desktop keeps the full studio navigation', async ({ page }, testInfo) => {
   await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toBeHidden();
   await expect(page.locator('.sidebar')).toBeVisible();
   await expect(page.locator('.greeting')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Next image in Scene gallery' })).toBeHidden();
+  await expect(page.locator('.scene-grid')).toHaveCSS('display', 'grid');
+  const cards = page.locator('.scene-card');
+  const first = (await cards.nth(0).boundingBox())!;
+  const second = (await cards.nth(1).boundingBox())!;
+  expect(Math.abs(first.y - second.y)).toBeLessThan(2);
+  expect(first.width).toBeLessThan(page.viewportSize()!.width / 2);
   await page.getByRole('button', { name: 'New experience', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Dismiss sheet' })).toBeHidden();
   const dialog = (await page.getByRole('dialog').boundingBox())!;
   expect(dialog.width).toBeLessThan(page.viewportSize()!.width);
   expect(dialog.y).toBeGreaterThan(0);
+});
+
+test('phone gallery swipes browse scenes and choices without approving them', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'Phone-only gallery');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const gallery = page.getByRole('region', { name: 'Scene gallery', exact: true });
+  await expect(gallery.getByRole('status')).toHaveText('1 of 4');
+  await expect(
+    gallery.getByRole('button', { name: 'Previous image in Scene gallery' }),
+  ).toBeDisabled();
+  await gallery.getByRole('button', { name: 'Next image in Scene gallery' }).click();
+  await expect(gallery.getByRole('status')).toHaveText('2 of 4');
+  const track = gallery.locator('.mobile-gallery-track');
+  await track.scrollIntoViewIfNeeded();
+  const box = (await track.boundingBox())!;
+  const cdp = await page.context().newCDPSession(page);
+  const y = Math.max(90, box.y + 80);
+  await cdp.send('Input.dispatchTouchEvent', {
+    type: 'touchStart',
+    touchPoints: [{ x: box.x + box.width * 0.85, y }],
+  });
+  for (let step = 1; step <= 8; step++) {
+    await cdp.send('Input.dispatchTouchEvent', {
+      type: 'touchMove',
+      touchPoints: [{ x: box.x + box.width * (0.85 - step * 0.075), y }],
+    });
+    await page.waitForTimeout(16);
+  }
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await cdp.detach();
+  await expect(gallery.getByRole('status')).toHaveText('3 of 4');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Export demo pack' })).toBeDisabled();
+  await gallery.getByRole('button', { name: 'Next image in Scene gallery' }).click();
+  await expect(gallery.getByRole('status')).toHaveText('4 of 4');
+  await expect(gallery.getByRole('button', { name: 'Next image in Scene gallery' })).toBeDisabled();
+  await page.screenshot({
+    path: testInfo.outputPath('mobile-swipe-gallery.png'),
+    scale: 'css',
+    animations: 'disabled',
+  });
+
+  await page
+    .getByRole('navigation', { name: 'Mobile navigation' })
+    .getByRole('button', { name: 'Experiences', exact: true })
+    .click();
+  const library = page.getByRole('region', { name: 'Experience gallery' });
+  await library.getByRole('button', { name: 'Next image in Experience gallery' }).click();
+  await expect(library.getByRole('status')).toHaveText('2 of 4');
+  await page.getByRole('button', { name: 'Close dialog', exact: true }).click();
+  await page
+    .getByRole('navigation', { name: 'Mobile navigation' })
+    .getByRole('button', { name: 'New experience', exact: true })
+    .click();
+  await page.getByLabel('Experience name').fill('Gallery test');
+  await page.getByLabel('Your look').fill('Custom blue jacket');
+  await page.getByRole('button', { name: 'Create experience', exact: true }).click();
+  await expect(gallery.getByRole('status')).toHaveText('1 of 4');
+  await page.locator('.scene-image-button').first().click();
+  await page.getByRole('button', { name: 'Generate candidates', exact: true }).click();
+  const choices = page.getByRole('region', { name: 'Image choices' });
+  await expect(choices.getByRole('status')).toHaveText('1 of 2', { timeout: 15000 });
+  await choices.getByRole('button', { name: 'Next image in Image choices' }).click();
+  await expect(choices.getByRole('status')).toHaveText('2 of 2');
+  await expect(choices.getByRole('button', { name: 'Approved', exact: true })).toHaveCount(0);
+  await choices
+    .locator('.candidate')
+    .last()
+    .getByRole('button', { name: 'Approve', exact: true })
+    .click();
+  await expect(choices.getByRole('button', { name: 'Approved', exact: true })).toHaveCount(1);
+  await page.screenshot({
+    path: testInfo.outputPath('mobile-choice-gallery.png'),
+    scale: 'css',
+    animations: 'disabled',
+  });
 });
 
 test('phone sheets support handle dismissal and scrollable feedback in a short viewport', async ({
