@@ -182,6 +182,56 @@ test('complete an experience, download it, then invalidate old approvals', async
   await expect(page.getByText('v3', { exact: true })).toBeVisible();
 });
 
+test('carousel saves stay current while a workspace refresh is in flight', async ({
+  page,
+}, testInfo) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Tokyo, after hours' })).toBeVisible();
+  await openScreen(page, testInfo, 'Social pack');
+  const carousel = page.locator('.pack-editor');
+  // The cover image's preview shows the cover title before it is saved.
+  await showPostView(page, testInfo, 'Carousel');
+  await page.getByLabel('Cover title').fill('Draft cover');
+  await showPostView(page, testInfo, 'Preview');
+  await expect(page.locator('.preview-cover-title')).toHaveText('Draft cover');
+
+  // Hold workspace reloads so a post save leaves its refresh in flight; the studio skips
+  // overlapping refreshes, so the carousel saves below get no reload of their own.
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => (release = resolve));
+  await page.route('**/api/v1/workspace', async (route) => {
+    await held;
+    await route.continue();
+  });
+  await showPostView(page, testInfo, 'Write post');
+  const reload = page.waitForRequest(
+    (request) => request.method() === 'GET' && request.url().endsWith('/api/v1/workspace'),
+  );
+  await page.getByLabel('Post text', { exact: true }).fill('Posted while the studio reloads.');
+  await page.getByRole('button', { name: 'Save post', exact: true }).click();
+  await reload;
+  await showPostView(page, testInfo, 'Carousel');
+  await page.getByLabel('Cover title').fill('First save');
+  await page.getByRole('button', { name: 'Save carousel' }).click();
+  await expect(carousel.getByText('Carousel saved.', { exact: true })).toBeVisible();
+  await expect(page.getByLabel('Cover title')).toHaveValue('First save');
+  // The second save must start from the first save's revision, not the stale workspace's.
+  await page.getByLabel('Cover title').fill('Second save');
+  await expect(carousel.getByText('Unsaved carousel changes', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Save carousel' }).click();
+  await expect(carousel.getByText('Carousel saved.', { exact: true })).toBeVisible();
+  await expect(carousel.getByRole('alert')).toHaveCount(0);
+  release();
+  await showPostView(page, testInfo, 'Write post');
+  await expect(page.getByText(/saved for this image\.$/)).toBeVisible();
+  await expect(page.getByLabel('Cover title')).toHaveValue('Second save');
+
+  await page.reload();
+  await openScreen(page, testInfo, 'Social pack');
+  await showPostView(page, testInfo, 'Carousel');
+  await expect(page.getByLabel('Cover title')).toHaveValue('Second save');
+});
+
 test('exports sharp post-ready crops for illustrated fixtures', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile', 'Export rendering does not depend on the viewport');
   await page.goto('/');

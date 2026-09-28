@@ -32,6 +32,8 @@ const sameFocus = (a: SocialFocus, b: SocialFocus) => a.x === b.x && a.y === b.y
 
 interface Props {
   experience: Experience;
+  /** The carousel cover as the carousel editor shows it, unsaved edits included. */
+  cover: { sceneId: string; title: string };
   selectedSceneId: string | null;
   onSelectScene: (id: string) => void;
   onDirtyChange: (dirty: boolean) => void;
@@ -40,6 +42,7 @@ interface Props {
 
 export function SocialComposer({
   experience,
+  cover,
   selectedSceneId,
   onSelectScene,
   onDirtyChange,
@@ -142,7 +145,7 @@ export function SocialComposer({
   const source = asset ?? demoSourceSize[hasPhotoPreset(experience) ? 'photo' : 'illustration'];
   const axis = cropAxis(source, platform);
   const safe = preset.safeArea;
-  const coverTitle = experience.pack.order[0] === scene.id ? experience.pack.coverTitle : '';
+  const coverTitle = cover.sceneId === scene.id ? cover.title : '';
   // The export sizes text in units of 1% of the image's shorter side. Express that unit in the
   // safe zone's container width so preview text keeps the export's proportions at any size.
   const [ratioWidth, ratioHeight] = preset.aspect;

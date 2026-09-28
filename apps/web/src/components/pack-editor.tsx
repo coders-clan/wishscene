@@ -10,31 +10,50 @@ import {
   type SocialPack,
 } from '@wishscene/contracts';
 
+/** The cover the carousel shows right now, unsaved edits included, for the post preview. */
+export type PackCover = { experienceId: string; sceneId: string; title: string };
+
 interface Props {
   experience: Experience;
   onDirtyChange: (dirty: boolean) => void;
+  onCoverChange: (cover: PackCover) => void;
   onSave: (input: PackUpdate) => Promise<SocialPack>;
 }
 
 type Draft = { order: string[]; coverTitle: string; baseRevision: number };
 
 // hunch-why: Carousel edits stay local until Save, like post drafts. The save carries the revision the edit started from, so another tab's newer carousel is reported instead of overwritten.
-export function PackEditor({ experience, onDirtyChange, onSave }: Props) {
+export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }: Props) {
   const [draft, setDraft] = useState<Draft | null>(null);
+  const [saved, setSaved] = useState<SocialPack | null>(null);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
-  const { pack } = experience;
+  // A workspace refresh can be skipped while another is in flight, so show our own save until
+  // the workspace catches up with it.
+  const pack = saved && saved.revision > experience.pack.revision ? saved : experience.pack;
   const order = draft?.order ?? pack.order;
   const coverTitle = draft?.coverTitle ?? pack.coverTitle;
   const dirty =
     !!draft && (draft.coverTitle !== pack.coverTitle || draft.order.join() !== pack.order.join());
   useEffect(() => onDirtyChange(dirty), [dirty, onDirtyChange]);
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [dirty]);
+  const coverSceneId = order[0];
+  useEffect(
+    () => onCoverChange({ experienceId: experience.id, sceneId: coverSceneId, title: coverTitle }),
+    [experience.id, coverSceneId, coverTitle, onCoverChange],
+  );
   const sceneFor = (id: string) => experience.scenes.find((scene) => scene.id === id);
 
   function edit(patch: Partial<Omit<Draft, 'baseRevision'>>) {
     setDraft({ order, coverTitle, baseRevision: draft?.baseRevision ?? pack.revision, ...patch });
     setError('');
+    setStatus('');
   }
   function move(index: number, delta: -1 | 1) {
     const next = [...order];
@@ -57,11 +76,13 @@ export function PackEditor({ experience, onDirtyChange, onSave }: Props) {
     setSaving(true);
     setError('');
     try {
-      await onSave({
-        expectedRevision: draft.baseRevision,
-        order: draft.order,
-        coverTitle: draft.coverTitle,
-      });
+      setSaved(
+        await onSave({
+          expectedRevision: draft.baseRevision,
+          order: draft.order,
+          coverTitle: draft.coverTitle,
+        }),
+      );
       setDraft(null);
       setStatus('Carousel saved.');
     } catch (cause) {

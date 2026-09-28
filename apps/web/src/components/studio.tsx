@@ -47,7 +47,7 @@ import {
   type SocialPack,
 } from '@wishscene/contracts';
 import { SocialComposer } from './social-composer';
-import { PackEditor } from './pack-editor';
+import { PackEditor, type PackCover } from './pack-editor';
 import { MobileSheetHandle } from './mobile-sheet-handle';
 import { useInstallApp } from './install-app';
 import { MobileGallery } from './mobile-gallery';
@@ -213,6 +213,7 @@ export default function Studio() {
   const [captionDirty, setCaptionDirty] = useState(false);
   const [socialDirty, setSocialDirty] = useState(false);
   const [packDirty, setPackDirty] = useState(false);
+  const [packCover, setPackCover] = useState<PackCover | null>(null);
   const [socialSceneId, setSocialSceneId] = useState<string | null>(null);
   // Phones show one part of Posts at a time so each fits the screen; desktop shows all four.
   const [postView, setPostView] = useState<'write' | 'preview' | 'carousel' | 'caption'>('write');
@@ -353,7 +354,7 @@ export default function Studio() {
   const submitStory = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (socialDirty) {
-      setError('Save your post drafts before creating an experience or changing the story.');
+      setError('Save your post drafts before changing the story.');
       return;
     }
     const data = new FormData(e.currentTarget);
@@ -833,6 +834,11 @@ export default function Studio() {
                 <SocialComposer
                   key={`${experience.id}:${experience.bibleVersion}:${workspaceReset}`}
                   experience={experience}
+                  cover={
+                    packCover?.experienceId === experience.id
+                      ? packCover
+                      : { sceneId: experience.pack.order[0], title: experience.pack.coverTitle }
+                  }
                   selectedSceneId={socialSceneId}
                   onSelectScene={setSocialSceneId}
                   onDirtyChange={setSocialDirty}
@@ -850,6 +856,7 @@ export default function Studio() {
                   key={`${experience.id}:${workspaceReset}`}
                   experience={experience}
                   onDirtyChange={setPackDirty}
+                  onCoverChange={setPackCover}
                   onSave={async (input) => {
                     const result = await api<SocialPack>(
                       `experiences/${experience.id}/pack`,

@@ -13,7 +13,7 @@ Click **Create post** on any storyboard image, or open **Social pack** and selec
 5. When the format trims the image, move **Crop position** (a slider under the preview; arrow keys, Home and End work) to choose what stays. The source photos are 3:4, so 4:5, 1:1 and 16:9 trim the top and bottom and 9:16 trims the sides.
 6. Inspect the live preview. The dashed line marks the format's suggested safe area; the cover title, text on image and AI-created label sit inside it, exactly where the export draws them. It is wishscene guidance, not an official platform guarantee.
 7. **Save post** stores this image’s selected platform, that platform’s draft and the image's crop position. Repeat for other images. **Copy text** copies the currently displayed caption.
-8. In **Carousel**, set the **Cover title** and the order with **Move earlier/later** (the first image is the cover), then **Save carousel**. A screen-reader announcement confirms each move, and focus stays on the moved image.
+8. In **Carousel**, set the **Cover title** and the order with **Move earlier/later** (the first image is the cover), then **Save carousel**. A screen-reader announcement confirms each move, and focus stays on the moved image. The cover image's preview shows the cover title as you edit it, before you save.
 9. Approve all four scenes and **Export demo pack**. See [Export pack](#export-pack).
 
 ## Preview presets
@@ -43,7 +43,7 @@ Suggestions describe an imagined scene and include AI/fictional context. Preview
 ## State and failure behavior
 
 - Each scene owns `social: { platform, revision, drafts, focus }`; every platform has independent `{ caption, overlayText, tone }` values, and `focus` is the image's crop position.
-- Each experience owns `pack: { order, coverTitle, revision }`. Carousel saves check the pack revision (`STALE_PACK`), require every scene exactly once (`INVALID_ORDER`), and do not change the Story Bible version or any approval. Unsaved carousel changes block export and switching experiences.
+- Each experience owns `pack: { order, coverTitle, revision }`. Carousel saves check the pack revision (`STALE_PACK`), require every scene exactly once (`INVALID_ORDER`), and do not change the Story Bible version or any approval. Unsaved carousel changes block export, creating an experience and switching experiences, and browser unload warns. Story edits keep them.
 - Workspaces saved before carousel support load with story order, the experience title as cover title, the default crop position, and the fixture sizes.
 - Edits stay in the open studio while moving between images, platforms and output tabs. **Save post** persists the currently selected platform only. The UI blocks pack export and experience/story changes while post drafts are unsaved. Browser unload warns; unsaved edits do not survive reload.
 - Saved drafts remain cookie-isolated. With `DATABASE_URL`, they persist in Postgres across restarts and deployments; expiry after 30 inactive days or an explicit reset clears the workspace. Without a database URL, local process-memory behavior remains (restart or one-hour expiry clears it). See [DEPLOYMENT.md](DEPLOYMENT.md).

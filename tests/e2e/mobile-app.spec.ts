@@ -224,6 +224,16 @@ test('phone gallery swipes browse scenes and choices without approving them', as
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await cdp.detach();
   await expect(gallery.getByRole('status')).toHaveText('3 of 4');
+  // The swipe's snap animation ignores reduced motion; let it land before tapping Next.
+  await expect
+    .poll(() =>
+      track.evaluate((element) =>
+        Math.abs(
+          element.children[2].getBoundingClientRect().left - element.getBoundingClientRect().left,
+        ),
+      ),
+    )
+    .toBeLessThan(1);
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Export demo pack' })).toBeDisabled();
   await gallery.getByRole('button', { name: 'Next image in Scene gallery' }).click();
