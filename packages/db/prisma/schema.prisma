@@ -90,11 +90,6 @@ model RateLimit {
 
 // ---------- Product ----------
 
-enum ExperienceStatus {
-  active
-  deleted
-}
-
 enum JobKind {
   scene_generation
   upload_validation
@@ -144,11 +139,11 @@ model Experience {
   userId              String           @map("user_id")
   user                User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   title               String
-  status              ExperienceStatus @default(active)
-  currentBibleVersion Int              @default(1) @map("current_bible_version")
-  createdAt           DateTime         @default(now()) @map("created_at")
-  updatedAt           DateTime         @updatedAt @map("updated_at")
-  deletedAt           DateTime?        @map("deleted_at")
+  currentBibleVersion Int             @default(1) @map("current_bible_version")
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+  // Soft delete: a set deleted_at hides the experience everywhere.
+  deletedAt           DateTime?       @map("deleted_at")
   bibles              StoryBible[]
   scenes              Scene[]
   assets              Asset[]
@@ -156,7 +151,7 @@ model Experience {
   jobs                Job[]
   exports             Export[]
 
-  @@index([userId, status])
+  @@index([userId, createdAt])
   @@map("experiences")
 }
 
@@ -296,6 +291,9 @@ model Upload {
   contentType String       @map("content_type")
   maxBytes    Int          @map("max_bytes")
   byteSize    Int?         @map("byte_size")
+  // ETag of the object that completion checked. Readers fetch with If-Match: a replaced object
+  // (the presigned POST stays usable for 5 minutes) is never validated or used.
+  etag        String?
   status      UploadStatus @default(pending)
   expiresAt   DateTime     @map("expires_at")
   completedAt DateTime?    @map("completed_at")
@@ -319,6 +317,15 @@ model Export {
 
   @@index([experienceId])
   @@map("exports")
+}
+
+// Fixed-window counters (takeThrottle), e.g. magic links per address. Keys never hold raw emails.
+model Throttle {
+  key         String   @id
+  windowStart DateTime @map("window_start") @db.Timestamptz(3)
+  count       Int
+
+  @@map("throttles")
 }
 
 model AuditEvent {

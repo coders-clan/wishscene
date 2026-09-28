@@ -36,7 +36,8 @@ packages/contracts/          Zod request/event/domain schemas
 packages/domain/             story versioning, approval and invalidation
 packages/providers/          image/video adapters and deterministic fakes
 packages/ui/                 reusable accessible components and brand tokens
-prisma/                      PostgreSQL schema and migrations
+packages/db/                 Prisma schema, migrations and owner-scoped store
+packages/storage/            private object storage adapter and fake
 docs/                        product, design, ADRs
 ```
 

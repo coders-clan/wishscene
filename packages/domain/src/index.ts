@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type {
+  Destination,
   Experience,
   ExperienceInput,
   ExportManifest,
@@ -58,6 +59,16 @@ const shotLists = {
     ['Under another sky', 'Wide · northern lights', '22:00', 'aurora'],
   ],
 } as const;
+export interface ScenePlan {
+  title: string;
+  shot: string;
+  time: string;
+  art: string;
+}
+/** The fixed four-scene shot list for a destination, shared by the mock and product stores. */
+export function planScenes(destination: Destination): ScenePlan[] {
+  return shotLists[destination].map(([title, shot, time, art]) => ({ title, shot, time, art }));
+}
 const active = (job: Job) => job.status === 'queued' || job.status === 'running';
 
 type Size = { width: number; height: number };
@@ -106,8 +117,8 @@ export class MockStudio {
     return studio;
   }
   private makeExperience(input: ExperienceInput, id = this.id()): Experience {
-    const scenes = shotLists[input.destination].map(
-      ([title, shot, time, art], ordinal): Scene => ({
+    const scenes = planScenes(input.destination).map(
+      ({ title, shot, time, art }, ordinal): Scene => ({
         id: `${id}-scene-${ordinal + 1}`,
         title,
         shot,
