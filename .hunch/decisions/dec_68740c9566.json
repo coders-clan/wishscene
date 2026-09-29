@@ -1,0 +1,47 @@
+{
+  "id": "dec_68740c9566",
+  "title": "Resolve client IP outside Vercel via WISHSCENE_TRUSTED_PROXIES",
+  "topic": "auth-rate-limit-client-ip",
+  "status": "accepted",
+  "context": "Better Auth 1.7.6 getIPFromHeader trusts X-Forwarded-For only when it holds exactly one address, unless advanced.ipAddress.trustedProxies is set; otherwise the request falls into one shared 'no-trusted-ip' bucket per path (sign-in DoS for users behind appending proxies). Vercel sets x-real-ip, which is used there.",
+  "decision": "On Vercel read x-real-ip and ignore trusted proxies. Elsewhere read x-forwarded-for with trustedProxies from WISHSCENE_TRUSTED_PROXIES (comma-separated IPs/CIDRs, validated with node:net isIP + prefix range). A malformed entry keeps product mode disabled (listed in missing). Without the variable, a single-value header works; a multi-value header falls back to Better Auth's shared bucket (documented, warned once by Better Auth).",
+  "consequences": [
+    "Operators behind appending proxies must set WISHSCENE_TRUSTED_PROXIES or share one rate-limit bucket.",
+    "Entries Better Auth's parseCIDR rejects are silently dropped by Better Auth, which fails toward 'no IP', not toward trusting a spoofed hop."
+  ],
+  "alternatives_rejected": [
+    "Fail closed (reject sign-in) whenever no IP resolves: needs a custom Better Auth hook and blocks legitimate deployments behind overwriting proxies.",
+    "Hop-count header rewriting (take Nth from right into a private header): more code, spoofing pitfalls, no current non-Vercel deployment needs it.",
+    "Require WISHSCENE_TRUSTED_PROXIES on every non-Vercel deploy: platform proxy CIDRs are often unknown/unstable."
+  ],
+  "rejected_tripwires": [],
+  "related_components": [],
+  "related_files": [
+    "apps/web/src/lib/product/config.ts",
+    "apps/web/src/lib/product/auth.ts",
+    "docs/DEVELOPMENT.md",
+    "apps/web/.env.example"
+  ],
+  "supersedes": null,
+  "superseded_by": null,
+  "caused_by_bug": null,
+  "commit": null,
+  "valid_from": "2026-09-29T06:15:28.572Z",
+  "valid_to": null,
+  "retired": {
+    "symbols": [],
+    "deps": []
+  },
+  "premises": [],
+  "provenance": {
+    "source": "agent_recorded",
+    "confidence": 0.75,
+    "evidence": [
+      "apps/web/src/lib/product/config.ts",
+      "apps/web/src/lib/product/auth.ts",
+      "docs/DEVELOPMENT.md",
+      "apps/web/.env.example"
+    ]
+  },
+  "date": "2026-09-29T06:15:28.572Z"
+}
