@@ -24,7 +24,7 @@
   "devDependencies": {
     "@davesheffer/hunch": "1.42.0",
     "@eslint/js": "9.39.1",
-    "@playwright/test": "1.58.2",
+    "@playwright/test": "1.63.0",
     "@types/node": "24.10.1",
     "@wishscene/contracts": "workspace:*",
     "@wishscene/domain": "workspace:*",
