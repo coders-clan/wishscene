@@ -461,6 +461,43 @@ test('simulate a failed job and reset the demo', async ({ page }) => {
   await expect(page.getByText('Ready to create', { exact: true })).toBeVisible();
 });
 
+// Phones reach sign-in from the More sheet; the topbar slot belongs to the feedback button.
+async function openAccount(page: Page, testInfo: TestInfo, name: string | RegExp) {
+  if (testInfo.project.name !== 'mobile')
+    return page.getByRole('button', { name, exact: true }).click();
+  await page
+    .getByRole('navigation', { name: 'Mobile navigation' })
+    .getByRole('button', { name: 'More', exact: true })
+    .click();
+  await page
+    .getByRole('dialog', { name: 'Your workspace' })
+    .getByRole('button', { name: typeof name === 'string' ? 'Sign in' : /Account/ })
+    .click();
+}
+
+test('sign in with an emulated magic link, then sign out', async ({ page }, testInfo) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Tokyo, after hours' })).toBeVisible();
+  await openAccount(page, testInfo, 'Sign in');
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByRole('heading', { name: 'Sign in with a magic link.' })).toBeVisible();
+  await expect(dialog.getByText(/Demo: no email is sent/)).toBeVisible();
+  await dialog.getByLabel('Email address').fill('alex@example.com');
+  await dialog.getByRole('button', { name: 'Email me a sign-in link' }).click();
+  const inbox = dialog.getByRole('region', { name: 'Demo inbox' });
+  await expect(inbox.getByText('alex@example.com')).toBeVisible();
+  await inbox.getByRole('button', { name: 'Sign in to wishscene' }).click();
+  await expect(dialog.getByRole('heading', { name: 'You’re signed in.' })).toBeVisible();
+  await expect(dialog.getByText('alex@example.com')).toBeVisible();
+  await dialog.getByRole('button', { name: 'Close dialog' }).click();
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Tokyo, after hours' })).toBeVisible();
+  await openAccount(page, testInfo, /Signed in as alex@example\.com/);
+  await dialog.getByRole('button', { name: 'Sign out' }).click();
+  await expect(dialog.getByRole('heading', { name: 'Sign in with a magic link.' })).toBeVisible();
+  await expect(dialog.getByRole('button', { name: 'Link used' })).toBeDisabled();
+});
+
 test('desktop storyboard fits the viewport without page scrolling', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'Desktop layout; phones have their own frame');
   const pageScrolls = () =>

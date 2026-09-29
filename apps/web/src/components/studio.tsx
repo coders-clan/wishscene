@@ -26,11 +26,13 @@ import {
   RotateCcw,
   Settings2,
   Sparkles,
+  UserRound,
   WandSparkles,
   X,
 } from 'lucide-react';
 import type {
   Asset,
+  DemoAuth,
   Experience,
   ExperienceInput,
   ExportManifest,
@@ -51,6 +53,7 @@ import { PackEditor, type PackCover } from './pack-editor';
 import { MobileSheetHandle } from './mobile-sheet-handle';
 import { useInstallApp } from './install-app';
 import { MobileGallery } from './mobile-gallery';
+import { DemoSignIn } from './demo-sign-in';
 
 async function api<T>(path: string, method = 'GET', payload?: unknown): Promise<T> {
   const response = await fetch(`/api/v1/${path}`, {
@@ -83,6 +86,7 @@ type Modal =
   | 'help'
   | 'review'
   | 'more'
+  | 'account'
   | null;
 
 function DemoLookFields({
@@ -259,6 +263,7 @@ export default function Studio() {
     setCaption(experience?.caption ?? '');
     setCaptionDirty(false);
   }, [experience?.id, experience?.caption]);
+  const account = workspace?.demoAuth.account ?? null;
   const approved = experience?.scenes.filter((item) => item.status === 'approved').length ?? 0;
   const jobs =
     workspace?.jobs.filter((job) => job.experienceId === experience?.id && activeJob(job.status)) ??
@@ -277,6 +282,13 @@ export default function Studio() {
     }
   };
   const close = () => setModal(null);
+  // Apply the returned sign-in state directly; a refresh can be skipped while a job poll is in flight.
+  const demoAuth = (path: string, payload: unknown, message: string) =>
+    run(async () => {
+      const auth = await api<DemoAuth>(`demo/auth/${path}`, 'POST', payload);
+      setWorkspace((current) => (current ? { ...current, demoAuth: auth } : current));
+      setNotice(message);
+    });
   const installApp = useInstallApp();
   const openScene = (item: Scene) => {
     setSceneId(item.id);
@@ -442,7 +454,7 @@ export default function Studio() {
             <span className="avatar">A</span>
             <div>
               <strong>Alex Morgan</strong>
-              <span>Demo workspace</span>
+              <span>{account?.email ?? 'Demo workspace'}</span>
             </div>
             <span className="profile-dot" />
           </div>
@@ -461,6 +473,16 @@ export default function Studio() {
             <button className="button primary" onClick={() => setModal('new')}>
               <Plus size={18} />
               New experience
+            </button>
+            <button
+              className="demo-pill account-pill"
+              aria-haspopup="dialog"
+              aria-label={account ? `Signed in as ${account.email}` : 'Sign in'}
+              disabled={!workspace}
+              onClick={() => setModal('account')}
+            >
+              <UserRound size={14} />
+              {account ? <b className="account-email">{account.email}</b> : 'Sign in'}
             </button>
             <button className="demo-pill" onClick={() => setModal('developer')}>
               <span />
@@ -1056,7 +1078,11 @@ export default function Studio() {
                         ? (scene?.title ?? 'Review scene')
                         : modal === 'more'
                           ? 'Your workspace'
-                          : 'A little tour of wishscene.'
+                          : modal === 'account'
+                            ? account
+                              ? 'You’re signed in.'
+                              : 'Sign in with a magic link.'
+                            : 'A little tour of wishscene.'
           }
           eyebrow={
             modal === 'review'
@@ -1065,7 +1091,9 @@ export default function Studio() {
                 ? 'DEVELOPER SANDBOX'
                 : modal === 'identity'
                   ? 'YOUR IDENTITY'
-                  : 'WISHSCENE STUDIO'
+                  : modal === 'account'
+                    ? 'DEMO SIGN-IN'
+                    : 'WISHSCENE STUDIO'
           }
           onClose={close}
           wide={modal === 'review' || modal === 'library'}
@@ -1086,6 +1114,14 @@ export default function Studio() {
                   <ChevronRight />
                 </button>
               )}
+              <button disabled={!workspace} onClick={() => setModal('account')}>
+                <UserRound />
+                <span>
+                  {account ? 'Account' : 'Sign in'}
+                  <small>{account ? account.email : 'Try the magic-link sign-in'}</small>
+                </span>
+                <ChevronRight />
+              </button>
               <button onClick={() => setModal('identity')}>
                 <Layers3 />
                 <span>
@@ -1324,6 +1360,19 @@ export default function Studio() {
                 needed.
               </p>
             </div>
+          )}
+          {modal === 'account' && workspace && (
+            <DemoSignIn
+              auth={workspace.demoAuth}
+              busy={busy}
+              onRequest={(email) =>
+                void demoAuth('magic-link', { email }, 'Sign-in link sent. Check the demo inbox.')
+              }
+              onVerify={(token) =>
+                void demoAuth('verify', { token }, 'Signed in with your magic link.')
+              }
+              onSignOut={() => void demoAuth('sign-out', {}, 'Signed out of the demo.')}
+            />
           )}
           {modal === 'help' && (
             <div className="tour-list">

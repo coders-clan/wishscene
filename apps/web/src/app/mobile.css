@@ -183,7 +183,8 @@
     justify-content: center;
   }
   .app-shell .demo-pill > span,
-  .app-shell .topbar-actions > .button {
+  .app-shell .topbar-actions > .button,
+  .app-shell .account-pill {
     display: none;
   }
   .app-shell .demo-pill > svg {
