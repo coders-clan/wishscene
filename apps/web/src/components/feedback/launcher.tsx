@@ -1,17 +1,8 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import {
-  MessageSquarePlus,
-  MousePointer2,
-  Scan,
-  List,
-  X,
-  Send,
-  Copy,
-  Check,
-  Github,
-} from 'lucide-react';
+import { MessageSquarePlus, MousePointer2, Scan, List, X, Send, Copy, Check } from 'lucide-react';
+import { GithubIcon } from '../github-icon';
 import type {
   Annotation,
   FeedbackCreate,
@@ -235,7 +226,7 @@ export function FeedbackLauncher() {
               className="button primary feedback-menu-action"
               href={`/api/auth/github?next=${encodeURIComponent(pathname)}`}
             >
-              <Github size={18} />
+              <GithubIcon size={18} />
               <span>
                 <strong>Sign in with GitHub</strong>
                 <small>Use your verified identity</small>

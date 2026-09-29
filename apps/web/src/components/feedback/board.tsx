@@ -9,7 +9,6 @@ import {
   Download,
   ExternalLink,
   Filter,
-  Github,
   MessageCircle,
   MessageSquarePlus,
   Plus,
@@ -17,6 +16,7 @@ import {
   Search,
   SlidersHorizontal,
 } from 'lucide-react';
+import { GithubIcon } from '../github-icon';
 import {
   feedbackCategories,
   feedbackPriorities,
@@ -397,7 +397,7 @@ function FeedbackDetail({
                 <div className="feedback-sign-in-card">
                   <p>Sign in with GitHub to vote or reply.</p>
                   <a className="button primary" href={loginHref}>
-                    <Github size={18} />
+                    <GithubIcon size={18} />
                     Sign in with GitHub
                   </a>
                 </div>
@@ -582,12 +582,12 @@ export function FeedbackBoard() {
         <div className="feedback-tools">
           {authLoaded && authUser ? (
             <button className="button" onClick={() => void signOut()}>
-              <Github size={18} />
+              <GithubIcon size={18} />
               <span>Sign out @{authUser.login}</span>
             </button>
           ) : authLoaded && authRequired ? (
             <a className="button primary" href="/api/auth/github?next=%2Ffeedback">
-              <Github size={18} />
+              <GithubIcon size={18} />
               <span>Sign in with GitHub</span>
             </a>
           ) : null}
