@@ -4,3 +4,4 @@ pnpm-lock.yaml
 .hunch
 apps/web/public/demo
 apps/web/next-env.d.ts
+packages/db/src/generated

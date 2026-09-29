@@ -1,0 +1,59 @@
+{
+  "id": "htask_3abdf0c310a48e7d73174057",
+  "title": "Issue #2: auth, ownership, private storage, data model",
+  "state": "interrupted",
+  "started_at": "2026-09-28T12:24:36.187Z",
+  "finished_at": "2026-09-28T12:44:32.175Z",
+  "coverage": "delivered",
+  "lessons": [
+    {
+      "kind": "decisions",
+      "record_id": "dec_0c48d8d56e",
+      "content_hash": "sha256:c650a52cb392dd7b7de36b7eec04ebe6686c4268055e48186c1ce31d9851cd2b",
+      "title": "Feedback is shared across visitors and survives mock resets. SQLite provides zero-config local persistence; Postgres provides shared durable storage across deployed instances. Atomic revision checks p"
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_d28ca0f611",
+      "content_hash": "sha256:61ecc03dcc5ea0d3af93ec7151defb29e1da03ae8c85ad7fa6969abfff0c2b87",
+      "title": "Deployed demo workspaces use a Postgres row lock per browser session. Hydrate, apply domain rules, and save in one transaction so Vercel instances cannot lose approvals, social drafts, or generation u"
+    },
+    {
+      "kind": "constraints",
+      "record_id": "con_480efb317d",
+      "content_hash": "sha256:d6a8195aae0dd737a3ae22aef33178da70895ee69d063038888419d5aa0e3f89",
+      "title": "A Story Bible edit must invalidate previous approvals and cancel active jobs before a newer version can be exported."
+    }
+  ],
+  "applied": [],
+  "saved": [],
+  "checks": [],
+  "conformance": [],
+  "refusals": 0,
+  "files": [
+    ".gitignore",
+    "docker-compose.yml",
+    "docs/adr/0002-product-persistence-and-ownership.md",
+    "packages/db/package.json",
+    "packages/db/prisma.config.ts",
+    "packages/db/prisma/migrations/20260928000000_init/migration.sql",
+    "packages/db/prisma/migrations/migration_lock.toml",
+    "packages/db/prisma/schema.prisma",
+    "packages/db/tsconfig.json",
+    "packages/storage/package.json",
+    "packages/storage/tsconfig.json",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml"
+  ],
+  "supersedes": [],
+  "source_snapshot": null,
+  "report_hash": "sha256:b705b888497b54bf72ce66c28266ac44f3845382baac078dcd47fc0d741dc3fd",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_3abdf0c310a48e7d73174057"
+    ],
+    "last_verified": "2026-09-28T12:44:32.175Z"
+  }
+}

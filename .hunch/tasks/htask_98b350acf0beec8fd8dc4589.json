@@ -1,0 +1,88 @@
+{
+  "id": "htask_98b350acf0beec8fd8dc4589",
+  "title": "Issue #2: auth, ownership, private storage and data model (store, storage, auth, API, tests)",
+  "state": "interrupted",
+  "started_at": "2026-09-28T12:47:47.982Z",
+  "finished_at": "2026-09-28T13:21:19.125Z",
+  "coverage": "delivered",
+  "lessons": [
+    {
+      "kind": "constraints",
+      "record_id": "con_480efb317d",
+      "content_hash": "sha256:d6a8195aae0dd737a3ae22aef33178da70895ee69d063038888419d5aa0e3f89",
+      "title": "A Story Bible edit must invalidate previous approvals and cancel active jobs before a newer version can be exported."
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_c1b5aa1fec",
+      "content_hash": "sha256:3c74260def9c9e0144e875c4d8062e780654aa57cb3feff40848f136a2eb90c5",
+      "title": "Social drafts belong to each scene and platform. Saving one must preserve the others; version and revision checks reject stale writes without silently replacing edited copy."
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_d7095985f1",
+      "content_hash": "sha256:6ada187bd3ad9a4b82a93851bb5bcfbc673414c473a02613cdd7e995148257bc",
+      "title": "Keep mock state behind the domain boundary intended for persistence. Each browser gets its own workspace, with no identity uploads or provider calls."
+    },
+    {
+      "kind": "decisions",
+      "record_id": "dec_02a56d6bff",
+      "content_hash": "sha256:33541a7cccf0f7577a9d5e99d1b19b1ffe77c9e3e3c5016ff2a257565fa691fc",
+      "title": "Social post crop is position plus zoom, edited in a full-screen drag/pinch editor; export never upscales"
+    }
+  ],
+  "applied": [],
+  "saved": [],
+  "checks": [],
+  "conformance": [],
+  "refusals": 0,
+  "files": [
+    "packages/domain/src/index.ts",
+    ".github/workflows/ci.yml",
+    ".prettierignore",
+    "apps/web/.env.example",
+    "apps/web/next.config.ts",
+    "apps/web/package.json",
+    "apps/web/src/app/api/v1/[...path]/route.ts",
+    "apps/web/src/app/api/v1/auth/[...all]/route.ts",
+    "apps/web/src/lib/json-body.ts",
+    "apps/web/src/lib/mock-api.ts",
+    "apps/web/src/lib/product/api.test.ts",
+    "apps/web/src/lib/product/api.ts",
+    "apps/web/src/lib/product/auth.ts",
+    "apps/web/src/lib/product/config.ts",
+    "apps/web/src/lib/product/log.ts",
+    "apps/web/src/lib/product/mailer.ts",
+    "apps/web/src/lib/product/mode.ts",
+    "apps/web/src/lib/product/runtime.ts",
+    "docs/DEVELOPMENT.md",
+    "docs/STACK.md",
+    "docs/TECHNICAL_DESIGN.md",
+    "docs/adr/0002-product-persistence-and-ownership.md",
+    "eslint.config.mjs",
+    "package.json",
+    "packages/db/package.json",
+    "packages/db/src/client.ts",
+    "packages/db/src/index.ts",
+    "packages/db/src/store.test.ts",
+    "packages/db/src/store.ts",
+    "packages/db/src/testing.ts",
+    "packages/db/src/worker.ts",
+    "packages/storage/src/index.test.ts",
+    "packages/storage/src/index.ts",
+    "playwright.local.config.ts",
+    "pnpm-lock.yaml",
+    "vitest.config.ts"
+  ],
+  "supersedes": [],
+  "source_snapshot": null,
+  "report_hash": "sha256:5605dc88168fd0d43af6f4ec71592e695a9f2715c07d6669ef8ceb134be7af86",
+  "provenance": {
+    "source": "task_report",
+    "confidence": 1,
+    "evidence": [
+      "hunch report htask_98b350acf0beec8fd8dc4589"
+    ],
+    "last_verified": "2026-09-28T13:21:19.125Z"
+  }
+}

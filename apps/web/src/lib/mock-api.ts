@@ -10,32 +10,10 @@ import {
 } from '@wishscene/contracts';
 import { DomainError, type MockStudio } from '@wishscene/domain';
 import { withWorkspace } from './workspace-store';
-import { isJsonRequest, isSameOriginWrite } from './request-security';
+import { jsonBody as body } from './json-body';
+import { isSameOriginWrite } from './request-security';
 
 const COOKIE = 'wishscene-demo';
-async function body(request: NextRequest) {
-  if (!isJsonRequest(request))
-    throw new DomainError(415, 'JSON_REQUIRED', 'Send application/json.');
-  const reader = request.body?.getReader();
-  if (!reader) throw new DomainError(400, 'INVALID_JSON', 'A JSON body is required.');
-  let size = 0;
-  const parts: Uint8Array[] = [];
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    size += value.byteLength;
-    if (size > 16384) {
-      await reader.cancel();
-      throw new DomainError(413, 'BODY_TOO_LARGE', 'Request body exceeds 16 KiB.');
-    }
-    parts.push(value);
-  }
-  try {
-    return JSON.parse(Buffer.concat(parts).toString('utf8'));
-  } catch {
-    throw new DomainError(400, 'INVALID_JSON', 'Request body is not valid JSON.');
-  }
-}
 export async function dispatch(request: NextRequest, path: string[]) {
   if (process.env.NODE_ENV === 'production' && process.env.WISHSCENE_MOCK !== '1')
     return NextResponse.json(

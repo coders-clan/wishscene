@@ -59,6 +59,8 @@ Real authentication/ownership, the product Prisma schema, BullMQ/Redis workers, 
 | `packages/contracts/src/` | Zod inputs and shared response types |
 | `packages/domain/src/` | Mock state machine, versioning, approvals, export readiness |
 | `packages/providers/src/` | Minimal deterministic fixture adapter; production provider contract is still a follow-up |
+| `packages/db/` | Prisma schema, migrations, owner-scoped store, worker and test helpers |
+| `packages/storage/` | `AssetStore` interface, S3-compatible adapter and in-memory fake |
 | `apps/web/public/demo/` | Original SVG fixtures and 16 bundled JPG photos; no external image hosts |
 | `packages/contracts/src/demo.ts` | Shared preset settings and preview selection used by provider and browser |
 | `scripts/generate-demo-art.mjs` | Reproducible illustration source |
@@ -107,3 +109,44 @@ Pick an unassigned issue and make a feature branch. Keep mock flows usable while
 Use **Team feedback** or the floating **Feedback** button to capture/annotate elements and sections. The list is shared across visitors, with replies and votes; only a report's creator can edit its status, priority or assignee. Local feedback is saved in `apps/web/.data/`; never commit it. With `DATABASE_URL`, feedback and cookie-isolated studio workspaces use Postgres, supporting Neon + Vercel. Feedback survives mock resets; durable workspace expiry is 30 inactive days. See [FEEDBACK.md](FEEDBACK.md) and [DEPLOYMENT.md](DEPLOYMENT.md).
 
 CI starts a real Postgres service for persistence/HTTP tests and browser journeys. Set `WISHSCENE_TEST_PG_URL` locally to include these integration tests; otherwise the Postgres-specific tests are explicitly skipped while SQLite/API/domain checks still run.
+
+## Product mode (issue #2)
+
+`WISHSCENE_PRODUCT=1` routes `/api/v1/*` to the owner-scoped product API (`apps/web/src/lib/product/api.ts`) and mounts Better Auth magic-link sign-in at `/api/v1/auth/*`, backed by `packages/db` and `packages/storage`. Mock stays the default and the studio UI still talks to the mock API; product UI is follow-up work. See [ADR 0002](adr/0002-product-persistence-and-ownership.md) for the design. Production product mode stays disabled until a mail provider exists.
+
+Start local Postgres and MinIO:
+
+```sh
+docker compose up -d
+DATABASE_URL=postgres://wishscene:wishscene-dev-only@127.0.0.1:55432/wishscene pnpm --filter @wishscene/db migrate:deploy
+```
+
+Set these variables (see `apps/web/.env.example`):
+
+```sh
+WISHSCENE_PRODUCT=1
+DATABASE_URL=postgres://wishscene:wishscene-dev-only@127.0.0.1:55432/wishscene
+AUTH_SECRET=<32+ random characters>
+S3_ENDPOINT=http://127.0.0.1:59000
+S3_REGION=us-east-1
+S3_BUCKET=wishscene-dev
+S3_ACCESS_KEY_ID=wishscene
+S3_SECRET_ACCESS_KEY=wishscene-dev-only
+S3_FORCE_PATH_STYLE=1
+```
+
+`WISHSCENE_PUBLIC_ORIGIN` is required when deployed and is also the fixed base URL for magic links. Postgres listens on 127.0.0.1:55432; MinIO listens on 127.0.0.1:59000 (console 59001). Without a required variable, product mode fails closed with a 503 `PRODUCT_MISCONFIGURED` response naming only the missing variable names.
+
+Dev magic links are written as files to git-ignored `apps/web/.data/dev-mail/`, never logged to the console.
+
+Sign-in rate limits read the client IP from `x-real-ip` on Vercel. Elsewhere they read `X-Forwarded-For`, and the app must sit behind a proxy; a directly exposed server would trust a client-supplied value. A proxy that overwrites the header with the one client address works as is. A proxy that appends to it needs `WISHSCENE_TRUSTED_PROXIES` (comma-separated IPs or CIDR ranges of your proxies): the client IP is then the rightmost address not in that list. Without it, a multi-address header resolves no IP, and all such clients share one rate-limit bucket (Better Auth logs a warning once). A malformed entry keeps product mode disabled; so do IPv6 zone ids, IPv4-mapped IPv6 entries (write those as plain IPv4) and IPv6 entries with an embedded dotted quad (write them in hex).
+
+Magic links are also limited to 3 per mailbox per 10 minutes. The limit is best effort: addresses are compared lowercased, without a `+tag`, and without dots for Gmail; other alias schemes count separately. A limited request answers 429 with `Retry-After`.
+
+In production, run the app as a non-owner Postgres role with only `SELECT, INSERT, UPDATE, DELETE` on the tables and `USAGE, SELECT` on the sequences, and run `prisma migrate deploy` as the owner: the owner can disable the append-only triggers. Deleting append-only history, including hard-deleting a user, must go through `withPurge()` from `@wishscene/db`; never `SET wishscene.purge` on a session.
+
+Routes (all require a session; cross-account and malformed ids return 404; writes need same-origin + `application/json`):
+
+`GET/POST /api/v1/experiences`, `GET /api/v1/experiences/:id`, `PATCH /api/v1/experiences/:id/bible` (`expectedVersion`, `outfit`, `mood`), `POST /api/v1/experiences/:id/scenes/:sceneId/generations` (`requestKey`), `POST /api/v1/experiences/:id/exports` (`expectedVersion`), `GET /api/v1/jobs/:id`, `POST /api/v1/jobs/:id/cancel`, `POST /api/v1/assets/:id/approve` (`expectedVersion`), `GET /api/v1/assets/:id/download`, `POST /api/v1/uploads/init` (`contentType`, `byteSize`), `POST /api/v1/uploads/:id/complete`.
+
+Integration tests exercise `packages/db` and the product API against a real database. Set `WISHSCENE_TEST_PG_URL` to the same local Postgres URL, then run `pnpm test`; each test file creates and drops its own `wishscene_it_*` database. Without the variable these tests are skipped.

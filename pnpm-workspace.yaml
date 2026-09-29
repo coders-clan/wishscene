@@ -2,6 +2,8 @@ packages:
   - apps/*
   - packages/*
 allowBuilds:
+  '@prisma/engines': true
+  prisma: true
   sharp: true
   esbuild: true
   tree-sitter: true
@@ -13,3 +15,7 @@ allowBuilds:
   '@tree-sitter-grammars/tree-sitter-yaml': true
 minimumReleaseAgeExclude:
   - '@davesheffer/hunch@1.42.0'
+overrides:
+  # Transitive via prisma@7.10.0 / @prisma/config@7.10.0; remove once prisma ships patched pins.
+  'mysql2@<3.22.0': ^3.22.0
+  'deepmerge-ts@<8.0.0': ^8.0.0

@@ -34,8 +34,16 @@ const securityHeaders = [
 ];
 
 const config: NextConfig = {
-  transpilePackages: ['@wishscene/contracts', '@wishscene/domain', '@wishscene/providers'],
+  transpilePackages: [
+    '@wishscene/contracts',
+    '@wishscene/db',
+    '@wishscene/domain',
+    '@wishscene/providers',
+    '@wishscene/storage',
+  ],
   poweredByHeader: false,
+  // Dev request logs print full URLs; magic-link verification URLs carry the sign-in token.
+  logging: { incomingRequests: { ignore: [/^\/api\/v1\/auth\//] } },
   output: 'standalone',
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];

@@ -1,0 +1,46 @@
+{
+  "id": "dec_8c9c89d354",
+  "title": "Per-address magic-link throttle in own throttles table, keyed by canonical-address HMAC",
+  "topic": "magic-link-address-throttle",
+  "status": "accepted",
+  "context": "Per-IP limits alone let rotating IPs flood one inbox. Better Auth's rate_limits table prunes rows older than its longest window (60s), so it cannot hold a 10-minute per-address window.",
+  "decision": "packages/db takeThrottle: fixed-window counter in a throttles table (INSERT ... ON CONFLICT upsert, returns allowed + retryAfterSeconds), windows capped at THROTTLE_MAX_WINDOW_MS (24h), rows older than that pruned by pruneThrottles (1% of calls). Key = 'magic-link:' + HMAC-SHA256(k, canonicalEmail(email)) where k = HMAC-SHA256(AUTH_SECRET, 'wishscene/magic-link-throttle/v1'). canonicalEmail lowercases, strips +tag, and for gmail/googlemail strips dots and maps to gmail.com. 3 links per mailbox per 10 minutes; 429 carries Retry-After.",
+  "consequences": [
+    "Best effort: other alias schemes (Yahoo -tag, catch-all domains) still get one budget per spelling.",
+    "A throttled request still leaves an unused verification row that expires in 10 minutes."
+  ],
+  "alternatives_rejected": [
+    "Better Auth rate_limits storage: pruned after 60s, window cannot exceed its longest rule.",
+    "Keying on the raw normalized address or on a plain hash: stores personal data or a cheaply reversible value.",
+    "Keying the HMAC directly with AUTH_SECRET: that secret also signs cookies; purpose-bound derived key instead.",
+    "Global per-instance send cap: an attacker could exhaust it for everyone."
+  ],
+  "rejected_tripwires": [],
+  "related_components": [],
+  "related_files": [
+    "packages/db/src/client.ts",
+    "apps/web/src/lib/product/auth.ts",
+    "packages/db/prisma/migrations/20260928120000_upload_etag_throttles/migration.sql"
+  ],
+  "supersedes": null,
+  "superseded_by": null,
+  "caused_by_bug": null,
+  "commit": null,
+  "valid_from": "2026-09-29T06:15:35.230Z",
+  "valid_to": null,
+  "retired": {
+    "symbols": [],
+    "deps": []
+  },
+  "premises": [],
+  "provenance": {
+    "source": "agent_recorded",
+    "confidence": 0.75,
+    "evidence": [
+      "packages/db/src/client.ts",
+      "apps/web/src/lib/product/auth.ts",
+      "packages/db/prisma/migrations/20260928120000_upload_etag_throttles/migration.sql"
+    ]
+  },
+  "date": "2026-09-29T06:15:35.230Z"
+}
