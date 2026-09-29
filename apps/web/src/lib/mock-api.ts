@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import {
   approvalInput,
+  demoSignInInput,
+  demoVerifyInput,
   experienceInput,
   generationInput,
   packUpdate,
@@ -67,6 +69,13 @@ async function route(request: NextRequest, path: string[], studio: MockStudio) {
     const route = path.join('/');
     if (request.method === 'GET' && route === 'workspace') result = studio.snapshot();
     else if (request.method === 'POST' && route === 'mock/reset') result = studio.reset();
+    // Emulated magic-link sign-in. Only the mock dispatcher routes demo/*, so product mode never exposes it.
+    else if (request.method === 'POST' && route === 'demo/auth/magic-link')
+      result = studio.requestDemoLink(demoSignInInput.parse(await body(request)).email);
+    else if (request.method === 'POST' && route === 'demo/auth/verify')
+      result = studio.verifyDemoLink(demoVerifyInput.parse(await body(request)).token);
+    else if (request.method === 'POST' && route === 'demo/auth/sign-out')
+      result = studio.signOutDemo();
     else if (request.method === 'POST' && route === 'experiences') {
       result = studio.create(experienceInput.parse(await body(request)));
       status = 201;

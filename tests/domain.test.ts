@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { DomainError, MockStudio } from '@wishscene/domain';
-import { experienceInput, demoPresets } from '@wishscene/contracts';
+import {
+  experienceInput,
+  demoPresets,
+  demoSignInInput,
+  type Workspace,
+} from '@wishscene/contracts';
 
 function fixture() {
   let time = Date.parse('2026-01-01T12:00:00Z');
@@ -185,5 +190,71 @@ describe('mock studio lifecycle', () => {
         mood: 'Adventure',
       }).success,
     ).toBe(false);
+  });
+});
+
+describe('emulated magic-link sign-in', () => {
+  it('delivers a single-use link to the demo inbox and signs in with it', () => {
+    const { studio } = fixture();
+    expect(studio.snapshot().demoAuth).toEqual({ account: null, inbox: [] });
+    const sent = studio.requestDemoLink('alex@example.com');
+    expect(sent.account).toBeNull();
+    expect(sent.inbox).toHaveLength(1);
+    expect(sent.inbox[0]).toMatchObject({
+      to: 'alex@example.com',
+      sentAt: '2026-01-01T12:00:00.000Z',
+      expiresAt: '2026-01-01T12:10:00.000Z',
+      usedAt: null,
+    });
+    const signedIn = studio.verifyDemoLink(sent.inbox[0].token);
+    expect(signedIn.account).toEqual({
+      email: 'alex@example.com',
+      signedInAt: '2026-01-01T12:00:00.000Z',
+    });
+    expect(() => studio.verifyDemoLink(sent.inbox[0].token)).toThrow('already used');
+    expect(() => studio.verifyDemoLink('not-a-real-token')).toThrow('invalid');
+    expect(studio.signOutDemo().account).toBeNull();
+    expect(studio.snapshot().demoAuth.inbox).toHaveLength(1);
+  });
+  it('expires links after 10 minutes and limits requests to 3 per 10 minutes', () => {
+    const { studio, advance } = fixture();
+    const first = studio.requestDemoLink('alex@example.com').inbox[0];
+    advance(60_000);
+    studio.requestDemoLink('alex@example.com');
+    studio.requestDemoLink('sam@example.com');
+    let error: unknown;
+    try {
+      studio.requestDemoLink('alex@example.com');
+    } catch (e) {
+      error = e;
+    }
+    expect(error).toBeInstanceOf(DomainError);
+    expect((error as DomainError).status).toBe(429);
+    expect((error as DomainError).message).toContain('9 minutes');
+    advance(9 * 60_000);
+    expect(() => studio.verifyDemoLink(first.token)).toThrow('expired');
+    expect(studio.requestDemoLink('alex@example.com').inbox).toHaveLength(4);
+    for (let i = 0; i < 3; i++) {
+      advance(10 * 60_000);
+      studio.requestDemoLink('alex@example.com');
+    }
+    expect(studio.snapshot().demoAuth.inbox).toHaveLength(5);
+  });
+  it('forgets the address on reset and restores older snapshots without sign-in state', () => {
+    const { studio } = fixture();
+    studio.verifyDemoLink(studio.requestDemoLink('alex@example.com').inbox[0].token);
+    expect(studio.reset().demoAuth).toEqual({ account: null, inbox: [] });
+    const legacy: Partial<Workspace> = studio.snapshot();
+    delete legacy.demoAuth;
+    expect(MockStudio.restore(legacy as Workspace).snapshot().demoAuth).toEqual({
+      account: null,
+      inbox: [],
+    });
+  });
+  it('validates the email address at the contract', () => {
+    expect(demoSignInInput.parse({ email: '  alex@example.com ' }).email).toBe('alex@example.com');
+    expect(demoSignInInput.safeParse({ email: 'not-an-email' }).success).toBe(false);
+    expect(demoSignInInput.safeParse({ email: `${'a'.repeat(250)}@x.io` }).success).toBe(false);
+    expect(demoSignInInput.safeParse({ email: 'a@b.io', extra: 1 }).success).toBe(false);
   });
 });

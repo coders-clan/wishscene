@@ -126,6 +126,29 @@ describe('mock HTTP boundary', () => {
     });
     expect((await dispatch(crossSite, ['experiences'])).status).toBe(403);
   });
+  it('emulates magic-link sign-in inside the browser workspace only', async () => {
+    const cookie = (await call('workspace')).headers.get('set-cookie')!.split(';')[0];
+    const other = (await call('workspace')).headers.get('set-cookie')!.split(';')[0];
+    expect((await call('demo/auth/magic-link', 'POST', { email: 'nope' }, cookie)).status).toBe(
+      400,
+    );
+    const sent = await call('demo/auth/magic-link', 'POST', { email: 'alex@example.com' }, cookie);
+    expect(sent.status).toBe(200);
+    const { token } = (await sent.json()).inbox[0];
+    expect((await call('demo/auth/verify', 'POST', { token }, other)).status).toBe(400);
+    expect(
+      (await call('demo/auth/verify', 'POST', { token }, cookie, 'https://other.example')).status,
+    ).toBe(403);
+    const verified = await call('demo/auth/verify', 'POST', { token }, cookie);
+    expect(verified.status).toBe(200);
+    expect((await verified.json()).account.email).toBe('alex@example.com');
+    const workspace = await (await call('workspace', 'GET', undefined, cookie)).json();
+    expect(workspace.demoAuth.account.email).toBe('alex@example.com');
+    expect((await call('demo/auth/verify', 'GET', undefined, cookie)).status).toBe(404);
+    expect(
+      (await (await call('demo/auth/sign-out', 'POST', {}, cookie)).json()).account,
+    ).toBeNull();
+  });
   it('reports malformed JSON without exposing an internal exception', async () => {
     const request = new NextRequest('http://localhost:3000/api/v1/experiences', {
       method: 'POST',

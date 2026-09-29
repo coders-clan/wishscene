@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type {
+  DemoAuth,
   Destination,
   Experience,
   ExperienceInput,
@@ -70,6 +71,10 @@ export function planScenes(destination: Destination): ScenePlan[] {
   return shotLists[destination].map(([title, shot, time, art]) => ({ title, shot, time, art }));
 }
 const active = (job: Job) => job.status === 'queued' || job.status === 'running';
+// Mirrors the product magic link (lib/product/auth.ts): 10-minute single-use links, 3 per 10 minutes.
+const DEMO_LINK_TTL = 10 * 60 * 1000;
+const DEMO_LINK_LIMIT = 3;
+const DEMO_INBOX_SIZE = 5;
 
 type Size = { width: number; height: number };
 type SavedExperience = Omit<Experience, 'pack' | 'scenes'> & {
@@ -84,7 +89,13 @@ type SavedExperience = Omit<Experience, 'pack' | 'scenes'> & {
   >;
 };
 // hunch-why: Saved demo workspaces predate carousel order, crop focus, crop zoom and asset sizes. Filling defaults on load keeps existing Postgres rows (schema_version 1) usable without a migration.
-function upgrade(snapshot: Omit<Workspace, 'experiences'> & { experiences: SavedExperience[] }) {
+function upgrade(
+  snapshot: Omit<Workspace, 'experiences' | 'demoAuth'> & {
+    experiences: SavedExperience[];
+    demoAuth?: DemoAuth;
+  },
+) {
+  snapshot.demoAuth ??= { account: null, inbox: [] };
   for (const experience of snapshot.experiences) {
     experience.pack ??= {
       order: experience.scenes.map((scene) => scene.id),
@@ -192,6 +203,7 @@ export class MockStudio {
         ),
       ],
       jobs: [],
+      demoAuth: { account: null, inbox: [] },
     };
   }
   reset() {
@@ -201,6 +213,51 @@ export class MockStudio {
   snapshot(): Workspace {
     this.settle();
     return structuredClone(this.state);
+  }
+  // hunch-why: The public demo has no mail provider, so magic-link sign-in is emulated inside the workspace: the "email" lands in an on-page inbox and its link only works for the same browser workspace. It never touches Better Auth, product sessions or real mail.
+  requestDemoLink(email: string): DemoAuth {
+    const now = this.clock();
+    const auth = this.state.demoAuth;
+    const recent = auth.inbox.filter((m) => now - Date.parse(m.sentAt) < DEMO_LINK_TTL);
+    if (recent.length >= DEMO_LINK_LIMIT) {
+      const oldest = Math.min(...recent.map((m) => Date.parse(m.sentAt)));
+      const minutes = Math.max(1, Math.ceil((oldest + DEMO_LINK_TTL - now) / 60000));
+      throw new DomainError(
+        429,
+        'RATE_LIMITED',
+        `Too many sign-in links. Try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`,
+      );
+    }
+    auth.inbox.unshift({
+      id: this.id(),
+      to: email,
+      sentAt: new Date(now).toISOString(),
+      expiresAt: new Date(now + DEMO_LINK_TTL).toISOString(),
+      usedAt: null,
+      token: this.id(),
+    });
+    auth.inbox.length = Math.min(auth.inbox.length, DEMO_INBOX_SIZE);
+    return structuredClone(auth);
+  }
+  verifyDemoLink(token: string): DemoAuth {
+    const now = this.clock();
+    const auth = this.state.demoAuth;
+    const message = auth.inbox.find((m) => m.token === token);
+    if (!message || message.usedAt)
+      throw new DomainError(
+        400,
+        'INVALID_LINK',
+        'This sign-in link is invalid or was already used. Request a new one.',
+      );
+    if (now >= Date.parse(message.expiresAt))
+      throw new DomainError(400, 'LINK_EXPIRED', 'This sign-in link expired. Request a new one.');
+    message.usedAt = new Date(now).toISOString();
+    auth.account = { email: message.to, signedInAt: message.usedAt };
+    return structuredClone(auth);
+  }
+  signOutDemo(): DemoAuth {
+    this.state.demoAuth.account = null;
+    return structuredClone(this.state.demoAuth);
   }
   private experience(id: string) {
     const item = this.state.experiences.find((x) => x.id === id);

@@ -25,6 +25,7 @@ VS Code users can reopen this repo in the included dev container. It installs de
 | Generation | Simulated queued → running → ready/failed; 2.4-second normal and 12-second slow scenario |
 | Review | One fixed photo per scene for a matching preset; two illustrated grades for custom settings; previous candidates retained |
 | Retry/cancel | Idempotent request keys; one active job per scene; safe cancellation; previous choice retained |
+| Demo sign-in | Emulated magic link: **Sign in** (phones: **More → Sign in**) puts the email in an on-page demo inbox; no mail is sent and nothing is gated. See [MOCK_API.md](MOCK_API.md#emulated-magic-link-sign-in) |
 | Social pack | Per-image Instagram/Story, TikTok, Facebook, LinkedIn and X previews; editable tone templates, captions and overlays; saved drafts and per-image text files in ZIP |
 | Isolation | Random HttpOnly session cookie; separate workspace per browser; optional Postgres persistence |
 | Hunch | Pinned CLI/MCP configs, project memory, explicit task and verification workflow |
@@ -45,6 +46,7 @@ Real authentication/ownership, the product Prisma schema, BullMQ/Redis workers, 
 6. In **Developer tools**, choose Failure or Slow. Generate a scene, observe failure/retry or cancel the slow job. Scenario changes apply to subsequent requests.
 7. Create a new Kyoto experience. Selecting the destination fills its matching photo outfit and mood. Reloading preserves server state; the selected experience defaults to Tokyo after reload. Use the title picker to switch.
 8. Edit the outfit to a custom value: the form explains the illustrated fallback. Use **Use Kyoto photo preset** to restore matching photos; saving still clears previous approvals.
+9. Click **Sign in**, enter any email address and open the link from the **Demo inbox**. The header then shows the address. Links work once and expire after 10 minutes.
 
 ## Code map
 

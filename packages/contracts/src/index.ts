@@ -77,11 +77,30 @@ export interface Job {
   finishesAt: number;
   error?: string;
 }
+export const demoSignInInput = z
+  .object({ email: z.string().trim().max(254).pipe(z.email()) })
+  .strict();
+export const demoVerifyInput = z.object({ token: z.string().min(8).max(128) }).strict();
+/** An emulated magic-link email. It never leaves the workspace; the demo inbox shows it. */
+export interface DemoInboxMessage {
+  id: string;
+  to: string;
+  sentAt: string;
+  expiresAt: string;
+  usedAt: string | null;
+  token: string;
+}
+export interface DemoAuth {
+  account: { email: string; signedInAt: string } | null;
+  /** Newest first. */
+  inbox: DemoInboxMessage[];
+}
 export interface Workspace {
   mode: 'mock';
   profile: { name: string; referenceCount: number; description: string };
   experiences: Experience[];
   jobs: Job[];
+  demoAuth: DemoAuth;
 }
 export interface ExportOutput extends ExportFrame {
   /** Rendered crop inside the ZIP. `width`/`height` are its exact pixel size. */

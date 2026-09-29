@@ -245,6 +245,12 @@ img {
   font-size: var(--text-xs);
   color: #9999ab;
   margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profile > div {
+  min-width: 0;
 }
 .profile-dot {
   margin-left: auto;
@@ -318,6 +324,94 @@ img {
   height: 5px;
   background: #68977e;
   border-radius: 50%;
+}
+.account-pill {
+  min-width: 0;
+}
+.account-email {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.demo-account {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--violet);
+}
+.demo-account > div {
+  min-width: 0;
+}
+.demo-account strong,
+.demo-account span {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.demo-account strong {
+  color: var(--ink);
+  font-weight: 550;
+}
+.demo-account span {
+  font-size: var(--text-xs);
+  color: var(--muted);
+  margin-top: 3px;
+}
+.demo-inbox h3 {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.demo-inbox ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+}
+.demo-mail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 15px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.demo-mail-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+.demo-mail-meta > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.demo-mail-meta time {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.demo-mail-meta strong {
+  color: var(--ink);
+  font-weight: 550;
+}
+.demo-mail h4 {
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+.demo-mail p {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--muted);
 }
 main {
   max-width: 1510px;

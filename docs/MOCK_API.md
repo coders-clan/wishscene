@@ -14,7 +14,10 @@ Base: `/api/v1`. All responses are JSON; all request bodies use `Content-Type: a
 | PATCH | `/experiences/:id/pack` | expectedRevision, order (every scene ID once), coverTitle (≤ 64) | updated `SocialPack`; stale revision is 409 `STALE_PACK`, an incomplete or foreign order is 400 `INVALID_ORDER`; does not change the Story Bible version |
 | POST | `/jobs/:id/cancel` | `{}` | `{ cancelled: true }` |
 | POST | `/experiences/:id/exports` | `{}` | `ExportManifest` when every scene is approved at the current version |
-| POST | `/mock/reset` | `{}` | reseeded Workspace for the current cookie |
+| POST | `/mock/reset` | `{}` | reseeded Workspace for the current cookie; also clears demo sign-in |
+| POST | `/demo/auth/magic-link` | email (≤ 254) | `DemoAuth`; adds an emulated sign-in email to the workspace's demo inbox |
+| POST | `/demo/auth/verify` | token | `DemoAuth` with `account` set; the link is then used |
+| POST | `/demo/auth/sign-out` | `{}` | `DemoAuth` with `account: null` |
 
 Input schemas are exported by `@wishscene/contracts`; extra input properties are rejected on typed mutations. Maximum JSON body: 16 KiB. Supported destinations: Tokyo, Kyoto, Amalfi, Iceland. Moods: After hours, Slow living, Golden hour, Adventure. Caption: up to 2,200 characters. Scenarios: success (default), slow, failure. Request keys: 8–128 characters, unique per session. Repeating the same key and parameters returns the same job, including its terminal result. Changing its parameters/version returns `KEY_REUSED` (409).
 
@@ -25,7 +28,9 @@ Errors are `{ "error": { "code": "...", "message": "..." } }`:
 - 400 `VALIDATION` or `INVALID_JSON`
 - 403 `ORIGIN` for cross-origin mutations when an Origin header is present
 - 404 `NOT_FOUND`
+- 400 `INVALID_LINK` or `LINK_EXPIRED` for demo sign-in links
 - 409 `STALE_VERSION`, `KEY_REUSED`, `ALREADY_RUNNING`, `NOT_READY`, `LIMIT`, `STALE_SOCIAL`
+- 429 `RATE_LIMITED` after 3 demo sign-in links in 10 minutes
 - 413 `BODY_TOO_LARGE`, 415 `JSON_REQUIRED`
 - 503 `MOCK_DISABLED` in production unless `WISHSCENE_MOCK=1`; `CAPACITY` after 100 local or 1,000 Postgres sessions; `STORAGE_REQUIRED` on Vercel without a database URL; `STORAGE` when database access fails
 
@@ -47,6 +52,10 @@ Every Scene includes `social: { platform, revision, drafts, focus }`. Supported 
 Every Experience includes `pack: { order, coverTitle, revision }`. `order` lists every scene ID once; the first is the carousel cover. New experiences use story order and the experience title as the cover title. Every Asset records `width`/`height`, the pixel size the export renders from (photos 1086×1448; SVG illustrations 1200×1600, 2× their viewBox).
 
 The manifest (`schema: 'wishscene.mock-export/2'`) lists assets in carousel order with `position` (1 = cover), `cover`, top-level `coverTitle`, and `social: { platform, caption, overlayText, tone, focus, previewAspectRatio, previewOnly: true }`. `previewOnly` means nothing was posted. `filename` is the unedited original under `originals/`. `output: { filename, type: 'image/jpeg', aspectRatio, width, height, crop }` describes the rendered post image under `images/`: `width`/`height` are its exact pixels and `crop` is the source rectangle. The browser draws that crop, the cover title (cover only), Story/TikTok text on image, and an `AI-created · Fictional scene` label inside the format's safe area. Output sizes are exact multiples of the aspect ratio, capped at 1080 px wide (1600 for X), and never upscale the source, so a zoomed crop exports smaller. The ZIP also holds one `posts/<image>.txt` per image. Other saved platform drafts stay in the workspace; export uses each scene’s selected platform.
+
+## Emulated magic-link sign-in
+
+The public demo has no mail provider, so the studio emulates the product's magic-link flow (see [DEVELOPMENT.md](DEVELOPMENT.md#product-mode-issue-2)) without sending mail. `Workspace.demoAuth` is `{ account: { email, signedInAt } | null, inbox }`. Each inbox message holds `to`, `sentAt`, `expiresAt`, `usedAt` and `token`; the studio shows it in an on-page "Demo inbox". Links match the product's rules: single use, valid for 10 minutes, and at most 3 per 10 minutes. The inbox keeps the 5 newest messages. A token only works in the workspace that requested it. The address is stored only in that workspace row and removed on reset or expiry. The demo identity does not gate any studio action, and it is not Better Auth: these routes exist only in the mock dispatcher, so `WISHSCENE_PRODUCT=1` never serves them.
 
 ## Shared storage and feedback
 
