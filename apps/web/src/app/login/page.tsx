@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { Github } from 'lucide-react';
+import { GithubIcon } from '@/components/github-icon';
 import { authMode, readSessionToken, safeNext, SESSION_COOKIE } from '@/lib/auth/session';
 
 export const dynamic = 'force-dynamic';
@@ -42,7 +42,7 @@ export default async function LoginPage({
           className="button primary login-button"
           href={`/api/auth/github?next=${encodeURIComponent(next)}`}
         >
-          <Github size={18} />
+          <GithubIcon size={18} />
           Sign in with GitHub
         </a>
       </div>
