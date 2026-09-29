@@ -1,12 +1,18 @@
-import { randomUUID } from 'node:crypto';
+import { createHmac, randomUUID } from 'node:crypto';
+import { APIError } from 'better-auth/api';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { publishCandidate } from '@wishscene/db';
 import { createTestDatabase } from '@wishscene/db/testing';
 import { MemoryAssetStore } from '@wishscene/storage';
 import { productDispatch } from './api';
-import { createProductAuth, MAGIC_LINKS_PER_ADDRESS } from './auth';
-import { productConfig } from './config';
+import {
+  canonicalEmail,
+  createProductAuth,
+  MAGIC_LINKS_PER_ADDRESS,
+  magicLinkThrottleKey,
+} from './auth';
+import { parseTrustedProxies, productConfig } from './config';
 import { redact, scrub, setLogSink } from './log';
 import { MemoryMailer } from './mailer';
 import type { ProductRuntime } from './runtime';
@@ -42,6 +48,104 @@ describe('product config', () => {
         S3_SECRET_ACCESS_KEY: 'secret',
       }),
     ).toEqual({ config: null, missing: ['MAIL_PROVIDER'] });
+    expect(
+      productConfig({ NODE_ENV: 'test', WISHSCENE_TRUSTED_PROXIES: '10.0.0.0/8,nope' }).missing,
+    ).toContain('WISHSCENE_TRUSTED_PROXIES');
+  });
+
+  it('accepts only IPs and CIDR ranges as trusted proxies', () => {
+    expect(parseTrustedProxies(undefined)).toEqual([]);
+    expect(parseTrustedProxies(' 10.0.0.0/8, 192.0.2.1 ,2001:db8::/32')).toEqual([
+      '10.0.0.0/8',
+      '192.0.2.1',
+      '2001:db8::/32',
+    ]);
+    for (const bad of [
+      '10.0.0.0/33',
+      '10.0.0.0/8/1',
+      'proxy.internal',
+      '10.0.0.0/x',
+      // Better Auth drops zone ids and reads IPv4-mapped entries as IPv4.
+      'fe80::1%eth0',
+      '::ffff:10.0.0.1',
+      '::ffff:a00:0/104',
+      // ...and misreads an embedded dotted quad.
+      '64:ff9b::10.0.0.5',
+    ])
+      expect(parseTrustedProxies(bad), bad).toBeNull();
+  });
+});
+
+describe('magic-link address throttle keys', () => {
+  it('gives mailbox variants one key and never contains the address', () => {
+    expect(canonicalEmail(' Victim+promo@Example.test ')).toBe('victim@example.test');
+    expect(canonicalEmail('v.i.c.t.i.m+1@googlemail.com')).toBe('victim@gmail.com');
+    // Dots only collapse where the provider ignores them.
+    expect(canonicalEmail('v.ictim@example.test')).toBe('v.ictim@example.test');
+    const secret = 'test-secret-that-is-at-least-32-characters';
+    const key = magicLinkThrottleKey(secret, 'victim@gmail.com');
+    expect(magicLinkThrottleKey(secret, 'V.ictim+2@googlemail.com')).toBe(key);
+    expect(magicLinkThrottleKey(secret, 'other@gmail.com')).not.toBe(key);
+    expect(key).not.toMatch(/victim|gmail/i);
+    // Keyed by a derived key, not by the auth secret itself.
+    const direct = createHmac('sha256', secret).update('victim@gmail.com').digest('base64url');
+    expect(key).not.toContain(direct);
+  });
+});
+
+describe('product API session edge cases', () => {
+  const request = () => new NextRequest(`${ORIGIN}/api/v1/experiences`);
+  const withAuth = (getSession: () => Promise<unknown>, prisma?: unknown) =>
+    ({
+      prisma,
+      assets: new MemoryAssetStore(),
+      auth: { api: { getSession } },
+    }) as unknown as ProductRuntime;
+
+  it('answers a session that vanished mid-refresh with 401 and the cleared cookie', async () => {
+    const error = new APIError('UNAUTHORIZED', { message: 'Failed to get session' });
+    const cleared = new Headers();
+    cleared.append('set-cookie', 'wishscene-product.session_token=; Max-Age=0; Path=/');
+    Object.defineProperty(error, Symbol.for('better-call:api-error-headers'), { value: cleared });
+    const response = await productDispatch(
+      request(),
+      ['experiences'],
+      withAuth(() => Promise.reject(error)),
+    );
+    expect(response.status).toBe(401);
+    expect((await response.json()).error.code).toBe('UNAUTHENTICATED');
+    expect(response.headers.getSetCookie()).toEqual([
+      'wishscene-product.session_token=; Max-Age=0; Path=/',
+    ]);
+    const other = new APIError('INTERNAL_SERVER_ERROR', { message: 'x' });
+    const failed = await productDispatch(
+      request(),
+      ['experiences'],
+      withAuth(() => Promise.reject(other)),
+    );
+    expect(failed.status).toBe(500);
+  });
+
+  it('answers pool exhaustion with 503 and logs it', async () => {
+    const lines: string[] = [];
+    setLogSink((_level, line) => lines.push(line));
+    try {
+      const exhausted = new Error('timeout exceeded when trying to connect');
+      const prisma = new Proxy({}, { get: () => ({ findMany: () => Promise.reject(exhausted) }) });
+      const session = { user: { id: randomUUID(), deletedAt: null }, session: {} };
+      const response = await productDispatch(
+        request(),
+        ['experiences'],
+        withAuth(() => Promise.resolve({ headers: new Headers(), response: session }), prisma),
+      );
+      expect(response.status).toBe(503);
+      expect(response.headers.get('retry-after')).toBe('1');
+      expect(lines.map((line) => JSON.parse(line))).toContainEqual(
+        expect.objectContaining({ level: 'warn', code: 'POOL_TIMEOUT', route: 'GET experiences' }),
+      );
+    } finally {
+      setLogSink(null);
+    }
   });
 });
 
@@ -286,18 +390,24 @@ describe.skipIf(!process.env.WISHSCENE_TEST_PG_URL)('product API over HTTP (Post
 
   it('limits magic links per address across client IPs', async () => {
     const email = `target-${randomUUID()}@example.test`;
-    const statuses: number[] = [];
+    const responses: Response[] = [];
     for (let i = 0; i <= MAGIC_LINKS_PER_ADDRESS; i++) {
       const response = await authRequest('/sign-in/magic-link', {
         method: 'POST',
-        // Case and spacing variants count as the same address.
-        body: JSON.stringify({ email: i % 2 ? email.toUpperCase() : email }),
+        // Case variants and +tags count as the same mailbox.
+        body: JSON.stringify({ email: i % 2 ? email.toUpperCase() : email.replace('@', `+${i}@`) }),
         ip: `192.0.2.${i + 1}`,
       });
-      statuses.push(response.status);
+      responses.push(response);
     }
-    expect(statuses).toEqual([...Array(MAGIC_LINKS_PER_ADDRESS).fill(200), 429]);
-    expect(mailer.sent.filter((mail) => mail.to.toLowerCase() === email)).toHaveLength(
+    expect(responses.map((response) => response.status)).toEqual([
+      ...Array(MAGIC_LINKS_PER_ADDRESS).fill(200),
+      429,
+    ]);
+    const retryAfter = Number(responses.at(-1)!.headers.get('retry-after'));
+    expect(retryAfter).toBeGreaterThan(500);
+    expect(retryAfter).toBeLessThanOrEqual(600);
+    expect(mailer.sent.filter((mail) => canonicalEmail(mail.to) === email)).toHaveLength(
       MAGIC_LINKS_PER_ADDRESS,
     );
     const keys = (await db.prisma.throttle.findMany()).map((row) => row.key).join();
@@ -318,5 +428,16 @@ describe.skipIf(!process.env.WISHSCENE_TEST_PG_URL)('product API over HTTP (Post
     expect(response.headers.getSetCookie().join()).toMatch(/wishscene-product\.session_token=[^;]/);
     const session = await db.prisma.session.findFirstOrThrow({ where: { userId: user.id } });
     expect(session.expiresAt.getTime()).toBeGreaterThan(Date.now() + 6 * 24 * 60 * 60_000);
+
+    // A deleted account's session is not extended in the browser.
+    await db.prisma.session.updateMany({
+      where: { userId: user.id },
+      data: { expiresAt: new Date(Date.now() + 5 * 24 * 60 * 60_000) },
+    });
+    await db.prisma.user.update({ where: { id: user.id }, data: { deletedAt: new Date() } });
+    const tombstoned = await call('experiences', { cookie });
+    expect(tombstoned.status).toBe(401);
+    expect(tombstoned.headers.getSetCookie()).toEqual([]);
+    expect(await db.prisma.session.count({ where: { userId: user.id } })).toBe(0);
   });
 });

@@ -4,8 +4,11 @@ import {
   isTransientDbError,
   ownerStore,
   Prisma,
+  pruneThrottles,
   publishCandidate,
   takeThrottle,
+  THROTTLE_MAX_WINDOW_MS,
+  transientDbErrorCode,
   withPurge,
   type OwnerStore,
   type PrismaClient,
@@ -21,12 +24,17 @@ const input = {
 const key = () => `o/${randomBytes(32).toString('base64url')}`;
 const notFound = { status: 404, code: 'NOT_FOUND' };
 
-it('treats transaction timeouts and write conflicts as retryable', () => {
+it('treats only failures that surely did not write as retryable', () => {
   const known = (code: string) =>
     new Prisma.PrismaClientKnownRequestError('x', { code, clientVersion: '7.10.0' });
-  expect(isTransientDbError(known('P2028'))).toBe(true);
-  expect(isTransientDbError(known('P2034'))).toBe(true);
-  expect(isTransientDbError(known('P2002'))).toBe(false);
+  for (const code of ['P1001', 'P2028', 'P2034', 'P2037'])
+    expect(transientDbErrorCode(known(code))).toBe(code);
+  // A connection lost mid-query may have committed.
+  for (const code of ['P1008', 'P1017', 'P2002'])
+    expect(isTransientDbError(known(code))).toBe(false);
+  expect(transientDbErrorCode(new Error('timeout exceeded when trying to connect'))).toBe(
+    'POOL_TIMEOUT',
+  );
   expect(isTransientDbError(new Error('P2028'))).toBe(false);
 });
 
@@ -117,7 +125,7 @@ describe.skipIf(!process.env.WISHSCENE_TEST_PG_URL)('product store (Postgres)', 
     await expect(bob.assetForDownload(assetId)).rejects.toMatchObject(notFound);
     await expect(bob.uploadObjectKey(upload.id)).rejects.toMatchObject(notFound);
     await expect(
-      bob.completeUpload(upload.id, { byteSize: 1000, contentType: 'image/png' }),
+      bob.completeUpload(upload.id, { byteSize: 1000, contentType: 'image/png', etag: '"a"' }),
     ).rejects.toMatchObject(notFound);
     await expect(bob.getExperience('not-a-uuid')).rejects.toMatchObject(notFound);
     expect(await bob.listExperiences()).toEqual([]);
@@ -406,6 +414,13 @@ describe.skipIf(!process.env.WISHSCENE_TEST_PG_URL)('product store (Postgres)', 
       status: 409,
       code: 'UPLOAD_MISSING',
     });
+    // No ETag, no pinned version: refuse and keep the upload pending for a retry.
+    await expect(
+      store.completeUpload(upload.id, { byteSize: 4000, contentType: 'image/png', etag: null }),
+    ).rejects.toMatchObject({ status: 502, code: 'UPLOAD_UNVERIFIED' });
+    expect((await prisma.upload.findUniqueOrThrow({ where: { id: upload.id } })).status).toBe(
+      'pending',
+    );
     const done = await store.completeUpload(upload.id, {
       byteSize: 4000,
       contentType: 'image/png',
@@ -422,7 +437,7 @@ describe.skipIf(!process.env.WISHSCENE_TEST_PG_URL)('product store (Postgres)', 
     const events = await prisma.outboxEvent.findMany({ where: { aggregateId: done.job.id } });
     expect(events.map((event) => event.payload)).toEqual([{ jobId: done.job.id, etag: '"v1"' }]);
     await expect(
-      store.completeUpload(upload.id, { byteSize: 4000, contentType: 'image/png' }),
+      store.completeUpload(upload.id, { byteSize: 4000, contentType: 'image/png', etag: '"v2"' }),
     ).rejects.toMatchObject({ code: 'UPLOAD_NOT_PENDING' });
 
     const big = await store.initUpload({
@@ -431,7 +446,7 @@ describe.skipIf(!process.env.WISHSCENE_TEST_PG_URL)('product store (Postgres)', 
       objectKey: key(),
     });
     await expect(
-      store.completeUpload(big.id, { byteSize: 101, contentType: 'image/jpeg' }),
+      store.completeUpload(big.id, { byteSize: 101, contentType: 'image/jpeg', etag: '"b"' }),
     ).rejects.toMatchObject({ status: 422, code: 'UPLOAD_REJECTED' });
     const wrong = await store.initUpload({
       contentType: 'image/jpeg',
@@ -439,12 +454,57 @@ describe.skipIf(!process.env.WISHSCENE_TEST_PG_URL)('product store (Postgres)', 
       objectKey: key(),
     });
     await expect(
-      store.completeUpload(wrong.id, { byteSize: 50, contentType: 'text/html' }),
+      store.completeUpload(wrong.id, { byteSize: 50, contentType: 'text/html', etag: '"w"' }),
     ).rejects.toMatchObject({ status: 422, code: 'UPLOAD_REJECTED' });
     expect(
       await prisma.upload.count({ where: { id: { in: [big.id, wrong.id] }, status: 'rejected' } }),
     ).toBe(2);
     expect(await prisma.job.count({ where: { uploadId: { in: [big.id, wrong.id] } } })).toBe(0);
+  });
+
+  it('never reports closing an upload that a concurrent request settled', async () => {
+    const userId = randomUUID();
+    await prisma.user.create({ data: { id: userId, name: 'Test', email: `${userId}@x.test` } });
+    const setup = ownerStore(prisma, userId);
+    const expired = await setup.initUpload({
+      contentType: 'image/png',
+      byteSize: 100,
+      objectKey: key(),
+    });
+    const mismatched = await setup.initUpload({
+      contentType: 'image/png',
+      byteSize: 100,
+      objectKey: key(),
+    });
+    // Another request completes the upload right after this one read it as pending.
+    const racing = prisma.$extends({
+      query: {
+        upload: {
+          async findFirst({ args, query }) {
+            const row = await query(args);
+            if (row)
+              await prisma.upload.update({ where: { id: row.id }, data: { status: 'uploaded' } });
+            return row;
+          },
+        },
+      },
+    }) as unknown as PrismaClient;
+    const later = ownerStore(racing, userId, () => new Date(Date.now() + 60 * 60_000));
+    await expect(
+      later.completeUpload(expired.id, { byteSize: 100, contentType: 'image/png', etag: '"e"' }),
+    ).rejects.toMatchObject({ status: 409, code: 'UPLOAD_NOT_PENDING' });
+    await expect(
+      ownerStore(racing, userId).completeUpload(mismatched.id, {
+        byteSize: 101,
+        contentType: 'image/png',
+        etag: '"m"',
+      }),
+    ).rejects.toMatchObject({ status: 409, code: 'UPLOAD_NOT_PENDING' });
+    expect(
+      await prisma.upload.count({
+        where: { id: { in: [expired.id, mismatched.id] }, status: 'uploaded' },
+      }),
+    ).toBe(2);
   });
 
   it('limits upload starts per account per hour', async () => {
@@ -464,14 +524,31 @@ describe.skipIf(!process.env.WISHSCENE_TEST_PG_URL)('product store (Postgres)', 
   it('counts throttled attempts per key within a window', async () => {
     const key = `test:${randomUUID()}`;
     const results: boolean[] = [];
-    for (let i = 0; i < 4; i++) results.push(await takeThrottle(prisma, key, 3, 60_000));
+    for (let i = 0; i < 4; i++) results.push((await takeThrottle(prisma, key, 3, 60_000)).allowed);
     expect(results).toEqual([true, true, true, false]);
-    expect(await takeThrottle(prisma, `test:${randomUUID()}`, 3, 60_000)).toBe(true);
+    // The caller learns when the current window ends.
+    const { retryAfterSeconds } = await takeThrottle(prisma, key, 3, 60_000);
+    expect(retryAfterSeconds).toBeGreaterThan(50);
+    expect(retryAfterSeconds).toBeLessThanOrEqual(60);
+    expect((await takeThrottle(prisma, `test:${randomUUID()}`, 3, 60_000)).allowed).toBe(true);
     // Once the window has passed, the count starts over.
     await prisma.$executeRaw`UPDATE throttles SET window_start = now() - interval '2 minutes'
       WHERE key = ${key}`;
-    expect(await takeThrottle(prisma, key, 3, 60_000)).toBe(true);
+    expect((await takeThrottle(prisma, key, 3, 60_000)).allowed).toBe(true);
     expect((await prisma.throttle.findUniqueOrThrow({ where: { key } })).count).toBe(1);
+    await expect(takeThrottle(prisma, key, 3, THROTTLE_MAX_WINDOW_MS + 1)).rejects.toThrow();
+  });
+
+  it('prunes throttle rows older than the longest window', async () => {
+    const stale = `test:${randomUUID()}`;
+    const fresh = `test:${randomUUID()}`;
+    await takeThrottle(prisma, stale, 3, 60_000);
+    await takeThrottle(prisma, fresh, 3, 60_000);
+    await prisma.$executeRaw`UPDATE throttles SET window_start = now() - interval '25 hours'
+      WHERE key = ${stale}`;
+    await pruneThrottles(prisma);
+    const left = await prisma.throttle.findMany({ where: { key: { in: [stale, fresh] } } });
+    expect(left.map((row) => row.key)).toEqual([fresh]);
   });
 
   it('matches the Prisma schema after migrating a fresh database', () => {

@@ -38,6 +38,7 @@ export function productRuntime(): ProductRuntime {
       baseURL: config.baseURL,
       mailer: new FileOutboxMailer(),
       ipAddressHeaders: config.ipAddressHeaders,
+      trustedProxies: config.trustedProxies,
     }),
     assets: new S3AssetStore(config.s3),
   };

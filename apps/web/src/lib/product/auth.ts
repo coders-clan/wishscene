@@ -12,6 +12,34 @@ export const MAGIC_LINKS_PER_ADDRESS = 3;
 const MAGIC_LINK_ADDRESS_WINDOW_MS = 10 * 60_000;
 
 /**
+ * The mailbox an address most likely delivers to, so variants share one throttle budget:
+ * lowercase, no +tag, and for Gmail no dots. Best effort: providers with other alias schemes
+ * (e.g. Yahoo's -tag) or catch-all domains still get one budget per spelling.
+ */
+export function canonicalEmail(email: string) {
+  const address = email.trim().toLowerCase();
+  const at = address.lastIndexOf('@');
+  if (at < 0) return address;
+  let local = address.slice(0, at).split('+')[0];
+  let domain = address.slice(at + 1);
+  if (domain === 'googlemail.com') domain = 'gmail.com';
+  if (domain === 'gmail.com') local = local.replaceAll('.', '');
+  return `${local}@${domain}`;
+}
+
+/**
+ * Throttle key for an address: HMAC of its canonical form under a key derived for this purpose
+ * only, so the table never holds an address, nor a hash that is cheap to reverse, and the auth
+ * secret itself never keys anything but Better Auth.
+ */
+export function magicLinkThrottleKey(secret: string, email: string) {
+  const key = createHmac('sha256', secret).update('wishscene/magic-link-throttle/v1').digest();
+  return (
+    'magic-link:' + createHmac('sha256', key).update(canonicalEmail(email)).digest('base64url')
+  );
+}
+
+/**
  * Better Auth for product mode: passwordless magic links (hashed, single use, 10 minutes),
  * rate limits stored in Postgres so they hold across serverless instances. Mounted at
  * /api/v1/auth, apart from the feedback board's GitHub sign-in at /api/auth.
@@ -23,12 +51,10 @@ export function createProductAuth(options: {
   mailer: Mailer;
   /** Headers naming the client IP for rate limits; see productConfig(). */
   ipAddressHeaders?: string[];
+  /** Proxy addresses (IP or CIDR) stripped from the right of X-Forwarded-For. */
+  trustedProxies?: string[];
 }) {
   const { prisma, mailer, baseURL } = options;
-  // Keyed hash: the throttle table never holds an address, nor a hash that is cheap to reverse.
-  const addressKey = (email: string) =>
-    'magic-link:' +
-    createHmac('sha256', options.secret).update(email.trim().toLowerCase()).digest('base64url');
   return betterAuth({
     appName: 'wishscene',
     baseURL,
@@ -53,7 +79,10 @@ export function createProductAuth(options: {
     advanced: {
       cookiePrefix: 'wishscene-product',
       useSecureCookies: baseURL.startsWith('https:'),
-      ipAddress: { ipAddressHeaders: options.ipAddressHeaders ?? ['x-forwarded-for'] },
+      ipAddress: {
+        ipAddressHeaders: options.ipAddressHeaders ?? ['x-forwarded-for'],
+        trustedProxies: options.trustedProxies ?? [],
+      },
     },
     databaseHooks: {
       session: {
@@ -70,7 +99,9 @@ export function createProductAuth(options: {
       },
     },
     logger: {
-      level: 'error',
+      // Warnings include an unresolvable client IP (shared rate-limit bucket) and ignored
+      // trusted proxies, which operators must see.
+      level: 'warn',
       log: (level, message, ...args) => log(level, `auth: ${message}`, { args }),
     },
     plugins: [
@@ -79,16 +110,19 @@ export function createProductAuth(options: {
         storeToken: 'hashed',
         async sendMagicLink({ email, url }) {
           // Per address across all clients, so rotating IPs cannot flood one inbox.
-          const allowed = await takeThrottle(
+          const { allowed, retryAfterSeconds } = await takeThrottle(
             prisma,
-            addressKey(email),
+            magicLinkThrottleKey(options.secret, email),
             MAGIC_LINKS_PER_ADDRESS,
             MAGIC_LINK_ADDRESS_WINDOW_MS,
           );
+          // The link's verification row was already written; it expires unused.
           if (!allowed)
-            throw new APIError('TOO_MANY_REQUESTS', {
-              message: 'Too many sign-in links for this address. Try again in a few minutes.',
-            });
+            throw new APIError(
+              'TOO_MANY_REQUESTS',
+              { message: 'Too many sign-in links for this address. Try again in a few minutes.' },
+              { 'Retry-After': String(retryAfterSeconds) },
+            );
           await mailer.send({
             to: email,
             subject: 'Your wishscene sign-in link',

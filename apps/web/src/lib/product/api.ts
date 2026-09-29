@@ -1,8 +1,9 @@
 import { randomUUID } from 'node:crypto';
+import { isAPIError } from 'better-auth/api';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { experienceInput, generationInput, storyUpdate } from '@wishscene/contracts';
-import { isTransientDbError, ownerStore, type OwnerStore } from '@wishscene/db';
+import { ownerStore, transientDbErrorCode, type OwnerStore } from '@wishscene/db';
 import { DomainError } from '@wishscene/domain';
 import { MAX_UPLOAD_BYTES, UPLOAD_CONTENT_TYPES, objectKey } from '@wishscene/storage';
 import { jsonBody } from '../json-body';
@@ -145,6 +146,27 @@ function reply(requestId: string, status: number, body: unknown) {
 const failure = (requestId: string, status: number, code: string, message: string) =>
   reply(requestId, status, { error: { code, message, requestId } });
 
+// better-call's kAPIErrorHeaderSymbol: the headers an endpoint had set before it threw.
+const API_ERROR_HEADERS = Symbol.for('better-call:api-error-headers');
+
+/**
+ * The session and the cookies Better Auth set while reading it. A session that disappears while
+ * being extended throws 401 with a cleared cookie; that reads as signed out, cookie included.
+ */
+async function readSession(runtime: ProductRuntime, request: NextRequest) {
+  try {
+    const { headers, response } = await runtime.auth.api.getSession({
+      headers: request.headers,
+      returnHeaders: true,
+    });
+    return { session: response, cookies: headers.getSetCookie() };
+  } catch (error) {
+    if (!isAPIError(error) || error.statusCode !== 401) throw error;
+    const headers = (error as { [API_ERROR_HEADERS]?: unknown })[API_ERROR_HEADERS];
+    return { session: null, cookies: headers instanceof Headers ? headers.getSetCookie() : [] };
+  }
+}
+
 /** Product API behind WISHSCENE_PRODUCT=1. Every call is owner-scoped by the session user. */
 export async function productDispatch(
   request: NextRequest,
@@ -167,11 +189,12 @@ export async function productDispatch(
       response = failure(requestId, 415, 'JSON_REQUIRED', 'Send application/json.');
     else {
       const resolved = runtime ?? productRuntime();
-      const { headers, response: session } = await resolved.auth.api.getSession({
-        headers: request.headers,
-        returnHeaders: true,
-      });
-      sessionCookies = headers.getSetCookie();
+      const { session, cookies } = await readSession(resolved, request);
+      // A deleted account's session is never extended in the browser, and reading it may have
+      // extended the row, so its sessions are revoked.
+      if (session?.user.deletedAt)
+        await resolved.prisma.session.deleteMany({ where: { userId: session.user.id } });
+      else sessionCookies = cookies;
       if (!session || session.user.deletedAt)
         response = failure(requestId, 401, 'UNAUTHENTICATED', 'Sign in to continue.');
       else if (!route) response = failure(requestId, 404, 'NOT_FOUND', 'API route not found.');
@@ -182,6 +205,7 @@ export async function productDispatch(
       }
     }
   } catch (error) {
+    const busy = transientDbErrorCode(error);
     if (error instanceof z.ZodError)
       response = failure(
         requestId,
@@ -191,7 +215,9 @@ export async function productDispatch(
       );
     else if (error instanceof DomainError)
       response = failure(requestId, error.status, error.code, error.message);
-    else if (isTransientDbError(error)) {
+    else if (busy) {
+      // P2028 also covers misuse of a closed transaction, so a steady stream here is a bug.
+      log('warn', 'product api busy', { requestId, route: label, code: busy });
       response = failure(requestId, 503, 'TRY_AGAIN', 'The service is busy. Try again.');
       response.headers.set('Retry-After', '1');
     } else {

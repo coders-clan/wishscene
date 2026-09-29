@@ -139,7 +139,9 @@ S3_FORCE_PATH_STYLE=1
 
 Dev magic links are written as files to git-ignored `apps/web/.data/dev-mail/`, never logged to the console.
 
-Sign-in rate limits read the client IP from `x-real-ip` on Vercel. Elsewhere the app must sit behind a proxy that sets or appends `X-Forwarded-For`; a directly exposed server would trust a client-supplied value. Magic links are also limited to 3 per address per 10 minutes.
+Sign-in rate limits read the client IP from `x-real-ip` on Vercel. Elsewhere they read `X-Forwarded-For`, and the app must sit behind a proxy; a directly exposed server would trust a client-supplied value. A proxy that overwrites the header with the one client address works as is. A proxy that appends to it needs `WISHSCENE_TRUSTED_PROXIES` (comma-separated IPs or CIDR ranges of your proxies): the client IP is then the rightmost address not in that list. Without it, a multi-address header resolves no IP, and all such clients share one rate-limit bucket (Better Auth logs a warning once). A malformed entry keeps product mode disabled; so do IPv6 zone ids, IPv4-mapped IPv6 entries (write those as plain IPv4) and IPv6 entries with an embedded dotted quad (write them in hex).
+
+Magic links are also limited to 3 per mailbox per 10 minutes. The limit is best effort: addresses are compared lowercased, without a `+tag`, and without dots for Gmail; other alias schemes count separately. A limited request answers 429 with `Retry-After`.
 
 In production, run the app as a non-owner Postgres role with only `SELECT, INSERT, UPDATE, DELETE` on the tables and `USAGE, SELECT` on the sequences, and run `prisma migrate deploy` as the owner: the owner can disable the append-only triggers. Deleting append-only history, including hard-deleting a user, must go through `withPurge()` from `@wishscene/db`; never `SET wishscene.purge` on a session.
 

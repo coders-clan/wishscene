@@ -82,7 +82,8 @@ export interface ExportView {
 export interface ObjectHead {
   byteSize: number;
   contentType: string | null;
-  etag?: string | null;
+  /** The stored object's version; required to complete an upload. */
+  etag: string | null;
 }
 
 export const notFound = () => new DomainError(404, 'NOT_FOUND', 'Not found.');
@@ -565,8 +566,9 @@ export function ownerStore(prisma: PrismaClient, userId: string, clock = () => n
 
     /**
      * Marks an upload uploaded and creates its validation job in one transaction. Throws
-     * UPLOAD_REJECTED (422) or UPLOAD_EXPIRED (410) after closing the row; the caller then
-     * deletes the stored object.
+     * UPLOAD_REJECTED (422) or UPLOAD_EXPIRED (410) only after this call closed the row; the
+     * caller then deletes the stored object. A row another request already settled throws
+     * UPLOAD_NOT_PENDING (409), and the object must be kept.
      */
     async completeUpload(id: string, head: ObjectHead | null) {
       assertId(id);
@@ -579,15 +581,16 @@ export function ownerStore(prisma: PrismaClient, userId: string, clock = () => n
       );
       if (upload.status !== 'pending') throw notPending;
       const now = clock();
-      const close = async (status: 'expired' | 'rejected', action: string) => {
-        await prisma.$transaction(async (tx) => {
+      // Closes the row unless a concurrent request settled it first.
+      const close = (status: 'expired' | 'rejected', action: string) =>
+        prisma.$transaction(async (tx) => {
           const closed = await tx.upload.updateMany({
             where: { id, userId, status: 'pending' },
             data: { status, byteSize: head?.byteSize ?? null, completedAt: now },
           });
-          if (closed.count) await audit(tx, action, id);
+          if (!closed.count) throw notPending;
+          await audit(tx, action, id);
         }, TX);
-      };
       if (upload.expiresAt <= now) {
         await close('expired', 'upload.expired');
         throw new DomainError(410, 'UPLOAD_EXPIRED', 'This upload expired. Start a new one.');
@@ -605,15 +608,18 @@ export function ownerStore(prisma: PrismaClient, userId: string, clock = () => n
           'The file does not match the declared type or size.',
         );
       }
+      // Without a version the validator could read a replaced object; keep the upload pending.
+      const etag = head.etag;
+      if (!etag)
+        throw new DomainError(
+          502,
+          'UPLOAD_UNVERIFIED',
+          'Storage did not confirm the file version. Try again.',
+        );
       return prisma.$transaction(async (tx) => {
         const updated = await tx.upload.updateMany({
           where: { id, userId, status: 'pending' },
-          data: {
-            status: 'uploaded',
-            byteSize: head.byteSize,
-            etag: head.etag ?? null,
-            completedAt: now,
-          },
+          data: { status: 'uploaded', byteSize: head.byteSize, etag, completedAt: now },
         });
         if (!updated.count) throw notPending;
         const job = await tx.job.create({
@@ -626,10 +632,7 @@ export function ownerStore(prisma: PrismaClient, userId: string, clock = () => n
           },
         });
         // The validator reads the object with If-Match: etag, so a later replacement fails.
-        await outbox(tx, 'job.created', job.id, {
-          jobId: job.id,
-          ...(head.etag ? { etag: head.etag } : {}),
-        });
+        await outbox(tx, 'job.created', job.id, { jobId: job.id, etag });
         await audit(tx, 'upload.completed', id);
         const saved = await tx.upload.findUniqueOrThrow({ where: { id } });
         return { upload: uploadView(saved), job: jobView(job) };
