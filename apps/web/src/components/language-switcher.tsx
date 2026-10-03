@@ -1,5 +1,5 @@
 'use client';
-import { useHasUnsavedChanges } from '@/i18n/unsaved';
+import { useAllowNavigation, useHasUnsavedChanges } from '@/i18n/unsaved';
 
 import { useId, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
@@ -7,6 +7,7 @@ import { localeName, supportedLocales } from '@/i18n/locales';
 
 export function LanguageSwitcher() {
   const hasUnsaved = useHasUnsavedChanges();
+  const allowNavigation = useAllowNavigation();
   const id = useId();
   const locale = useLocale();
   const t = useTranslations('common');
@@ -24,6 +25,7 @@ export function LanguageSwitcher() {
       });
       if (!response.ok) throw new Error('Locale update failed');
       // A full navigation also updates the server-rendered document language/direction.
+      allowNavigation();
       window.location.reload();
     } catch {
       setError(true);

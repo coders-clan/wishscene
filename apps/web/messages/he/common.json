@@ -66,5 +66,18 @@
   "error_EXPORT_BROWSER": "הדפדפן הזה אינו תומך ביצירת תמונות לייצוא.",
   "error_EXPORT_ENCODE": "לא ניתן ליצור את קובץ התמונה לייצוא.",
   "error_CAPTURE_LONG": "העמוד ארוך מדי לצילום. אפשר לשלוח דיווח טקסט.",
-  "error_CAPTURE_LARGE": "הצילום גדול מדי. בחרו אזור קטן יותר."
+  "error_CAPTURE_LARGE": "הצילום גדול מדי. בחרו אזור קטן יותר.",
+  "error_BOARD_FULL": "לוח המשוב מלא. פנו לצוות.",
+  "error_FEEDBACK_DISABLED": "המשוב אינו זמין בסביבה הזאת.",
+  "error_INVALID_LINK": "קישור הכניסה אינו תקין. בקשו קישור חדש.",
+  "error_KEY_REUSED": "הבקשה הזאת כבר נוצלה. רעננו ונסו שוב.",
+  "error_PRODUCT_MISCONFIGURED": "השירות אינו זמין. נסו שוב מאוחר יותר.",
+  "error_PRODUCT_DISABLED": "השירות אינו זמין בסביבה הזאת.",
+  "error_RATE_LIMITED": "נשלחו יותר מדי בקשות. המתינו דקה ונסו שוב.",
+  "error_STALE_FEEDBACK": "הדיווח עודכן. רעננו לפני השמירה.",
+  "error_STALE_PACK": "הקרוסלה השתנתה. רעננו לפני השמירה.",
+  "error_STALE_SOCIAL": "הפוסט השתנה. רעננו לפני השמירה.",
+  "error_STORAGE_REQUIRED": "אחסון סביבת העבודה אינו זמין. נסו שוב מאוחר יותר.",
+  "error_WORKSPACE_VERSION": "יש לרענן את סביבת העבודה. רעננו ונסו שוב.",
+  "error_AUTH_CONFIG": "הכניסה אינה זמינה. נסו שוב מאוחר יותר."
 }

@@ -62,8 +62,6 @@
   "md2828392f0": "studio.tsx: literal text",
   "m88f26ff67b": "studio.tsx: literal text",
   "m81ebc5142b": "studio.tsx: literal text",
-  "m1d4d43cc6f": "studio.tsx: jsx text",
-  "med35534087": "studio.tsx: jsx text",
   "m7b29020292": "studio.tsx: attr text",
   "m6b2fb75bdb": "studio.tsx: literal text",
   "md2d72af867": "studio.tsx: literal text",
@@ -179,8 +177,6 @@
   "md42713493c": "studio.tsx: jsx text",
   "mde75da8950": "studio.tsx: jsx text",
   "m88c36f173d": "studio.tsx: jsx text",
-  "m51b7aafcae": "studio.tsx: jsx text",
-  "m8de689aab9": "studio.tsx: jsx text",
   "m7f618b6be1": "studio.tsx: jsx text",
   "m3ebd907945": "studio.tsx: literal text",
   "m07a5491e03": "studio.tsx: jsx text",
@@ -293,5 +289,8 @@
   "candidateCount": "studio: {count, plural, one {# candidate} other {# candidates}}",
   "version": "studio: v{version, number}",
   "captionCount": "studio: {count, number}/2200",
-  "cropState": "studio: Zoom {zoom, number}% · {size}"
+  "cropState": "studio: Zoom {zoom, number}% · {size}",
+  "storyReset": "studio: Updating resets approvals. Existing images stay in history but cannot be exported as version {version, number}.",
+  "usePreset": "studio: Use {destination} photo preset",
+  "charCount": "studio: {count, number}/{limit, number} characters"
 }

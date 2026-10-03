@@ -62,8 +62,6 @@
   "md2828392f0": "Phötö prësët mátchëd~~~~~~~",
   "m88f26ff67b": "Cüstöm dëvëlöpër sëttïngs~~~~~~~~~",
   "m81ebc5142b": "Cüstöm sëttïngs üsë ïllüstrátëd plácëhöldërs; thëy dö nöt chángë thë përsön’s clöthës ör lïghtïng. Lïvë ÁÏ gënërátïön ïs á fütürë fëátürë.~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-  "m1d4d43cc6f": "Üsë~~",
-  "med35534087": "phötö prësët~~~~~",
   "m7b29020292": "Clösë dïálög~~~~~",
   "m6b2fb75bdb": "Scënë ápprövëd. Löökïng gööd.~~~~~~~~~~~",
   "md2d72af867": "Cöüld nöt fëtch á dëmö ïmágë.~~~~~~~~~~~",
@@ -179,8 +177,6 @@
   "md42713493c": "Dëstïnátïön~~~~",
   "mde75da8950": "Crëátë ëxpërïëncë~~~~~~",
   "m88c36f173d": "Thësë dëtáïls stáy shárëd ácröss ëvëry scënë. Chángïng thëm crëátës á nëw störy vërsïön ánd clëárs prëvïöüs áppröváls.~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-  "m51b7aafcae": "Störy v~~~",
-  "m8de689aab9": "· Yöür prëvïöüs cándïdátës árë këpt. Áctïvë jöbs wïll bë cáncëllëd whën thë störy chángës.~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
   "m7f618b6be1": "Sávë störy~~~~",
   "m3ebd907945": "Ëxpërïëncë gállëry~~~~~~~",
   "m07a5491e03": "· 4 scënës~~~~",
@@ -248,7 +244,7 @@
   "m90d8a836ae": "Cröp för ~~~~{v0}",
   "m7b835a175f": "Föür prë-gënërátëd ~~~~~~~{v0} phötös shárë thïs löök ánd thë sámë fïctïönál mán. Rëgënërátïng rëüsës thësë phötös.~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
   "m84c5cffd52": "{v0}\n\nBündlëd dëmö fïxtürës, nöt nëwly gënërátëd ïmágës.\nïmágës/: pöst-rëády JPËGs ïn cáröüsël ördër, cröppëd tö thë rëcördëd förmát, wïth ÁÏ lábëls.\nörïgïnáls/: ápprövëd örïgïnáls.\npösts/: për-ïmágë cáptïöns. Nöthïng wás püblïshëd tö á söcïál áccöünt.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-  "mb64d5d8753": "{v0}\nScënë: ~~~{v1}\nÏmágë: ~~~{v2} (~{v3}×~{v4}, ~{v5})\n\n~~{v6}\n\n{v7}ÁÏ-crëátëd fïctïönál scënë.\n~~~~~~~~~~",
+  "mb64d5d8753": "{v0}\nScënë: ~~~{v1}\nÏmágë: ~~~{v2} (~{v3, number}×~{v4, number}, ~{v5})\n\n~~{v6}\n\n{v7}ÁÏ-crëátëd fïctïönál scënë.\n~~~~~~~~~~",
   "m82e982f8e8": "Rëvïëw ~~~{v0}",
   "m1486f9f1a7": "{v0}: ~{v1} ïn ~~{v2}",
   "m054d3d2e94": "Crëátë pöst för ~~~~~~{v0}",
@@ -293,5 +289,8 @@
   "candidateCount": "{count, plural, one {# cándïdátë~~~~} other {# cándïdátës~~~~}}",
   "version": "v~{version, number}",
   "captionCount": "{count, number}/2200~~",
-  "cropState": "Zööm ~~{zoom, number}% · ~~{size}"
+  "cropState": "Zööm ~~{zoom, number}% · ~~{size}",
+  "storyReset": "Üpdátïng rësëts áppröváls. Ëxïstïng ïmágës stáy ïn hïstöry büt cánnöt bë ëxpörtëd ás vërsïön ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{version, number}.~",
+  "usePreset": "Üsë ~~{destination} phötö prësët~~~~~",
+  "charCount": "{count, number}/~{limit, number} cháráctërs~~~~"
 }

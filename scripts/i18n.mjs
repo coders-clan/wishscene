@@ -176,6 +176,24 @@ if (write) fs.writeFileSync('apps/web/src/i18n/catalogs.ts', generated);
 else if (fs.readFileSync('apps/web/src/i18n/catalogs.ts', 'utf8') !== generated)
   errors.push('Stale catalog registry: run pnpm i18n:extract');
 
+// Check literal calls against their namespace, not merely global key occurrence.
+for (const file of files.filter((f) => !f.endsWith('.test.ts') && !f.endsWith('/catalogs.ts'))) {
+  const text = fs.readFileSync(file, 'utf8');
+  const bindings = new Map();
+  for (const match of text.matchAll(
+    /const\s+(\w+)\s*=\s*(?:await\s+)?(?:useCopy|useTranslations|getTranslations)\('([^']+)'\)/g,
+  )) {
+    const previous = bindings.get(match[1]);
+    bindings.set(match[1], previous && previous !== match[2] ? null : match[2]);
+  }
+  for (const [binding, namespace] of bindings) {
+    if (!namespace || !source[namespace]) continue;
+    const pattern = new RegExp(`\\b${binding}\\(\\s*['"]([^'"]+)['"]`, 'g');
+    for (const match of text.matchAll(pattern))
+      if (!Object.hasOwn(source[namespace], match[1]))
+        errors.push(`${file}: Uncatalogued key: ${namespace}.${match[1]}`);
+  }
+}
 for (const file of files.filter((f) => f.endsWith('.tsx') && !f.endsWith('/github-icon.tsx'))) {
   const text = fs.readFileSync(file, 'utf8'),
     sf = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);

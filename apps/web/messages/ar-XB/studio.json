@@ -62,8 +62,6 @@
   "md2828392f0": "‮Photo preset matched‬",
   "m88f26ff67b": "‮Custom developer settings‬",
   "m81ebc5142b": "‮Custom settings use illustrated placeholders; they do not change the person’s clothes or lighting. Live AI generation is a future feature.‬",
-  "m1d4d43cc6f": "‮Use‬",
-  "med35534087": "‮photo preset‬",
   "m7b29020292": "‮Close dialog‬",
   "m6b2fb75bdb": "‮Scene approved. Looking good.‬",
   "md2d72af867": "‮Could not fetch a demo image.‬",
@@ -179,8 +177,6 @@
   "md42713493c": "‮Destination‬",
   "mde75da8950": "‮Create experience‬",
   "m88c36f173d": "‮These details stay shared across every scene. Changing them creates a new story version and clears previous approvals.‬",
-  "m51b7aafcae": "‮Story v‬",
-  "m8de689aab9": "‮· Your previous candidates are kept. Active jobs will be cancelled when the story changes.‬",
   "m7f618b6be1": "‮Save story‬",
   "m3ebd907945": "‮Experience gallery‬",
   "m07a5491e03": "‮· 4 scenes‬",
@@ -248,7 +244,7 @@
   "m90d8a836ae": "‮Crop for ‬{v0}",
   "m7b835a175f": "‮Four pre-generated ‬{v0}‮ photos share this look and the same fictional man. Regenerating reuses these photos.‬",
   "m84c5cffd52": "{v0}‮\n\nBundled demo fixtures, not newly generated images.\nimages/: post-ready JPEGs in carousel order, cropped to the recorded format, with AI labels.\noriginals/: approved originals.\nposts/: per-image captions. Nothing was published to a social account.\n‬",
-  "mb64d5d8753": "{v0}‮\nScene: ‬{v1}‮\nImage: ‬{v2}‮ (‬{v3}‮×‬{v4}‮, ‬{v5}‮)\n\n‬{v6}\n\n{v7}‮AI-created fictional scene.\n‬",
+  "mb64d5d8753": "{v0}‮\nScene: ‬{v1}‮\nImage: ‬{v2}‮ (‬{v3, number}‮×‬{v4, number}‮, ‬{v5}‮)\n\n‬{v6}\n\n{v7}‮AI-created fictional scene.\n‬",
   "m82e982f8e8": "‮Review ‬{v0}",
   "m1486f9f1a7": "{v0}‮: ‬{v1}‮ in ‬{v2}",
   "m054d3d2e94": "‮Create post for ‬{v0}",
@@ -293,5 +289,8 @@
   "candidateCount": "{count, plural, one {#‮ candidate‬} other {#‮ candidates‬}}",
   "version": "‮v‬{version, number}",
   "captionCount": "{count, number}‮/2200‬",
-  "cropState": "‮Zoom ‬{zoom, number}‮% · ‬{size}"
+  "cropState": "‮Zoom ‬{zoom, number}‮% · ‬{size}",
+  "storyReset": "‮Updating resets approvals. Existing images stay in history but cannot be exported as version ‬{version, number}‮.‬",
+  "usePreset": "‮Use ‬{destination}‮ photo preset‬",
+  "charCount": "{count, number}‮/‬{limit, number}‮ characters‬"
 }

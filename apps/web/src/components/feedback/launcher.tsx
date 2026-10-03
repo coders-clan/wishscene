@@ -84,14 +84,6 @@ export function FeedbackLauncher() {
     window.addEventListener('hashchange', reveal);
     return () => window.removeEventListener('hashchange', reveal);
   }, []);
-  useEffect(() => {
-    if (!target) return;
-    const guard = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-    };
-    window.addEventListener('beforeunload', guard);
-    return () => window.removeEventListener('beforeunload', guard);
-  }, [target]);
   const capture = useCallback(async (next: FeedbackTarget) => {
     setMode(null);
     setRect(null);

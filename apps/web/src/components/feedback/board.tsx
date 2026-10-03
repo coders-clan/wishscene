@@ -247,7 +247,7 @@ function FeedbackDetail({
               {item.description}
             </p>
             <p className="feedback-hint">
-              {item.author} · {timestamp(item.createdAt)}
+              <bdi>{item.author}</bdi> · {timestamp(item.createdAt)}
             </p>
             {item.hasScreenshot ? (
               <a
@@ -444,7 +444,9 @@ function FeedbackDetail({
               {item.comments.map((comment) => (
                 <article key={comment.id} className={`feedback-comment ${comment.kind}`}>
                   <div>
-                    <strong>{comment.author}</strong>
+                    <strong>
+                      <bdi>{comment.author}</bdi>
+                    </strong>
                     <time>{timestamp(comment.createdAt)}</time>
                   </div>
                   <p dir="auto">
@@ -810,12 +812,16 @@ export function FeedbackBoard() {
               <p dir="auto">{item.description}</p>
               <div className="feedback-list-meta">
                 <span>
-                  {item.author} · {timestamp(item.createdAt)}
+                  <bdi>{item.author}</bdi> · {timestamp(item.createdAt)}
                 </span>
                 <span>
                   {msg(`enum_${item.target.kind}`)} · {item.target.label.slice(0, 55)}
                 </span>
-                {item.assignee && <span>→ {item.assignee}</span>}
+                {item.assignee && (
+                  <span>
+                    → <bdi>{item.assignee}</bdi>
+                  </span>
+                )}
               </div>
             </div>
             <div className="feedback-list-stats">

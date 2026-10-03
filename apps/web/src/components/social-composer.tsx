@@ -89,12 +89,6 @@ export function SocialComposer({
   };
   const hasEdits = experience.scenes.some(isSceneDirty);
   useEffect(() => onDirtyChange(hasEdits), [hasEdits, onDirtyChange]);
-  useEffect(() => {
-    if (!hasEdits) return;
-    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
-    window.addEventListener('beforeunload', warn);
-    return () => window.removeEventListener('beforeunload', warn);
-  }, [hasEdits]);
 
   function update(patch: Partial<SocialDraft>) {
     rememberRevision();

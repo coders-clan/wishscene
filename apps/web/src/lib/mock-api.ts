@@ -154,7 +154,7 @@ async function route(request: NextRequest, path: string[], studio: MockStudio) {
     } else {
       status = 500;
       result = {
-        error: { code: 'INTERNAL', message: 'The mock workspace could not complete this request.' },
+        error: { code: 'INTERNAL' },
       };
       console.error(error);
     }

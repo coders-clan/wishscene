@@ -6,6 +6,12 @@ import { spawnSync } from 'node:child_process';
 
 it.each([
   [
+    'wrong namespace',
+    'src/components/language-switcher.tsx',
+    (s: string) => s.replace("t('language')", "t('mailHeader')"),
+    'Uncatalogued key: common.mailHeader',
+  ],
+  [
     'missing translation',
     'messages/he/common.json',
     (s: string) => {

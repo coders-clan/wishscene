@@ -66,5 +66,18 @@
   "error_EXPORT_BROWSER": "Thïs bröwsër cánnöt rëndër ëxpört ïmágës.~~~~~~~~~~~~~~~",
   "error_EXPORT_ENCODE": "Cöüld nöt ëncödë án ëxpört ïmágë.~~~~~~~~~~~~",
   "error_CAPTURE_LONG": "Thïs págë ïs töö löng tö cáptürë. Yöü cán stïll sënd á tëxt rëpört.~~~~~~~~~~~~~~~~~~~~~~~~",
-  "error_CAPTURE_LARGE": "Cáptürë ïs töö lárgë. Chöösë á smállër sëctïön.~~~~~~~~~~~~~~~~~"
+  "error_CAPTURE_LARGE": "Cáptürë ïs töö lárgë. Chöösë á smállër sëctïön.~~~~~~~~~~~~~~~~~",
+  "error_BOARD_FULL": "Thë fëëdbáck böárd ïs füll. Cöntáct thë tëám.~~~~~~~~~~~~~~~~",
+  "error_FEEDBACK_DISABLED": "Fëëdbáck ïs ünáváïláblë ïn thïs ënvïrönmënt.~~~~~~~~~~~~~~~~",
+  "error_INVALID_LINK": "Thïs sïgn-ïn lïnk ïs ïnválïd. Rëqüëst á nëw önë.~~~~~~~~~~~~~~~~~",
+  "error_KEY_REUSED": "Thïs rëqüëst wás álrëády üsëd. Rëfrësh ánd try ágáïn.~~~~~~~~~~~~~~~~~~~",
+  "error_PRODUCT_MISCONFIGURED": "Thë sërvïcë ïs ünáváïláblë. Try ágáïn látër.~~~~~~~~~~~~~~~~",
+  "error_PRODUCT_DISABLED": "Thë sërvïcë ïs ünáváïláblë ïn thïs ënvïrönmënt.~~~~~~~~~~~~~~~~~",
+  "error_RATE_LIMITED": "Töö mány rëqüësts. Wáït á mïnütë ánd try ágáïn.~~~~~~~~~~~~~~~~~",
+  "error_STALE_FEEDBACK": "Sömëönë üpdátëd thïs rëpört. Rëfrësh bëförë sávïng.~~~~~~~~~~~~~~~~~~",
+  "error_STALE_PACK": "Thë cáröüsël chángëd. Rëfrësh bëförë sávïng.~~~~~~~~~~~~~~~~",
+  "error_STALE_SOCIAL": "Thïs pöst chángëd ïn ánöthër táb. Rëlöád bëförë sávïng.~~~~~~~~~~~~~~~~~~~~",
+  "error_STORAGE_REQUIRED": "Wörkspácë störágë ïs ünáváïláblë. Try ágáïn látër.~~~~~~~~~~~~~~~~~~",
+  "error_WORKSPACE_VERSION": "Thë wörkspácë nëëds á rëfrësh. Rëlöád ánd try ágáïn.~~~~~~~~~~~~~~~~~~~",
+  "error_AUTH_CONFIG": "Sïgn-ïn ïs ünáváïláblë. Try ágáïn látër.~~~~~~~~~~~~~~"
 }

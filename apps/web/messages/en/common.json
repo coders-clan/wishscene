@@ -66,5 +66,18 @@
   "error_EXPORT_BROWSER": "This browser cannot render export images.",
   "error_EXPORT_ENCODE": "Could not encode an export image.",
   "error_CAPTURE_LONG": "This page is too long to capture. You can still send a text report.",
-  "error_CAPTURE_LARGE": "Capture is too large. Choose a smaller section."
+  "error_CAPTURE_LARGE": "Capture is too large. Choose a smaller section.",
+  "error_BOARD_FULL": "The feedback board is full. Contact the team.",
+  "error_FEEDBACK_DISABLED": "Feedback is unavailable in this environment.",
+  "error_INVALID_LINK": "This sign-in link is invalid. Request a new one.",
+  "error_KEY_REUSED": "This request was already used. Refresh and try again.",
+  "error_PRODUCT_MISCONFIGURED": "The service is unavailable. Try again later.",
+  "error_PRODUCT_DISABLED": "The service is unavailable in this environment.",
+  "error_RATE_LIMITED": "Too many requests. Wait a minute and try again.",
+  "error_STALE_FEEDBACK": "Someone updated this report. Refresh before saving.",
+  "error_STALE_PACK": "The carousel changed. Refresh before saving.",
+  "error_STALE_SOCIAL": "This post changed in another tab. Reload before saving.",
+  "error_STORAGE_REQUIRED": "Workspace storage is unavailable. Try again later.",
+  "error_WORKSPACE_VERSION": "The workspace needs a refresh. Reload and try again.",
+  "error_AUTH_CONFIG": "Sign-in is unavailable. Try again later."
 }

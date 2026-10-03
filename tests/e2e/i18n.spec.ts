@@ -14,6 +14,11 @@ for (const locale of ['en', 'he', 'en-XA', 'ar-XB']) {
       page,
       isMobile,
     }) => {
+      const translationErrors: string[] = [];
+      page.on('console', (event) => {
+        if (/MISSING_MESSAGE|INVALID_MESSAGE|FORMATTING_ERROR/.test(event.text()))
+          translationErrors.push(event.text());
+      });
       const t = (english: string) => copy(locale, 'studio', english);
       const f = (english: string) => copy(locale, 'feedback', english);
       await page.addInitScript(() => {
@@ -103,6 +108,7 @@ for (const locale of ['en', 'he', 'en-XA', 'ar-XB']) {
         path: `test-results/${locale}-${isMobile ? 'phone' : 'desktop'}-feedback.png`,
         fullPage: true,
       });
+      expect(translationErrors).toEqual([]);
     });
   });
 }

@@ -3,6 +3,7 @@
 import { ClientApiError } from '@/i18n/api-error';
 import { useUnsavedChanges } from '@/i18n/unsaved';
 import { useCopy } from '@/i18n/copy';
+import { useFormatter } from 'next-intl';
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
   ArrowDownToLine,
@@ -138,8 +139,7 @@ function DemoLookFields({
               setMood(preset.mood);
             }}
           >
-            {msg('m1d4d43cc6f')}
-            {destination} {msg('med35534087')}
+            {msg('usePreset', { destination: demo(destination) })}
           </button>
         )}
       </div>
@@ -204,6 +204,7 @@ function ModalFrame({
 export default function Studio() {
   const msg = useCopy('studio');
   const demo = useCopy('demo');
+  const format = useFormatter();
   const t = useTranslations('common');
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [experienceId, setExperienceId] = useState('tokyo-after-hours');
@@ -605,7 +606,7 @@ export default function Studio() {
                 </div>
                 <div className="story-detail outfit">
                   <span>{msg('mde42400c95')}</span>
-                  <strong>{experience.outfit}</strong>
+                  <strong dir="auto">{experience.outfit}</strong>
                 </div>
                 <div className="story-detail">
                   <span>{msg('mfca272339c')}</span>
@@ -757,7 +758,9 @@ export default function Studio() {
                               width={600}
                               height={800}
                             />
-                            <span className="scene-number">0{i + 1}</span>
+                            <span className="scene-number">
+                              {format.number(i + 1, { minimumIntegerDigits: 2 })}
+                            </span>
                             <span className={`scene-badge ${item.status}`}>
                               {item.status === 'approved' && <Check size={12} />}{' '}
                               {msg(`status_${item.status}`)}
@@ -800,7 +803,7 @@ export default function Studio() {
                             </span>
                           </button>
                           <div className="scene-caption">
-                            <h4>{item.title}</h4>
+                            <h4 dir="auto">{item.title}</h4>
                             <p>{item.shot}</p>
                             <div className="scene-actions">
                               <span>{msg('candidateCount', { count: currentAssets.length })}</span>
@@ -1262,10 +1265,7 @@ export default function Studio() {
               />
               <div className="info-box">
                 <BookOpen size={19} />
-                <p>
-                  {msg('m51b7aafcae')}
-                  {experience.bibleVersion} {msg('m8de689aab9')}
-                </p>
+                <p>{msg('storyReset', { version: experience.bibleVersion })}</p>
               </div>
               <button className="button primary" disabled={busy}>
                 {msg('m7f618b6be1')}
@@ -1415,7 +1415,7 @@ export default function Studio() {
                 [msg('me41df9fa48'), msg('ma85e83130a')],
               ].map(([title, copy], i) => (
                 <div key={title}>
-                  <span>0{i + 1}</span>
+                  <span>{format.number(i + 1, { minimumIntegerDigits: 2 })}</span>
                   <div>
                     <h3>{title}</h3>
                     <p>{copy}</p>
