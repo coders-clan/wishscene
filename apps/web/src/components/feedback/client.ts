@@ -1,3 +1,4 @@
+import { ClientApiError } from '@/i18n/api-error';
 export async function feedbackRequest<T>(path = '', init?: RequestInit): Promise<T> {
   const response = await fetch(`/api/feedback${path}`, {
     cache: 'no-store',
@@ -9,7 +10,7 @@ export async function feedbackRequest<T>(path = '', init?: RequestInit): Promise
     const next = `${location.pathname}${location.search}${location.hash}`;
     location.assign(`/login?next=${encodeURIComponent(next)}`);
   }
-  if (!response.ok) throw new Error(data.error?.message || 'Could not reach the feedback board.');
+  if (!response.ok) throw new ClientApiError(data.error?.code ?? 'GENERIC');
   return data as T;
 }
 export function readName() {

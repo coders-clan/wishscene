@@ -1,5 +1,7 @@
 'use client';
 
+import { useCopy } from '@/i18n/copy';
+import { useFormatter } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { ArrowDown, ArrowUp, Check } from 'lucide-react';
 import {
@@ -24,6 +26,8 @@ type Draft = { order: string[]; coverTitle: string; baseRevision: number };
 
 // hunch-why: Carousel edits stay local until Save, like post drafts. The save carries the revision the edit started from, so another tab's newer carousel is reported instead of overwritten.
 export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }: Props) {
+  const msg = useCopy('studio');
+  const format = useFormatter();
   const [draft, setDraft] = useState<Draft | null>(null);
   const [saved, setSaved] = useState<SocialPack | null>(null);
   const [saving, setSaving] = useState(false);
@@ -37,12 +41,6 @@ export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }:
   const dirty =
     !!draft && (draft.coverTitle !== pack.coverTitle || draft.order.join() !== pack.order.join());
   useEffect(() => onDirtyChange(dirty), [dirty, onDirtyChange]);
-  useEffect(() => {
-    if (!dirty) return;
-    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
-    window.addEventListener('beforeunload', warn);
-    return () => window.removeEventListener('beforeunload', warn);
-  }, [dirty]);
   const coverSceneId = order[0];
   useEffect(
     () => onCoverChange({ experienceId: experience.id, sceneId: coverSceneId, title: coverTitle }),
@@ -62,7 +60,12 @@ export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }:
     const id = next[target];
     edit({ order: next });
     setStatus(
-      `${sceneFor(id)?.title} moved to position ${target + 1} of ${next.length}.${target === 0 ? ' It is now the cover.' : ''}`,
+      msg('moved', {
+        title: sceneFor(id)?.title ?? '',
+        position: target + 1,
+        count: next.length,
+        cover: target === 0 ? 'yes' : 'no',
+      }),
     );
     // Keep keyboard focus on the moved image. At either end, use its other arrow.
     requestAnimationFrame(() => {
@@ -84,9 +87,9 @@ export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }:
         }),
       );
       setDraft(null);
-      setStatus('Carousel saved.');
+      setStatus(msg('m8137df6db7'));
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Could not save the carousel. Try again.');
+      setError(msg.error(cause));
     } finally {
       setSaving(false);
     }
@@ -102,10 +105,11 @@ export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }:
       }}
     >
       <h3 id="pack-editor-title">
-        Carousel <span>Order and cover</span>
+        {msg('mf1f842e195')}
+        <span>{msg('md1b14c8931')}</span>
       </h3>
-      <p>Set the order people swipe through. The first image is the cover.</p>
-      <label htmlFor="cover-title">Cover title</label>
+      <p>{msg('m552e31a5d4')}</p>
+      <label htmlFor="cover-title">{msg('m6bf0c003ed')}</label>
       <input
         id="cover-title"
         dir="auto"
@@ -116,9 +120,9 @@ export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }:
         onChange={(event) => edit({ coverTitle: event.target.value })}
       />
       <p id="cover-title-hint" className="fine-print">
-        Drawn on the cover image in the export. Leave it empty for no title.
+        {msg('md92cbe3624')}
       </p>
-      <ol className="pack-order" aria-label="Carousel order">
+      <ol className="pack-order" aria-label={msg('m4cb7ed5dda')}>
         {order.map((id, index) => {
           const scene = sceneFor(id);
           if (!scene) return null;
@@ -130,18 +134,18 @@ export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }:
             )?.image ?? demoPreview(experience, scene);
           return (
             <li key={id}>
-              <img src={image} alt="" width={45} height={60} />
+              <img src={image} alt={' '} width={45} height={60} />
               <span className="pack-order-title">
                 <strong>
-                  {String(index + 1).padStart(2, '0')} · {scene.title}
+                  {format.number(index + 1, { minimumIntegerDigits: 2 })} · {scene.title}
                 </strong>
-                {index === 0 && <span className="pack-cover-badge">Cover</span>}
+                {index === 0 && <span className="pack-cover-badge">{msg('m8b656a5dd9')}</span>}
               </span>
               <button
                 type="button"
                 className="icon-button"
                 id={`pack-up-${id}`}
-                aria-label={`Move ${scene.title} earlier`}
+                aria-label={msg('me4ad435a1c', { v0: scene.title })}
                 disabled={saving || index === 0}
                 onClick={() => move(index, -1)}
               >
@@ -151,7 +155,7 @@ export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }:
                 type="button"
                 className="icon-button"
                 id={`pack-down-${id}`}
-                aria-label={`Move ${scene.title} later`}
+                aria-label={msg('maf890bbad8', { v0: scene.title })}
                 disabled={saving || index === order.length - 1}
                 onClick={() => move(index, 1)}
               >
@@ -167,7 +171,7 @@ export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }:
         </p>
       )}
       <div className="caption-actions">
-        <span role="status">{status || (dirty ? 'Unsaved carousel changes' : '')}</span>
+        <span role="status">{status || (dirty ? msg('m9b8496cece') : '')}</span>
         <div className="pack-actions">
           <button
             type="button"
@@ -176,13 +180,13 @@ export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }:
             onClick={() => {
               setDraft(null);
               setError('');
-              setStatus('Carousel changes discarded.');
+              setStatus(msg('maf830d43ac'));
             }}
           >
-            Discard
+            {msg('m36fff63ccb')}
           </button>
           <button className="button primary" disabled={!dirty || saving}>
-            {saving ? 'Saving…' : 'Save carousel'} <Check size={18} />
+            {saving ? msg('m56a2285c5b') : msg('m9a5323b7ff')} <Check size={18} />
           </button>
         </div>
       </div>

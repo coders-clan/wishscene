@@ -1,3 +1,5 @@
+import { getTranslations } from 'next-intl/server';
+import { LanguageSwitcher } from '@/components/language-switcher';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { GithubIcon } from '@/components/github-icon';
@@ -5,34 +7,29 @@ import { authMode, readSessionToken, safeNext, SESSION_COOKIE } from '@/lib/auth
 
 export const dynamic = 'force-dynamic';
 
-const errorMessages: Record<string, string> = {
-  state: 'Sign-in expired. Please try again.',
-  denied: 'GitHub sign-in was cancelled.',
-  github: 'GitHub sign-in failed. Please try again.',
-};
-
 export default async function LoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ next?: string; error?: string }>;
 }) {
+  const t = await getTranslations('auth');
+  const metadata = await getTranslations('metadata');
   const mode = authMode();
   if (mode.mode === 'open') redirect('/');
   const { next: rawNext, error } = await searchParams;
   const next = safeNext(rawNext);
   const store = await cookies();
   if (readSessionToken(store.get(SESSION_COOKIE)?.value)) redirect(next);
-  const message = error ? errorMessages[error] : undefined;
+  const message = error && ['state', 'denied', 'github'].includes(error) ? t(error) : undefined;
   return (
     <main className="login">
       <div className="login-card">
         <span className="wordmark">
-          wishscene<span className="brand-dot">.</span>
+          {metadata('manifestName')}
+          <span className="brand-dot">.</span>
         </span>
-        <p>
-          Sign in with your GitHub account to add feedback, reply and vote. Only a report's creator
-          can edit its status, priority or assignee.
-        </p>
+        <LanguageSwitcher />
+        <p>{t('introduction')}</p>
         {message && (
           <p className="login-error" role="alert">
             {message}
@@ -43,7 +40,7 @@ export default async function LoginPage({
           href={`/api/auth/github?next=${encodeURIComponent(next)}`}
         >
           <GithubIcon size={18} />
-          Sign in with GitHub
+          {t('githubSignIn')}
         </a>
       </div>
     </main>

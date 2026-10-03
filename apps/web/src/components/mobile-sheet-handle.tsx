@@ -1,9 +1,11 @@
 'use client';
 
+import { useCopy } from '@/i18n/copy';
 import { useEffect, useRef, type PointerEvent } from 'react';
 
 /** Shared phone affordance; native dialogs retain focus trapping and Escape. */
 export function MobileSheetHandle({ onClose }: { onClose: () => void }) {
+  const msg = useCopy('mobile');
   const ref = useRef<HTMLButtonElement>(null);
   const drag = useRef<{ id: number; y: number } | null>(null);
   const moved = useRef(false);
@@ -45,7 +47,7 @@ export function MobileSheetHandle({ onClose }: { onClose: () => void }) {
       ref={ref}
       type="button"
       className="mobile-sheet-handle"
-      aria-label="Dismiss sheet"
+      aria-label={msg('m466de67a35')}
       onClick={(event) => {
         if (event.detail === 0 || !moved.current) onClose();
         moved.current = false;

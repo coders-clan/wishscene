@@ -123,6 +123,13 @@ for (const mode of ['sqlite', 'postgres'] as const) {
         const current = await (await call(report.id, 'GET', undefined, cookie)).json();
         expect(current.votes).toBe(1);
         expect(current.comments).toHaveLength(4);
+        expect(current.comments[0].changes).toEqual(
+          [
+            { field: 'status', from: 'open', to: 'in-progress' },
+            { field: 'priority', from: report.priority, to: 'high' },
+            { field: 'assignee', from: '', to: 'Coders Clan' },
+          ].filter((change) => change.from !== change.to),
+        );
         expect(current.assignee).toBe('Coders Clan');
         expect(current.status).toBe('in-progress');
         await call(`${report.id}/vote`, 'PUT', { voted: false }, cookie);

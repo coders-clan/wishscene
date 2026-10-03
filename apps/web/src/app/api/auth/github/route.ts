@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
   if (mode.mode === 'open') return noStore(NextResponse.redirect(new URL(next, origin)));
   if (mode.mode === 'misconfigured')
     return NextResponse.json(
-      { error: { code: 'AUTH_CONFIG', message: 'Sign-in is not configured.' } },
+      { error: { code: 'AUTH_CONFIG' } },
       { status: 503, headers: { 'Cache-Control': 'no-store' } },
     );
   const state = randomBytes(32).toString('base64url');

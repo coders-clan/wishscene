@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 async function handle(request: NextRequest) {
   if (!productMode())
     return NextResponse.json(
-      { error: { code: 'PRODUCT_DISABLED', message: 'Product mode is off.' } },
+      { error: { code: 'PRODUCT_DISABLED' } },
       { status: 404, headers: { 'Cache-Control': 'no-store' } },
     );
   try {
@@ -20,12 +20,12 @@ async function handle(request: NextRequest) {
   } catch (error) {
     if (error instanceof DomainError)
       return NextResponse.json(
-        { error: { code: error.code, message: error.message } },
+        { error: { code: error.code } },
         { status: error.status, headers: { 'Cache-Control': 'no-store' } },
       );
     log('error', 'auth route failure', { error });
     return NextResponse.json(
-      { error: { code: 'INTERNAL', message: 'Sign-in is unavailable. Please try again.' } },
+      { error: { code: 'INTERNAL' } },
       { status: 500, headers: { 'Cache-Control': 'no-store' } },
     );
   }

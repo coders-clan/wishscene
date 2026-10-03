@@ -5,3 +5,5 @@ pnpm-lock.yaml
 apps/web/public/demo
 apps/web/next-env.d.ts
 packages/db/src/generated
+
+apps/web/src/i18n/catalogs.ts

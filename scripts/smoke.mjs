@@ -52,6 +52,22 @@ try {
   assert.equal(pageResponse.headers.get('x-content-type-options'), 'nosniff');
   assert.equal(pageResponse.headers.get('referrer-policy'), 'strict-origin-when-cross-origin');
   assert.match(pageResponse.headers.get('permissions-policy') || '', /camera=\(\)/);
+  for (const locale of ['en', 'he', 'en-XA', 'ar-XB']) {
+    const headers = { 'accept-language': locale };
+    const direction = ['he', 'ar-XB'].includes(locale) ? 'rtl' : 'ltr';
+    const localized = await fetch(base, { headers });
+    assert.match(
+      await localized.text(),
+      new RegExp(`<html[^>]*lang="${locale}"[^>]*dir="${direction}"`),
+    );
+    const manifest = await (await fetch(`${base}/manifest.webmanifest`, { headers })).json();
+    assert.equal(manifest.lang, locale);
+    assert.equal(manifest.dir, direction);
+  }
+  const override = await fetch(base, {
+    headers: { 'accept-language': 'he-IL', cookie: 'wishscene_locale=en' },
+  });
+  assert.match(await override.text(), /<html[^>]*lang="en"[^>]*dir="ltr"/);
   const workspace = await request('workspace');
   const exp = workspace.experiences[0];
   for (const scene of exp.scenes.filter((x) => x.status !== 'approved'))
@@ -104,7 +120,7 @@ try {
   });
   assert.equal(blocked.status, 409);
   console.log(
-    'PASS: production server, security headers, session cookie, generation, approval, export manifest, binary photo assets, stale export guard.',
+    'PASS: four-locale SSR and manifest, cookie override, production server, security headers, session cookie, generation, approval, export manifest, binary photo assets, stale export guard.',
   );
 } finally {
   try {

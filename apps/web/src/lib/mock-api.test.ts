@@ -157,6 +157,6 @@ describe('mock HTTP boundary', () => {
     });
     const response = await dispatch(request, ['experiences']);
     expect(response.status).toBe(400);
-    expect((await response.json()).error.code).toBe('INVALID_JSON');
+    expect((await response.json()).error).toEqual({ code: 'INVALID_JSON' });
   });
 });

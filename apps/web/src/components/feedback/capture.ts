@@ -1,3 +1,4 @@
+import { ClientApiError } from '@/i18n/api-error';
 import type { FeedbackTarget } from '@wishscene/contracts';
 const hidden = '[data-feedback-ui], [data-feedback-private], input, textarea, select, .skip-link';
 export function safeText(element: HTMLElement) {
@@ -34,6 +35,7 @@ export function targetFor(
   kind: FeedbackTarget['kind'],
   rect: { x: number; y: number; width: number; height: number },
   element?: HTMLElement,
+  regionLabel = '',
 ): FeedbackTarget {
   return {
     kind,
@@ -46,7 +48,7 @@ export function targetFor(
           element.tagName.toLowerCase()
         ).slice(0, 120)
       : kind === 'region'
-        ? 'Selected section'
+        ? regionLabel
         : document.title.slice(0, 120),
     excerpt: element ? safeText(element) : '',
     viewport: { width: innerWidth, height: innerHeight, dpr: Math.min(devicePixelRatio, 10) },
@@ -59,8 +61,7 @@ export function pageTarget() {
 export async function screenshotSection(target: FeedbackTarget) {
   const { toCanvas } = await import('html-to-image');
   const height = Math.max(document.body.scrollHeight, innerHeight);
-  if (height > 14000)
-    throw new Error('This page is too long to capture. You can still send a text report.');
+  if (height > 14000) throw new ClientApiError('CAPTURE_LONG');
   const scale = Math.min(1, 1200 / innerWidth, 7000 / height);
   const source = await toCanvas(document.body, {
     pixelRatio: scale,
@@ -82,6 +83,6 @@ export async function screenshotSection(target: FeedbackTarget) {
     .getContext('2d')!
     .drawImage(source, x, y, width, cropHeight, 0, 0, canvas.width, canvas.height);
   const data = canvas.toDataURL('image/jpeg', 0.86);
-  if (data.length > 1500000) throw new Error('Capture is too large. Choose a smaller section.');
+  if (data.length > 1500000) throw new ClientApiError('CAPTURE_LARGE');
   return data;
 }

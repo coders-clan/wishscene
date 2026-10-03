@@ -1,5 +1,6 @@
 'use client';
 
+import { useCopy } from '@/i18n/copy';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { Check, Download, Share, SquarePlus, X } from 'lucide-react';
@@ -83,6 +84,7 @@ export function useInstallApp() {
 }
 
 export function InstallApp() {
+  const msg = useCopy('mobile');
   const { mode, open } = useSyncExternalStore(subscribe, getState, getInitial);
   const ref = useRef<HTMLDialogElement>(null);
   const pathname = usePathname();
@@ -184,25 +186,23 @@ export function InstallApp() {
     >
       <MobileSheetHandle onClose={dismiss} />
       <div className="install-head">
-        <img src="/icons/icon-192.png" alt="" width={56} height={56} />
+        <img src="/icons/icon-192.png" alt={' '} width={56} height={56} />
         <div>
-          <h2 id="install-title">Get the wishscene app</h2>
-          <p id="install-copy">
-            Add it to your home screen. It opens full screen, like any other app.
-          </p>
+          <h2 id="install-title">{msg('m6039033257')}</h2>
+          <p id="install-copy">{msg('mcdb3b258ea')}</p>
         </div>
-        <button className="icon-button" onClick={dismiss} aria-label="Close dialog">
+        <button className="icon-button" onClick={dismiss} aria-label={msg('m7b29020292')}>
           <X size={20} />
         </button>
       </div>
       {mode === 'native' ? (
         <div className="install-actions">
           <button className="button subtle" onClick={dismiss}>
-            Not now
+            {msg('me457149073')}
           </button>
           <button className="button primary" onClick={() => void install()}>
             <Download aria-hidden="true" />
-            Install app
+            {msg('me5f79aa13b')}
           </button>
         </div>
       ) : (
@@ -210,26 +210,20 @@ export function InstallApp() {
           <ol className="install-steps">
             <li>
               <Share aria-hidden="true" />
-              <span>
-                Tap the <strong>Share</strong> button in your browser
-              </span>
+              <span>{msg('installShare')}</span>
             </li>
             <li>
               <SquarePlus aria-hidden="true" />
-              <span>
-                Choose <strong>Add to Home Screen</strong>
-              </span>
+              <span>{msg('installHome')}</span>
             </li>
             <li>
               <Check aria-hidden="true" />
-              <span>
-                Tap <strong>Add</strong>, then open wishscene from your home screen
-              </span>
+              <span>{msg('installAdd')}</span>
             </li>
           </ol>
           <div className="install-actions">
             <button className="button primary" onClick={dismiss}>
-              Got it
+              {msg('m5b8027fa0e')}
             </button>
           </div>
         </>

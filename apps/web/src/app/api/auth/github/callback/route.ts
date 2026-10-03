@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
   }
   if (mode.mode === 'misconfigured')
     return NextResponse.json(
-      { error: { code: 'AUTH_CONFIG', message: 'Sign-in is not configured.' } },
+      { error: { code: 'AUTH_CONFIG' } },
       { status: 503, headers: { 'Cache-Control': 'no-store' } },
     );
   const params = request.nextUrl.searchParams;

@@ -14,16 +14,19 @@
     "typecheck": "pnpm -r typecheck && tsc -p tsconfig.tests.json",
     "test": "pnpm --filter @wishscene/db generate && vitest run",
     "test:e2e": "playwright test",
-    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "check": "pnpm i18n:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "hunch": "hunch",
     "format": "prettier --write apps packages tests scripts *.json *.ts *.mjs *.yaml",
     "format:check": "prettier --check apps packages tests scripts *.json *.ts *.mjs *.yaml",
     "demo:art": "node scripts/generate-demo-art.mjs",
-    "test:smoke": "node scripts/smoke.mjs"
+    "test:smoke": "node scripts/smoke.mjs",
+    "i18n:extract": "node scripts/i18n.mjs --write",
+    "i18n:check": "node scripts/i18n.mjs"
   },
   "devDependencies": {
     "@davesheffer/hunch": "1.42.0",
     "@eslint/js": "9.39.1",
+    "@formatjs/icu-messageformat-parser": "3.5.18",
     "@playwright/test": "1.63.0",
     "@types/node": "24.10.1",
     "@wishscene/contracts": "workspace:*",

@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
 
 const development = process.env.NODE_ENV === 'development';
 const contentSecurityPolicy = [
@@ -49,4 +50,4 @@ const config: NextConfig = {
     return [{ source: '/:path*', headers: securityHeaders }];
   },
 };
-export default config;
+export default createNextIntlPlugin()(config);

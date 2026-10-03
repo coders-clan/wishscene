@@ -16,19 +16,19 @@ VS Code users can reopen this repo in the included dev container. It installs de
 
 ## What is working
 
-| Surface | Behavior in this scaffold |
-| --- | --- |
-| Studio | Responsive storyboard, experience picker, creation form, native dialogs, review UI |
-| Starter data | Tokyo, Amalfi, Iceland; create Kyoto too; fictional Alex character |
-| Artwork | 16 pre-generated AI photos of fictional Alex; four matching destination presets; 16 SVG fallbacks for custom settings |
-| Story Bible | Versioned outfit and mood; optimistic version check; edits clear approvals and cancel old jobs |
-| Generation | Simulated queued → running → ready/failed; 2.4-second normal and 12-second slow scenario |
-| Review | One fixed photo per scene for a matching preset; two illustrated grades for custom settings; previous candidates retained |
-| Retry/cancel | Idempotent request keys; one active job per scene; safe cancellation; previous choice retained |
+| Surface      | Behavior in this scaffold                                                                                                                                                                               |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Studio       | Responsive storyboard, experience picker, creation form, native dialogs, review UI                                                                                                                      |
+| Starter data | Tokyo, Amalfi, Iceland; create Kyoto too; fictional Alex character                                                                                                                                      |
+| Artwork      | 16 pre-generated AI photos of fictional Alex; four matching destination presets; 16 SVG fallbacks for custom settings                                                                                   |
+| Story Bible  | Versioned outfit and mood; optimistic version check; edits clear approvals and cancel old jobs                                                                                                          |
+| Generation   | Simulated queued → running → ready/failed; 2.4-second normal and 12-second slow scenario                                                                                                                |
+| Review       | One fixed photo per scene for a matching preset; two illustrated grades for custom settings; previous candidates retained                                                                               |
+| Retry/cancel | Idempotent request keys; one active job per scene; safe cancellation; previous choice retained                                                                                                          |
 | Demo sign-in | Emulated magic link: **Sign in** (phones: **More → Sign in**) puts the email in an on-page demo inbox; no mail is sent and nothing is gated. See [MOCK_API.md](MOCK_API.md#emulated-magic-link-sign-in) |
-| Social pack | Per-image Instagram/Story, TikTok, Facebook, LinkedIn and X previews; editable tone templates, captions and overlays; saved drafts and per-image text files in ZIP |
-| Isolation | Random HttpOnly session cookie; separate workspace per browser; optional Postgres persistence |
-| Hunch | Pinned CLI/MCP configs, project memory, explicit task and verification workflow |
+| Social pack  | Per-image Instagram/Story, TikTok, Facebook, LinkedIn and X previews; editable tone templates, captions and overlays; saved drafts and per-image text files in ZIP                                      |
+| Isolation    | Random HttpOnly session cookie; separate workspace per browser; optional Postgres persistence                                                                                                           |
+| Hunch        | Pinned CLI/MCP configs, project memory, explicit task and verification workflow                                                                                                                         |
 
 **This is a developer sandbox, not the production backend.** Without `DATABASE_URL`, mock state is lost on server restart, expires after one hour without API activity, and is not shared across server processes. Maximum 100 active sessions, 20 experiences per session, and 500 jobs per session. Use Developer tools → Reset demo workspace to reseed. Session expiry silently starts a new seeded workspace on the next request. Multiple tabs in one browser share the session.
 
@@ -50,24 +50,24 @@ Real authentication/ownership, the product Prisma schema, BullMQ/Redis workers, 
 
 ## Code map
 
-| Path | Responsibility |
-| --- | --- |
-| `apps/web/src/app/` | Next.js page, layout, brand styles, HTTP route handler |
-| `apps/web/src/components/studio.tsx` | Interactive studio and dialogs |
-| `apps/web/src/components/social-composer.tsx` | Per-image platform, text and preview editor |
-| `packages/contracts/src/social.ts` | Social formats, draft schemas, types and copy templates |
-| `apps/web/src/lib/mock-api.ts` | JSON validation, domain dispatch, HTTP errors |
-| `apps/web/src/lib/workspace-store.ts` | Local session registry and transactional Postgres snapshot adapter |
-| `packages/contracts/src/` | Zod inputs and shared response types |
-| `packages/domain/src/` | Mock state machine, versioning, approvals, export readiness |
-| `packages/providers/src/` | Minimal deterministic fixture adapter; production provider contract is still a follow-up |
-| `packages/db/` | Prisma schema, migrations, owner-scoped store, worker and test helpers |
-| `packages/storage/` | `AssetStore` interface, S3-compatible adapter and in-memory fake |
-| `apps/web/public/demo/` | Original SVG fixtures and 16 bundled JPG photos; no external image hosts |
-| `packages/contracts/src/demo.ts` | Shared preset settings and preview selection used by provider and browser |
-| `scripts/generate-demo-art.mjs` | Reproducible illustration source |
-| `tests/` | Domain regression cases and Playwright journeys |
-| `apps/web/src/lib/mock-api.test.ts` | HTTP/session/validation boundary cases |
+| Path                                          | Responsibility                                                                           |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `apps/web/src/app/`                           | Next.js page, layout, brand styles, HTTP route handler                                   |
+| `apps/web/src/components/studio.tsx`          | Interactive studio and dialogs                                                           |
+| `apps/web/src/components/social-composer.tsx` | Per-image platform, text and preview editor                                              |
+| `packages/contracts/src/social.ts`            | Social formats, draft schemas, types and copy templates                                  |
+| `apps/web/src/lib/mock-api.ts`                | JSON validation, domain dispatch, HTTP errors                                            |
+| `apps/web/src/lib/workspace-store.ts`         | Local session registry and transactional Postgres snapshot adapter                       |
+| `packages/contracts/src/`                     | Zod inputs and shared response types                                                     |
+| `packages/domain/src/`                        | Mock state machine, versioning, approvals, export readiness                              |
+| `packages/providers/src/`                     | Minimal deterministic fixture adapter; production provider contract is still a follow-up |
+| `packages/db/`                                | Prisma schema, migrations, owner-scoped store, worker and test helpers                   |
+| `packages/storage/`                           | `AssetStore` interface, S3-compatible adapter and in-memory fake                         |
+| `apps/web/public/demo/`                       | Original SVG fixtures and 16 bundled JPG photos; no external image hosts                 |
+| `packages/contracts/src/demo.ts`              | Shared preset settings and preview selection used by provider and browser                |
+| `scripts/generate-demo-art.mjs`               | Reproducible illustration source                                                         |
+| `tests/`                                      | Domain regression cases and Playwright journeys                                          |
+| `apps/web/src/lib/mock-api.test.ts`           | HTTP/session/validation boundary cases                                                   |
 
 Domain operations remain synchronous inside a hydrated workspace. The optional Postgres adapter wraps them in a transaction; local no-database state remains process-local. The next product backend slice must introduce authenticated ownership, normalized product models and durable jobs/outbox. Do not swap an external network call into `MockImageProvider.candidates()`; workers need an asynchronous submit/poll/cancel contract and tests of provider failures.
 
@@ -152,3 +152,7 @@ Routes (all require a session; cross-account and malformed ids return 404; write
 `GET/POST /api/v1/experiences`, `GET /api/v1/experiences/:id`, `PATCH /api/v1/experiences/:id/bible` (`expectedVersion`, `outfit`, `mood`), `POST /api/v1/experiences/:id/scenes/:sceneId/generations` (`requestKey`), `POST /api/v1/experiences/:id/exports` (`expectedVersion`), `GET /api/v1/jobs/:id`, `POST /api/v1/jobs/:id/cancel`, `POST /api/v1/assets/:id/approve` (`expectedVersion`), `GET /api/v1/assets/:id/download`, `POST /api/v1/uploads/init` (`contentType`, `byteSize`), `POST /api/v1/uploads/:id/complete`.
 
 Integration tests exercise `packages/db` and the product API against a real database. Set `WISHSCENE_TEST_PG_URL` to the same local Postgres URL, then run `pnpm test`; each test file creates and drops its own `wishscene_it_*` database. Without the variable these tests are skipped.
+
+## Languages and RTL
+
+English, Hebrew and two pseudo-locales are available from the desktop header or phone More sheet. To add a locale, translate a new `apps/web/messages/{locale}` folder, add its tag to `supportedLocales` in `apps/web/src/i18n/locales.ts`, then run `pnpm i18n:extract` and `pnpm check`. See [I18N.md](I18N.md) for catalog contributions, RTL rules, tests and human release review; [ADR 0003](adr/0003-internationalization.md) records cookie routing and next-intl selection.

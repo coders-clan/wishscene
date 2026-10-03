@@ -1,5 +1,6 @@
 'use client';
 
+import { useCopy } from '@/i18n/copy';
 import { useEffect, useEffectEvent, useRef, useState, type CSSProperties } from 'react';
 import { RotateCcw, ZoomIn, ZoomOut } from 'lucide-react';
 import {
@@ -41,6 +42,7 @@ export function CropEditor({
   onApply,
   onClose,
 }: Props) {
+  const msg = useCopy('studio');
   const ref = useRef<HTMLDialogElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const frame = useRef<HTMLDivElement>(null);
@@ -55,9 +57,9 @@ export function CropEditor({
   let size = '';
   try {
     const { width, height } = exportFrame(source, platform, focus);
-    size = `Exports at ${width} × ${height} px`;
+    size = msg('m6734783d9d', { v0: width, v1: height });
   } catch {
-    size = 'This image is too small to export';
+    size = msg('m802ba3834c');
   }
 
   function set(next: SocialFocus) {
@@ -157,9 +159,9 @@ export function CropEditor({
       onClose={onClose}
     >
       <div className="crop-heading">
-        <h2 id="crop-title">Adjust crop</h2>
+        <h2 id="crop-title">{msg('mab5c626179')}</h2>
         <p>
-          {preset.label} · {preset.ratioLabel}
+          {msg(`platform_${platform}`)} · {preset.ratioLabel}
         </p>
         <p id="crop-size">{size}</p>
       </div>
@@ -203,7 +205,7 @@ export function CropEditor({
       </div>
       <div className="crop-controls">
         <div className="crop-zoom">
-          <label htmlFor="crop-zoom">Zoom</label>
+          <label htmlFor="crop-zoom">{msg('m9b3cbed5c4')}</label>
           <ZoomOut size={18} aria-hidden="true" />
           <input
             id="crop-zoom"
@@ -219,7 +221,7 @@ export function CropEditor({
         </div>
         <div className="crop-position">
           <label>
-            Horizontal position
+            {msg('m12b3b6f373')}
             <input
               type="range"
               min={0}
@@ -227,12 +229,12 @@ export function CropEditor({
               step={1}
               value={focus.x}
               disabled={!room.x}
-              aria-valuetext={`${Math.round(focus.x)}% from the left`}
+              aria-valuetext={msg('m19013919b9', { v0: Math.round(focus.x) })}
               onChange={(event) => set({ ...latest.current, x: Number(event.target.value) })}
             />
           </label>
           <label>
-            Vertical position
+            {msg('mf2a31e6a04')}
             <input
               type="range"
               min={0}
@@ -240,25 +242,22 @@ export function CropEditor({
               step={1}
               value={focus.y}
               disabled={!room.y}
-              aria-valuetext={`${Math.round(focus.y)}% from the top`}
+              aria-valuetext={msg('mebea959eba', { v0: Math.round(focus.y) })}
               onChange={(event) => set({ ...latest.current, y: Number(event.target.value) })}
             />
           </label>
         </div>
-        <p className="fine-print">
-          Drag the image to move it. Pinch, scroll or use Zoom to resize. Zooming in lowers the
-          export size, because images are never upscaled.
-        </p>
+        <p className="fine-print">{msg('m51a748bc30')}</p>
       </div>
       <div className="crop-actions">
         <button type="button" className="button" onClick={() => set({ ...defaultSocialFocus })}>
-          <RotateCcw size={18} /> Reset
+          <RotateCcw size={18} /> {msg('m44c57abd88')}
         </button>
         <button type="button" className="button" onClick={onClose}>
-          Cancel
+          {msg('m77dfd2135f')}
         </button>
         <button type="button" className="button primary" onClick={() => onApply(latest.current)}>
-          Done
+          {msg('me9b450d14b')}
         </button>
       </div>
     </dialog>

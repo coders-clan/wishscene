@@ -1,3 +1,4 @@
+import { ClientApiError } from '@/i18n/api-error';
 import { socialPlatforms, type ExportManifest } from '@wishscene/contracts';
 
 type ExportAsset = ExportManifest['assets'][number];
@@ -14,7 +15,7 @@ async function loadSource(asset: ExportAsset) {
     let src = asset.image;
     if (asset.media === 'illustration') {
       const response = await fetch(asset.image);
-      if (!response.ok) throw new Error('Could not load a demo image for export.');
+      if (!response.ok) throw new ClientApiError('EXPORT_SOURCE');
       const svg = (await response.text()).replace(
         '<svg ',
         `<svg width="${asset.width}" height="${asset.height}" `,
@@ -24,7 +25,7 @@ async function loadSource(asset: ExportAsset) {
     const image = new Image();
     image.src = src;
     await image.decode().catch(() => {
-      throw new Error('Could not load a demo image for export.');
+      throw new ClientApiError('EXPORT_SOURCE');
     });
     return image;
   } finally {
@@ -95,7 +96,11 @@ function textBlock(
 }
 
 // hunch-why: Crop geometry comes from the server manifest (the same exportFrame the preview uses), so the file matches the recorded pixel size. Text stays inside the format's safe area, and every image carries a visible AI label because social platforms strip file metadata.
-export async function renderPostImage(asset: ExportAsset, coverTitle: string): Promise<Blob> {
+export async function renderPostImage(
+  asset: ExportAsset,
+  coverTitle: string,
+  label = disclosureLabel,
+): Promise<Blob> {
   const image = await loadSource(asset);
   // Draw at the recorded source size first so crop coordinates mean the same thing for photos
   // and illustrations, even if a fixture file is resampled later.
@@ -108,7 +113,7 @@ export async function renderPostImage(asset: ExportAsset, coverTitle: string): P
   canvas.width = width;
   canvas.height = height;
   const context = canvas.getContext('2d');
-  if (!context) throw new Error('This browser cannot render export images.');
+  if (!context) throw new ClientApiError('EXPORT_BROWSER');
   context.imageSmoothingQuality = 'high';
   context.drawImage(source, crop.x, crop.y, crop.width, crop.height, 0, 0, width, height);
 
@@ -127,15 +132,15 @@ export async function renderPostImage(asset: ExportAsset, coverTitle: string): P
 
   const labelSize = Math.max(12, Math.round(unit * 2.6));
   context.font = `600 ${labelSize}px ${family}`;
-  context.direction = 'ltr';
+  context.direction = rtl.test(label) ? 'rtl' : 'ltr';
   const labelPad = Math.round(labelSize * 0.5);
-  const labelWidth = context.measureText(disclosureLabel).width + labelPad * 2;
+  const labelWidth = context.measureText(label).width + labelPad * 2;
   const labelHeight = labelSize + labelPad * 2;
   panel(context, box.left, box.bottom - labelHeight, labelWidth, labelHeight);
   context.fillStyle = '#ffffff';
   context.textAlign = 'left';
   context.textBaseline = 'middle';
-  context.fillText(disclosureLabel, box.left + labelPad, box.bottom - labelHeight / 2);
+  context.fillText(label, box.left + labelPad, box.bottom - labelHeight / 2);
   box = { ...box, bottom: box.bottom - labelHeight - Math.round(unit * 2) };
 
   if (preset.vertical && asset.social.overlayText.trim())
@@ -143,7 +148,7 @@ export async function renderPostImage(asset: ExportAsset, coverTitle: string): P
 
   return new Promise((resolve, reject) =>
     canvas.toBlob(
-      (blob) => (blob ? resolve(blob) : reject(new Error('Could not encode an export image.'))),
+      (blob) => (blob ? resolve(blob) : reject(new ClientApiError('EXPORT_ENCODE'))),
       asset.output.type,
       0.9,
     ),
