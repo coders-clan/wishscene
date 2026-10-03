@@ -18,7 +18,7 @@ UI locale does not determine generated content language. Saved story/caption con
 
 ## Verification and release gate
 
-Automated checks cover English, Hebrew and both pseudo-locales at desktop/phone sizes, locale precedence and persistence, ICU Arabic plurals, missing-key fallback, unsaved drafts, RTL galleries and the existing product journeys. Native-speaker Hebrew copy review against the brand guide and a real iPhone Safari/Android Chrome keyboard/gesture pass remain human release gates. Keep #42 open until their evidence is recorded.
+Automated checks cover English, Hebrew and both pseudo-locales at desktop/phone sizes, locale precedence and persistence, ICU Arabic plurals, missing-key fallback, unsaved drafts, RTL galleries and the existing product journeys. Native-speaker Hebrew copy review against the brand guide and a real iPhone Safari/Android Chrome keyboard/gesture pass remain human release gates. These unfinished human release gates are tracked in [#52](https://github.com/coders-clan/wishscene/issues/52); closing the development issue does not assert they passed.
 
 ## References
 
