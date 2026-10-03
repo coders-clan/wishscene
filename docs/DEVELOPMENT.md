@@ -152,3 +152,7 @@ Routes (all require a session; cross-account and malformed ids return 404; write
 `GET/POST /api/v1/experiences`, `GET /api/v1/experiences/:id`, `PATCH /api/v1/experiences/:id/bible` (`expectedVersion`, `outfit`, `mood`), `POST /api/v1/experiences/:id/scenes/:sceneId/generations` (`requestKey`), `POST /api/v1/experiences/:id/exports` (`expectedVersion`), `GET /api/v1/jobs/:id`, `POST /api/v1/jobs/:id/cancel`, `POST /api/v1/assets/:id/approve` (`expectedVersion`), `GET /api/v1/assets/:id/download`, `POST /api/v1/uploads/init` (`contentType`, `byteSize`), `POST /api/v1/uploads/:id/complete`.
 
 Integration tests exercise `packages/db` and the product API against a real database. Set `WISHSCENE_TEST_PG_URL` to the same local Postgres URL, then run `pnpm test`; each test file creates and drops its own `wishscene_it_*` database. Without the variable these tests are skipped.
+
+## Language and RTL foundation
+
+English and partial Hebrew are available from the desktop header or phone More sheet. See [I18N.md](I18N.md) for translated surfaces, how to extend catalogs and the remaining #42 phases; [ADR 0003](adr/0003-internationalization.md) records cookie routing and next-intl selection.

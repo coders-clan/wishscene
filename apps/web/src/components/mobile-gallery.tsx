@@ -1,6 +1,8 @@
 'use client';
 
 import { Children, useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { localeDirection } from '@/i18n/locales';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 /** Native touch scrolling on phones; the supplied grid remains intact on desktop. */
@@ -13,6 +15,8 @@ export function MobileGallery({
   className: string;
   label: string;
 }) {
+  const t = useTranslations('common');
+  const rtl = localeDirection(useLocale()) === 'rtl';
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
   const count = Children.toArray(children).length;
@@ -23,11 +27,12 @@ export function MobileGallery({
     const track = ref.current!;
     const sync = () => {
       if (!window.matchMedia('(max-width: 600px)').matches) return;
-      const left = track.getBoundingClientRect().left;
+      const edge = rtl ? 'right' : 'left';
+      const start = track.getBoundingClientRect()[edge];
       let nearest = 0;
       let distance = Infinity;
       Array.from(track.children).forEach((child, index) => {
-        const next = Math.abs(child.getBoundingClientRect().left - left);
+        const next = Math.abs(child.getBoundingClientRect()[edge] - start);
         if (next < distance) {
           nearest = index;
           distance = next;
@@ -43,15 +48,18 @@ export function MobileGallery({
       track.removeEventListener('scroll', sync);
       resize.disconnect();
     };
-  }, [count]);
+  }, [count, rtl]);
 
   function go(index: number) {
     const track = ref.current!;
     const child = track.children[index];
     if (!child) return;
+    const edge = rtl ? 'right' : 'left';
     track.scrollTo({
       left:
-        track.scrollLeft + child.getBoundingClientRect().left - track.getBoundingClientRect().left,
+        track.scrollLeft +
+        child.getBoundingClientRect()[edge] -
+        track.getBoundingClientRect()[edge],
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
         ? 'instant'
         : 'smooth',
@@ -64,7 +72,7 @@ export function MobileGallery({
         <div className="mobile-gallery-controls">
           <button
             type="button"
-            aria-label={`Previous image in ${label}`}
+            aria-label={t('previousImage', { label })}
             aria-controls={id}
             disabled={current === 0}
             onClick={() => go(current - 1)}
@@ -73,7 +81,7 @@ export function MobileGallery({
           </button>
           <div className="mobile-gallery-position">
             <span role="status" aria-live="polite">
-              {current + 1} of {count}
+              {t('imagePosition', { current: current + 1, count })}
             </span>
             <div className="mobile-gallery-dots" aria-hidden="true">
               {Array.from({ length: count }, (_, index) => (
@@ -83,7 +91,7 @@ export function MobileGallery({
           </div>
           <button
             type="button"
-            aria-label={`Next image in ${label}`}
+            aria-label={t('nextImage', { label })}
             aria-controls={id}
             disabled={current === count - 1}
             onClick={() => go(current + 1)}

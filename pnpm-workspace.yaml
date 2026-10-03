@@ -13,6 +13,8 @@ allowBuilds:
   tree-sitter-python: true
   tree-sitter-typescript: true
   '@tree-sitter-grammars/tree-sitter-yaml': true
+  '@parcel/watcher': false
+  '@swc/core': false
 minimumReleaseAgeExclude:
   - '@davesheffer/hunch@1.42.0'
 overrides:

@@ -1,3 +1,6 @@
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getTranslations } from 'next-intl/server';
+import { localeDirection } from '../i18n/locales';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import './feedback.css';
@@ -5,29 +8,34 @@ import './mobile.css';
 import { FeedbackLauncher } from '../components/feedback/launcher';
 import { InstallApp } from '../components/install-app';
 import { installCaptureScript } from '../components/install-capture';
-export const metadata: Metadata = {
-  title: 'wishscene — Your imagination, in frame',
-  description:
-    'An interactive wishscene studio sandbox. Imagine an experience, shape a story, and make the scene.',
-  applicationName: 'wishscene',
-  appleWebApp: { capable: true, title: 'wishscene', statusBarStyle: 'default' },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('metadata');
+  return {
+    title: t('title'),
+    description: t('description'),
+    applicationName: 'wishscene',
+    appleWebApp: { capable: true, title: 'wishscene', statusBarStyle: 'default' },
+  };
+}
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
   themeColor: '#f7f5f0',
 };
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
   return (
-    <html lang="en">
+    <html lang={locale} dir={localeDirection(locale)}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: installCaptureScript }} />
       </head>
       <body>
-        {children}
-        <FeedbackLauncher />
-        <InstallApp />
+        <NextIntlClientProvider>
+          {children}
+          <FeedbackLauncher />
+          <InstallApp />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

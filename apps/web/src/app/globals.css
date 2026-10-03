@@ -98,7 +98,8 @@ img {
 .sidebar {
   width: 240px;
   position: fixed;
-  inset: 0 auto 0 0;
+  inset-block: 0;
+  inset-inline-start: 0;
   background: var(--ink);
   color: #e6e6ef;
   padding: 32px 20px 20px;
@@ -117,7 +118,7 @@ img {
 }
 .brand-dot {
   color: #ae9dff;
-  margin-left: -7px;
+  margin-inline-start: -7px;
 }
 .brand-icon {
   width: 31px;
@@ -140,7 +141,7 @@ img {
   gap: 11px;
   padding: 12px;
   width: 100%;
-  text-align: left;
+  text-align: start;
   color: #a7a7b8;
   font-size: 0.9375rem;
   font-weight: 500;
@@ -169,10 +170,10 @@ img {
   height: 5px;
   background: #a78dff;
   border-radius: 50%;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 .nav-count {
-  margin-left: auto;
+  margin-inline-start: auto;
   font-size: var(--text-xs);
   background: #292b3a;
   padding: 1px 6px;
@@ -253,14 +254,14 @@ img {
   min-width: 0;
 }
 .profile-dot {
-  margin-left: auto;
+  margin-inline-start: auto;
   border-radius: 50%;
   width: 6px;
   height: 6px;
   background: #a5d9c6;
 }
 .main-shell {
-  margin-left: 240px;
+  margin-inline-start: 240px;
 }
 .topbar {
   height: 76px;
@@ -531,7 +532,7 @@ h1 em {
   gap: 13px;
   padding: 0;
   min-height: 44px;
-  text-align: left;
+  text-align: start;
 }
 .title-button h2 {
   font-weight: 570;
@@ -605,7 +606,7 @@ h1 em {
   overflow-wrap: anywhere;
 }
 .story-consistency {
-  margin-left: auto;
+  margin-inline-start: auto;
   display: none;
   align-items: center;
   gap: 5px;
@@ -700,7 +701,7 @@ h1 em {
   aspect-ratio: 4 / 4.4;
   overflow: hidden;
   background: #72647e;
-  text-align: left;
+  text-align: start;
 }
 .scene-image-button img {
   width: 100%;
@@ -719,7 +720,7 @@ h1 em {
 }
 .scene-number {
   position: absolute;
-  left: 12px;
+  inset-inline-start: 12px;
   top: 13px;
   font-size: var(--text-sm);
   color: #fff;
@@ -731,7 +732,7 @@ h1 em {
 }
 .scene-badge {
   position: absolute;
-  right: 10px;
+  inset-inline-end: 10px;
   top: 14px;
   display: flex;
   align-items: center;
@@ -767,8 +768,8 @@ h1 em {
 .scene-time {
   position: absolute;
   bottom: 13px;
-  left: 13px;
-  right: 12px;
+  inset-inline-start: 13px;
+  inset-inline-end: 12px;
   font-size: var(--text-sm);
   font-weight: 450;
   color: #fff;
@@ -823,7 +824,7 @@ h1 em {
   padding: 8px;
   white-space: nowrap;
   min-height: 44px;
-  margin-right: -8px;
+  margin-inline-end: -8px;
 }
 .draft .scene-image-button > img {
   opacity: 0.09;
@@ -957,8 +958,8 @@ h1 em {
   display: flex;
   gap: 4px;
   width: 88px;
-  margin-left: auto;
-  margin-right: 0;
+  margin-inline-start: auto;
+  margin-inline-end: 0;
   flex-shrink: 0;
 }
 .progress-track > span {
@@ -1051,7 +1052,7 @@ h1 em {
   font-size: 15px;
 }
 .post-header > span:last-child {
-  margin-left: auto;
+  margin-inline-start: auto;
   color: var(--violet);
 }
 .post-images {
@@ -1258,7 +1259,7 @@ textarea {
   overflow: hidden;
   background: white;
   position: relative;
-  text-align: left;
+  text-align: start;
   padding: 0;
 }
 .library-card > img {
@@ -1282,7 +1283,7 @@ textarea {
 .library-card > svg {
   position: absolute;
   bottom: 27px;
-  right: 14px;
+  inset-inline-end: 14px;
   color: #9680af;
 }
 .library-new {
@@ -1327,7 +1328,7 @@ textarea {
   color: var(--muted);
 }
 .identity-content .info-box {
-  text-align: left;
+  text-align: start;
 }
 .tour-list {
   display: flex;
@@ -1486,7 +1487,7 @@ textarea {
   color: #b6e2d3;
 }
 .toast button {
-  margin-left: 8px;
+  margin-inline-start: 8px;
   color: #c3b5cd;
   min-width: 44px;
   min-height: 44px;
@@ -1542,7 +1543,7 @@ textarea {
 .skip-link {
   position: fixed;
   z-index: 100;
-  left: 16px;
+  inset-inline-start: 16px;
   top: -60px;
   background: var(--violet);
   padding: 13px;
@@ -1656,7 +1657,7 @@ textarea {
   background: white;
   border: 1px solid var(--line);
   border-radius: 10px;
-  text-align: left;
+  text-align: start;
 }
 .composer-scene.selected {
   border-color: var(--violet);
@@ -1900,7 +1901,7 @@ textarea {
   padding: 14px 22px 22px;
 }
 .crop-actions > :first-child {
-  margin-right: auto;
+  margin-inline-end: auto;
 }
 .composer-form .caption-budget {
   margin-top: -10px;
@@ -2044,7 +2045,7 @@ textarea {
 .preview-story-label {
   position: absolute;
   top: 18px;
-  left: 16px;
+  inset-inline-start: 16px;
   font-size: var(--text-xs);
   color: white;
   background: #191321b8;
@@ -2071,7 +2072,7 @@ textarea {
   padding: 16px 18px 4px;
 }
 .preview-social-icons > svg:last-child {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 .preview-caption {
   font-size: var(--text-sm);
@@ -2111,7 +2112,7 @@ textarea {
 .pack-editor h3 span {
   font-size: var(--text-xs);
   color: var(--muted);
-  margin-left: 8px;
+  margin-inline-start: 8px;
 }
 .pack-editor > p:not(.fine-print, .modal-error) {
   color: var(--muted);
@@ -2180,7 +2181,7 @@ textarea {
 .pack-actions {
   display: flex;
   gap: 8px;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 .pack-caption {
   border-top: 1px solid var(--line);
@@ -2195,7 +2196,7 @@ textarea {
 .pack-caption h3 span {
   font-size: var(--text-xs);
   color: var(--muted);
-  margin-left: 8px;
+  margin-inline-start: 8px;
 }
 .pack-caption > p {
   color: var(--muted);
@@ -2370,7 +2371,7 @@ textarea {
   main:has(> #panel-storyboard) > .export-bar {
     order: 2;
     margin-top: 12px;
-    padding-right: max(16px, calc(140px - max(0px, (100vw - 1750px) / 2)));
+    padding-inline-end: max(16px, calc(140px - max(0px, (100vw - 1750px) / 2)));
   }
   #panel-storyboard,
   #panel-storyboard .mobile-gallery {
@@ -2628,7 +2629,7 @@ textarea {
     justify-content: center;
   }
   .main-shell {
-    margin-left: 72px;
+    margin-inline-start: 72px;
   }
   main {
     padding: 32px 24px 24px;
@@ -2663,7 +2664,7 @@ textarea {
   }
   .brand-dot {
     display: inline;
-    margin-left: -6px;
+    margin-inline-start: -6px;
   }
   .sidebar nav {
     display: none;
@@ -2861,12 +2862,12 @@ textarea {
 @media (max-width: 360px) {
   main,
   .topbar {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-inline-start: 16px;
+    padding-inline-end: 16px;
   }
   .sidebar {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-inline-start: 16px;
+    padding-inline-end: 16px;
   }
   .section-tabs [role='tab'] svg {
     display: none;
@@ -2879,5 +2880,51 @@ textarea {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Language controls are part of navigation on desktop and in the phone More sheet. */
+.language-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.language-switcher label {
+  font-size: 13px;
+}
+.language-switcher select {
+  max-width: 100%;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+.language-switcher [role='alert'] {
+  color: #a12639;
+  font-size: 12px;
+}
+[dir='rtl'] :is(.lucide-chevron-left, .lucide-chevron-right, .lucide-arrow-right) {
+  transform: scaleX(-1);
+}
+[dir='rtl'] .toast {
+  left: calc(50% - 120px);
+}
+@media (max-width: 1100px) {
+  [dir='rtl'] .toast {
+    left: calc(50% - 36px);
+  }
+}
+@media (max-width: 600px) {
+  .topbar-actions > .language-switcher {
+    display: none;
+  }
+  .mobile-more-actions > .language-switcher {
+    padding: 12px;
+  }
+  [dir='rtl'] .toast {
+    left: 50%;
   }
 }

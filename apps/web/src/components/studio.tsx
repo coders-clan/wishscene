@@ -53,6 +53,8 @@ import { PackEditor, type PackCover } from './pack-editor';
 import { MobileSheetHandle } from './mobile-sheet-handle';
 import { useInstallApp } from './install-app';
 import { MobileGallery } from './mobile-gallery';
+import { useTranslations } from 'next-intl';
+import { LanguageSwitcher } from './language-switcher';
 import { DemoSignIn } from './demo-sign-in';
 
 async function api<T>(path: string, method = 'GET', payload?: unknown): Promise<T> {
@@ -203,6 +205,7 @@ function ModalFrame({
 }
 
 export default function Studio() {
+  const t = useTranslations('common');
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [experienceId, setExperienceId] = useState('tokyo-after-hours');
   const [modal, setModal] = useState<Modal>(null);
@@ -397,19 +400,19 @@ export default function Studio() {
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main">
-        Skip to studio
+        {t('skip')}
       </a>
       <aside className="sidebar">
-        <a href="/" className="wordmark" aria-label="wishscene home">
+        <a href="/" className="wordmark" aria-label={t('home')}>
           <span className="brand-icon">
             <Sparkles size={21} />
           </span>
           wishscene<span className="brand-dot">.</span>
         </a>
-        <div className="workspace-label">YOUR CREATIVE SPACE</div>
-        <nav aria-label="Main navigation">
+        <div className="workspace-label">{t('creativeSpace')}</div>
+        <nav aria-label={t('navigation')}>
           <a className="nav-item" href="/feedback">
-            Team feedback
+            {t('feedback')}
           </a>
           <button
             className="nav-item active"
@@ -419,16 +422,17 @@ export default function Studio() {
             }}
           >
             <Clapperboard />
-            My studio
+            {t('studio')}
             <span className="nav-dot" />
           </button>
           <button className="nav-item" onClick={() => setModal('library')}>
             <FolderHeart />
-            Experiences<span className="nav-count">{workspace?.experiences.length ?? 3}</span>
+            {t('experiences')}
+            <span className="nav-count">{workspace?.experiences.length ?? 3}</span>
           </button>
           <button className="nav-item" onClick={() => setModal('identity')}>
             <Layers3 />
-            Your identity
+            {t('identity')}
           </button>
         </nav>
         <div className="sidebar-note">
@@ -445,16 +449,17 @@ export default function Studio() {
         <div className="sidebar-bottom">
           <button className="nav-item" onClick={() => setModal('developer')}>
             <Code2 />
-            Developer tools
+            {t('developer')}
           </button>
           <button className="nav-item" onClick={() => setModal('help')}>
-            <CircleHelp />A quick tour
+            <CircleHelp />
+            {t('tour')}
           </button>
           <div className="profile">
             <span className="avatar">A</span>
             <div>
               <strong>Alex Morgan</strong>
-              <span>{account?.email ?? 'Demo workspace'}</span>
+              <span>{account?.email ?? t('demoWorkspace')}</span>
             </div>
             <span className="profile-dot" />
           </div>
@@ -462,31 +467,38 @@ export default function Studio() {
       </aside>
       <div className="main-shell">
         <header className="topbar">
-          <a className="mobile-brand" href="/" aria-label="wishscene home">
+          <a className="mobile-brand" href="/" aria-label={t('home')}>
             <Sparkles size={20} /> wishscene<span>.</span>
           </a>
           <div className="breadcrumb">
-            Workspace <ChevronRight size={14} />
-            <strong>My studio</strong>
+            {t('workspace')} <ChevronRight size={14} />
+            <strong>{t('studio')}</strong>
           </div>
           <div className="topbar-actions">
+            <LanguageSwitcher />
             <button className="button primary" onClick={() => setModal('new')}>
               <Plus size={18} />
-              New experience
+              {t('newExperience')}
             </button>
             <button
               className="demo-pill account-pill"
               aria-haspopup="dialog"
-              aria-label={account ? `Signed in as ${account.email}` : 'Sign in'}
+              aria-label={account ? t('signedIn', { email: account.email }) : t('signIn')}
               disabled={!workspace}
               onClick={() => setModal('account')}
             >
               <UserRound size={14} />
-              {account ? <b className="account-email">{account.email}</b> : 'Sign in'}
+              {account ? (
+                <b className="account-email">
+                  <bdi>{account.email}</bdi>
+                </b>
+              ) : (
+                t('signIn')
+              )}
             </button>
             <button className="demo-pill" onClick={() => setModal('developer')}>
               <span />
-              Mock mode <Code2 size={14} />
+              {t('mockMode')} <Code2 size={14} />
             </button>
           </div>
         </header>
@@ -494,12 +506,12 @@ export default function Studio() {
           <section className="greeting" data-feedback-id="studio-greeting">
             <div>
               <p className="eyebrow">
-                <span className="violet-star">✳</span> A WORLD OF WHAT IF
+                <span className="violet-star">✳</span> {t('eyebrow')}
               </p>
               <h1>
-                Your imagination, <em>in frame.</em>
+                {t('heading')} <em>{t('headingEmphasis')}</em>
               </h1>
-              <p>Turn a somewhere into your kind of story.</p>
+              <p>{t('subtitle')}</p>
             </div>
           </section>
           {error && (
@@ -1016,39 +1028,39 @@ export default function Studio() {
           )}
         </main>
       </div>
-      <nav className="mobile-app-nav" aria-label="Mobile navigation">
+      <nav className="mobile-app-nav" aria-label={t('mobileNavigation')}>
         <button
           aria-current={!modal && tab === 'storyboard' ? 'page' : undefined}
           onClick={() => mobileScreen('storyboard')}
         >
           <Clapperboard size={21} />
-          <span>Studio</span>
+          <span>{t('studioShort')}</span>
         </button>
         <button aria-haspopup="dialog" onClick={() => setModal('library')}>
           <FolderHeart size={21} />
-          <span>Experiences</span>
+          <span>{t('experiences')}</span>
         </button>
         <button
           className="mobile-create"
-          aria-label="New experience"
+          aria-label={t('newExperience')}
           aria-haspopup="dialog"
           onClick={() => setModal('new')}
         >
           <span className="mobile-create-icon">
             <Plus size={24} />
           </span>
-          <span>Create</span>
+          <span>{t('create')}</span>
         </button>
         <button
           aria-current={!modal && tab === 'social' ? 'page' : undefined}
           onClick={() => mobileScreen('social')}
         >
           <Layers3 size={21} />
-          <span>Posts</span>
+          <span>{t('posts')}</span>
         </button>
         <button aria-haspopup="dialog" onClick={() => setModal('more')}>
           <MoreHorizontal size={22} />
-          <span>More</span>
+          <span>{t('more')}</span>
         </button>
       </nav>
       {notice && (
@@ -1100,6 +1112,7 @@ export default function Studio() {
         >
           {modal === 'more' && (
             <div className="mobile-more-actions">
+              <LanguageSwitcher />
               {installApp.available && (
                 <button
                   onClick={() => {
@@ -1117,7 +1130,7 @@ export default function Studio() {
               <button disabled={!workspace} onClick={() => setModal('account')}>
                 <UserRound />
                 <span>
-                  {account ? 'Account' : 'Sign in'}
+                  {account ? t('account') : t('signIn')}
                   <small>{account ? account.email : 'Try the magic-link sign-in'}</small>
                 </span>
                 <ChevronRight />
@@ -1125,14 +1138,16 @@ export default function Studio() {
               <button onClick={() => setModal('identity')}>
                 <Layers3 />
                 <span>
-                  Your identity<small>Meet the demo character</small>
+                  {t('identity')}
+                  <small>Meet the demo character</small>
                 </span>
                 <ChevronRight />
               </button>
               <a href="/feedback">
                 <MessageSquarePlus />
                 <span>
-                  Team feedback<small>Read reports, reply, and vote</small>
+                  {t('feedback')}
+                  <small>Read reports, reply, and vote</small>
                 </span>
                 <ChevronRight />
               </a>
@@ -1152,14 +1167,16 @@ export default function Studio() {
               <button onClick={() => setModal('help')}>
                 <CircleHelp />
                 <span>
-                  A quick tour<small>How to create your story</small>
+                  {t('tour')}
+                  <small>How to create your story</small>
                 </span>
                 <ChevronRight />
               </button>
               <button onClick={() => setModal('developer')}>
                 <Code2 />
                 <span>
-                  Developer tools<small>Mock scenarios and workspace reset</small>
+                  {t('developer')}
+                  <small>Mock scenarios and workspace reset</small>
                 </span>
                 <ChevronRight />
               </button>
