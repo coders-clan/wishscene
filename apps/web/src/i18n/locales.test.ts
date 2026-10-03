@@ -85,7 +85,16 @@ describe('catalog fallback and ICU', () => {
   });
   it('preserves ICU arguments and plurals through both pseudo-locales', () => {
     for (const locale of ['en-XA', 'ar-XB']) {
-      const t = createTranslator({ locale, messages: catalogs[locale] });
+      const t = createTranslator({
+        locale,
+        messages: {
+          studio: {
+            candidateCount: catalogs[locale].studio.candidateCount,
+            disclosure: catalogs[locale].studio.disclosure,
+          },
+          common: { imagePosition: catalogs[locale].common.imagePosition },
+        },
+      });
       expect(t('studio.candidateCount', { count: 2 })).toContain('2');
       expect(t('common.imagePosition', { current: 2, count: 4 })).toContain('4');
       expect(t('studio.disclosure')).not.toBe(catalogs.en.studio.disclosure);

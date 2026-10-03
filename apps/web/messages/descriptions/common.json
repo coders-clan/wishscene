@@ -61,5 +61,10 @@
   "error_UNAUTHORIZED": "common: Sign in to continue.",
   "error_FORBIDDEN": "common: You do not have access to this action.",
   "error_INVALID_JSON": "common: The request could not be read. Try again.",
-  "error_JSON_REQUIRED": "common: The request format is not supported."
+  "error_JSON_REQUIRED": "common: The request format is not supported.",
+  "error_EXPORT_SOURCE": "common: Could not load a demo image for export.",
+  "error_EXPORT_BROWSER": "common: This browser cannot render export images.",
+  "error_EXPORT_ENCODE": "common: Could not encode an export image.",
+  "error_CAPTURE_LONG": "common: This page is too long to capture. You can still send a text report.",
+  "error_CAPTURE_LARGE": "common: Capture is too large. Choose a smaller section."
 }

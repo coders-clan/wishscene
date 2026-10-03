@@ -61,5 +61,10 @@
   "error_UNAUTHORIZED": "היכנסו כדי להמשיך.",
   "error_FORBIDDEN": "אין לכם הרשאה לפעולה הזאת.",
   "error_INVALID_JSON": "לא הצלחנו לקרוא את הבקשה. נסו שוב.",
-  "error_JSON_REQUIRED": "פורמט הבקשה אינו נתמך."
+  "error_JSON_REQUIRED": "פורמט הבקשה אינו נתמך.",
+  "error_EXPORT_SOURCE": "לא ניתן לטעון תמונת הדגמה לייצוא.",
+  "error_EXPORT_BROWSER": "הדפדפן הזה אינו תומך ביצירת תמונות לייצוא.",
+  "error_EXPORT_ENCODE": "לא ניתן ליצור את קובץ התמונה לייצוא.",
+  "error_CAPTURE_LONG": "העמוד ארוך מדי לצילום. אפשר לשלוח דיווח טקסט.",
+  "error_CAPTURE_LARGE": "הצילום גדול מדי. בחרו אזור קטן יותר."
 }

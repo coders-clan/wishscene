@@ -61,5 +61,10 @@
   "error_UNAUTHORIZED": "Sïgn ïn tö cöntïnüë.~~~~~~~",
   "error_FORBIDDEN": "Yöü dö nöt hávë áccëss tö thïs áctïön.~~~~~~~~~~~~~~",
   "error_INVALID_JSON": "Thë rëqüëst cöüld nöt bë rëád. Try ágáïn.~~~~~~~~~~~~~~~",
-  "error_JSON_REQUIRED": "Thë rëqüëst förmát ïs nöt süppörtëd.~~~~~~~~~~~~~"
+  "error_JSON_REQUIRED": "Thë rëqüëst förmát ïs nöt süppörtëd.~~~~~~~~~~~~~",
+  "error_EXPORT_SOURCE": "Cöüld nöt löád á dëmö ïmágë för ëxpört.~~~~~~~~~~~~~~",
+  "error_EXPORT_BROWSER": "Thïs bröwsër cánnöt rëndër ëxpört ïmágës.~~~~~~~~~~~~~~~",
+  "error_EXPORT_ENCODE": "Cöüld nöt ëncödë án ëxpört ïmágë.~~~~~~~~~~~~",
+  "error_CAPTURE_LONG": "Thïs págë ïs töö löng tö cáptürë. Yöü cán stïll sënd á tëxt rëpört.~~~~~~~~~~~~~~~~~~~~~~~~",
+  "error_CAPTURE_LARGE": "Cáptürë ïs töö lárgë. Chöösë á smállër sëctïön.~~~~~~~~~~~~~~~~~"
 }

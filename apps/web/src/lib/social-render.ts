@@ -1,3 +1,4 @@
+import { ClientApiError } from '@/i18n/api-error';
 import { socialPlatforms, type ExportManifest } from '@wishscene/contracts';
 
 type ExportAsset = ExportManifest['assets'][number];
@@ -14,7 +15,7 @@ async function loadSource(asset: ExportAsset) {
     let src = asset.image;
     if (asset.media === 'illustration') {
       const response = await fetch(asset.image);
-      if (!response.ok) throw new Error('Could not load a demo image for export.');
+      if (!response.ok) throw new ClientApiError('EXPORT_SOURCE');
       const svg = (await response.text()).replace(
         '<svg ',
         `<svg width="${asset.width}" height="${asset.height}" `,
@@ -24,7 +25,7 @@ async function loadSource(asset: ExportAsset) {
     const image = new Image();
     image.src = src;
     await image.decode().catch(() => {
-      throw new Error('Could not load a demo image for export.');
+      throw new ClientApiError('EXPORT_SOURCE');
     });
     return image;
   } finally {
@@ -112,7 +113,7 @@ export async function renderPostImage(
   canvas.width = width;
   canvas.height = height;
   const context = canvas.getContext('2d');
-  if (!context) throw new Error('This browser cannot render export images.');
+  if (!context) throw new ClientApiError('EXPORT_BROWSER');
   context.imageSmoothingQuality = 'high';
   context.drawImage(source, crop.x, crop.y, crop.width, crop.height, 0, 0, width, height);
 
@@ -147,7 +148,7 @@ export async function renderPostImage(
 
   return new Promise((resolve, reject) =>
     canvas.toBlob(
-      (blob) => (blob ? resolve(blob) : reject(new Error('Could not encode an export image.'))),
+      (blob) => (blob ? resolve(blob) : reject(new ClientApiError('EXPORT_ENCODE'))),
       asset.output.type,
       0.9,
     ),

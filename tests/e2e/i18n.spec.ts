@@ -16,6 +16,17 @@ for (const locale of ['en', 'he', 'en-XA', 'ar-XB']) {
     }) => {
       const t = (english: string) => copy(locale, 'studio', english);
       const f = (english: string) => copy(locale, 'feedback', english);
+      await page.addInitScript(() => {
+        const calls: { text: string; x: number; alignment: string }[] = [];
+        (window as unknown as { exportTextCalls: typeof calls }).exportTextCalls = calls;
+        const fill = CanvasRenderingContext2D.prototype.fillText;
+        CanvasRenderingContext2D.prototype.fillText = function (text, x, y, maxWidth) {
+          calls.push({ text, x, alignment: this.textAlign });
+          return maxWidth === undefined
+            ? fill.call(this, text, x, y)
+            : fill.call(this, text, x, y, maxWidth);
+        };
+      });
       const response = await page.goto('/');
       const direction = locale === 'he' || locale === 'ar-XB' ? 'rtl' : 'ltr';
       expect(await response!.text()).toMatch(
@@ -64,6 +75,20 @@ for (const locale of ['en', 'he', 'en-XA', 'ar-XB']) {
         path: `test-results/${locale}-${isMobile ? 'phone' : 'desktop'}-studio.png`,
         fullPage: true,
       });
+      const downloaded = page.waitForEvent('download');
+      await page.getByRole('button', { name: t('Export demo pack') }).click();
+      expect((await downloaded).suggestedFilename()).toBe('wishscene-tokyo-demo.zip');
+      const disclosureCalls = await page.evaluate(
+        (label) =>
+          (
+            window as unknown as {
+              exportTextCalls: { text: string; x: number; alignment: string }[];
+            }
+          ).exportTextCalls.filter((call) => call.text === label),
+        catalogs[locale].studio.disclosure,
+      );
+      expect(disclosureCalls).toHaveLength(4);
+      expect(disclosureCalls.every((call) => call.alignment === 'left' && call.x < 100)).toBe(true);
       await page.goto('/feedback');
       await expect(
         page.getByRole('heading', { name: f('Team feedback'), exact: false }),

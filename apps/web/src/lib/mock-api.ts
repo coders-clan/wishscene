@@ -48,12 +48,8 @@ export async function dispatch(request: NextRequest, path: string[]) {
   } catch (error) {
     const status = error instanceof DomainError ? error.status : 503;
     const code = error instanceof DomainError ? error.code : 'STORAGE';
-    const message =
-      error instanceof DomainError
-        ? error.message
-        : 'Workspace storage is unavailable. Please try again.';
     return NextResponse.json(
-      { error: { code, message } },
+      { error: { code } },
       { status, headers: { 'Cache-Control': 'no-store' } },
     );
   }

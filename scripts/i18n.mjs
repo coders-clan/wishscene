@@ -60,23 +60,51 @@ if (write)
     for (const k of Object.keys(he)) if (!Object.hasOwn(source[ns], k)) delete he[k];
     fs.writeFileSync(`${root}/he/${ns}.json`, JSON.stringify(he, null, 2) + '\n');
   }
-for (const ns of namespaces) {
-  const en = source[ns],
-    he = read('he', ns);
-  for (const k of Object.keys(en))
-    if (!Object.hasOwn(he, k)) errors.push(`Missing Hebrew: ${ns}.${k}`);
-  for (const [k, v] of Object.entries(he)) {
-    if (!Object.hasOwn(en, k)) errors.push(`Unexpected Hebrew: ${ns}.${k}`);
-    try {
-      parse(v);
-      if (Object.hasOwn(en, k) && argumentsOf(v) !== argumentsOf(en[k]))
-        errors.push(`Placeholder mismatch: he/${ns}.${k}`);
-    } catch (e) {
-      errors.push(`Invalid ICU: he/${ns}.${k}: ${e.message}`);
+// Validate every configured shipping locale; partial status must be explicit.
+const localeConfig = ts.createSourceFile(
+  'locales.ts',
+  fs.readFileSync('apps/web/src/i18n/locales.ts', 'utf8'),
+  ts.ScriptTarget.Latest,
+  true,
+);
+const configList = (name) => {
+  let values = [];
+  const visit = (node) => {
+    if (
+      ts.isVariableDeclaration(node) &&
+      node.name.getText(localeConfig) === name &&
+      node.initializer
+    ) {
+      let value = node.initializer;
+      if (ts.isAsExpression(value)) value = value.expression;
+      if (ts.isArrayLiteralExpression(value)) values = value.elements.map((e) => e.text);
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(localeConfig);
+  return values;
+};
+const shippedLocales = configList('supportedLocales');
+const partialLocales = configList('partialLocales');
+for (const locale of shippedLocales.filter((l) => !['en', 'en-XA', 'ar-XB'].includes(l))) {
+  for (const ns of namespaces) {
+    const en = source[ns];
+    const local = fs.existsSync(`${root}/${locale}/${ns}.json`) ? read(locale, ns) : {};
+    if (!partialLocales.includes(locale))
+      for (const k of Object.keys(en))
+        if (!Object.hasOwn(local, k)) errors.push(`Missing ${locale}: ${ns}.${k}`);
+    for (const [k, v] of Object.entries(local)) {
+      if (!Object.hasOwn(en, k)) errors.push(`Unexpected ${locale}: ${ns}.${k}`);
+      try {
+        parse(v);
+        if (Object.hasOwn(en, k) && argumentsOf(v) !== argumentsOf(en[k]))
+          errors.push(`Placeholder mismatch: ${locale}/${ns}.${k}`);
+      } catch (e) {
+        errors.push(`Invalid ICU: ${locale}/${ns}.${k}: ${e.message}`);
+      }
     }
   }
 }
-
 // Pseudo-localization modifies literals only; ICU arguments, numbers and plural logic remain valid.
 function pseudo(value, rtl) {
   const accent = (s) =>
@@ -200,6 +228,14 @@ if (write) {
     );
   }
 }
+if (!write)
+  for (const ns of namespaces) {
+    const descriptions = fs.existsSync(`${root}/descriptions/${ns}.json`)
+      ? read('descriptions', ns)
+      : {};
+    for (const key of Object.keys(source[ns]))
+      if (!descriptions[key]) errors.push(`Missing translator description: ${ns}.${key}`);
+  }
 if (errors.length) {
   console.error(errors.join('\n'));
   process.exitCode = 1;
