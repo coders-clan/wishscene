@@ -1,11 +1,13 @@
 import { test, expect } from '@playwright/test';
 
+test.use({ locale: 'he-IL' });
+
 test('Hebrew first paint, saved choice, and RTL gallery', async ({ page, context, isMobile }) => {
-  await context.setExtraHTTPHeaders({ 'Accept-Language': 'he-IL, en;q=0.5' });
   const response = await page.goto('/');
   const html = await response!.text();
-  expect(html).toContain('lang="he"');
-  expect(html).toContain('dir="rtl"');
+  expect(html).toMatch(/<html[^>]*lang="he"[^>]*dir="rtl"/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'he');
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   await expect(page.getByRole('heading', { name: 'הדמיון שלכם, בתמונה.' })).toBeVisible();
   await expect
     .poll(async () =>
