@@ -143,8 +143,10 @@ function reply(requestId: string, status: number, body: unknown) {
     headers: { 'Cache-Control': 'no-store', 'X-Request-Id': requestId },
   });
 }
-const failure = (requestId: string, status: number, code: string, message: string) =>
-  reply(requestId, status, { error: { code, message, requestId } });
+const failure = (requestId: string, status: number, code: string, message: string) => {
+  void message; // Internal call-site diagnostic; user-facing errors are localized from codes.
+  return reply(requestId, status, { error: { code, requestId } });
+};
 
 // better-call's kAPIErrorHeaderSymbol: the headers an endpoint had set before it threw.
 const API_ERROR_HEADERS = Symbol.for('better-call:api-error-headers');

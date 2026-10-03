@@ -1,4 +1,6 @@
 'use client';
+
+import { useCopy } from '@/i18n/copy';
 import { useEffect, useId, useRef } from 'react';
 import { X } from 'lucide-react';
 import { MobileSheetHandle } from '../mobile-sheet-handle';
@@ -13,6 +15,7 @@ export function FeedbackDialog({
   onClose: () => void;
   wide?: boolean;
 }) {
+  const msg = useCopy('feedback');
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   useEffect(() => {
@@ -45,7 +48,7 @@ export function FeedbackDialog({
       <div className="feedback-dialog-heading">
         <MobileSheetHandle onClose={onClose} />
         <div>
-          <p className="eyebrow">WISHSCENE · BUILD TOGETHER</p>
+          <p className="eyebrow">{msg('mcaa060f59c')}</p>
           <h2 id={titleId}>{title}</h2>
         </div>
         <button
@@ -53,7 +56,7 @@ export function FeedbackDialog({
           className="icon-button"
           data-dialog-close
           onClick={onClose}
-          aria-label="Close feedback dialog"
+          aria-label={msg('m28f939b066')}
         >
           <X />
         </button>

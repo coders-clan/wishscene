@@ -1,4 +1,6 @@
 'use client';
+
+import { useCopy } from '@/i18n/copy';
 import { useEffect, useRef, useState } from 'react';
 import type { Annotation } from '@wishscene/contracts';
 import { ArrowUpRight, Square, Pencil, Type, Undo2, Download, Copy, EyeOff } from 'lucide-react';
@@ -75,11 +77,12 @@ export function AnnotationEditor({
   marks: Annotation[];
   onChange: (marks: Annotation[]) => void;
 }) {
+  const msg = useCopy('feedback');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef<Annotation | null>(null);
   const [tool, setTool] = useState<Annotation['tool']>('rectangle');
   const [color, setColor] = useState<Annotation['color']>('#ff5263');
-  const [label, setLabel] = useState('Look here');
+  const [label, setLabel] = useState(msg('m7a925b7614'));
   const [note, setNote] = useState('');
   useEffect(() => {
     let active = true;
@@ -91,7 +94,7 @@ export function AnnotationEditor({
           canvasRef.current.getContext('2d')!.drawImage(canvas, 0, 0);
         }
       })
-      .catch(() => setNote('Screenshot could not be opened. Remove it and try another capture.'));
+      .catch(() => setNote(msg('m4bcf7bfc7f')));
     return () => {
       active = false;
     };
@@ -109,26 +112,26 @@ export function AnnotationEditor({
       if (copy) {
         const blob = await new Promise<Blob>((resolve, reject) =>
           canvas.toBlob(
-            (b) => (b ? resolve(b) : reject(new Error('Could not copy image.'))),
+            (b) => (b ? resolve(b) : reject(new Error(msg('mb1dc42859b')))),
             'image/png',
           ),
         );
         await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-        setNote('Annotated section copied.');
+        setNote(msg('m03cec76f15'));
       } else {
         const anchor = document.createElement('a');
         anchor.href = canvas.toDataURL('image/jpeg', 0.9);
         anchor.download = 'wishscene-feedback.jpg';
         anchor.click();
-        setNote('Annotated section downloaded.');
+        setNote(msg('m69cf8a5dd7'));
       }
     } catch {
-      setNote('Copy is unavailable in this browser. Use Download image.');
+      setNote(msg('m09cca6ed16'));
     }
   }
   return (
     <div className="feedback-editor">
-      <div className="feedback-tools" aria-label="Annotation tools">
+      <div className="feedback-tools" aria-label={msg('m8ea1801dd0')}>
         {tools.map((t) => (
           <button
             type="button"
@@ -138,7 +141,7 @@ export function AnnotationEditor({
             onClick={() => setTool(t.id)}
           >
             <t.icon size={17} />
-            {t.label}
+            {msg(`enum_${t.id}`)}
           </button>
         ))}
         <button
@@ -148,7 +151,7 @@ export function AnnotationEditor({
           disabled={!marks.length}
         >
           <Undo2 size={17} />
-          Undo
+          {msg('m39fc721248')}
         </button>
       </div>
       <div className="feedback-tools">
@@ -158,29 +161,27 @@ export function AnnotationEditor({
             type="button"
             className={`feedback-color ${color === c ? 'active' : ''}`}
             style={{ background: c }}
-            aria-label={['Red ink', 'Purple ink', 'Yellow ink', 'Green ink'][i]}
+            aria-label={
+              [msg('m3f32672178'), msg('m33f13fdb89'), msg('m55aafc9905'), msg('m7a56564137')][i]
+            }
             aria-pressed={color === c}
             onClick={() => setColor(c)}
           />
         ))}
         {tool === 'text' && (
           <input
-            aria-label="Annotation text"
+            aria-label={msg('mff8fb98f40')}
             value={label}
             maxLength={120}
             onChange={(e) => setLabel(e.target.value)}
           />
         )}
-        <span>
-          {tool === 'redact'
-            ? 'Drag over anything you want hidden.'
-            : 'Drag to mark. Choose Text, then tap to place a note.'}
-        </span>
+        <span>{tool === 'redact' ? msg('mc0b2eb8345') : msg('m71317b86c3')}</span>
       </div>
       <canvas
         ref={canvasRef}
         className="feedback-canvas"
-        aria-label="Screenshot annotation canvas"
+        aria-label={msg('me65df79cf5')}
         onPointerDown={(e) => {
           if (marks.length >= 50) return;
           e.currentTarget.setPointerCapture(e.pointerId);
@@ -219,13 +220,13 @@ export function AnnotationEditor({
       <div className="feedback-tools">
         <button type="button" className="button" onClick={() => void download(true)}>
           <Copy size={17} />
-          Copy image
+          {msg('m883f2df073')}
         </button>
         <button type="button" className="button" onClick={() => void download(false)}>
           <Download size={17} />
-          Download image
+          {msg('md6f34a97a5')}
         </button>
-        <small>{marks.length}/50 marks · Hidden areas are removed from the uploaded image.</small>
+        <small>{msg('markCount', { count: marks.length })}</small>
       </div>
       {note && <p role="status">{note}</p>}
     </div>

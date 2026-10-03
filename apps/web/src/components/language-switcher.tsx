@@ -1,16 +1,19 @@
 'use client';
+import { useHasUnsavedChanges } from '@/i18n/unsaved';
 
 import { useId, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { localeNames, supportedLocales } from '@/i18n/locales';
+import { localeName, supportedLocales } from '@/i18n/locales';
 
 export function LanguageSwitcher() {
+  const hasUnsaved = useHasUnsavedChanges();
   const id = useId();
   const locale = useLocale();
   const t = useTranslations('common');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
   async function change(value: string) {
+    if (hasUnsaved() && !window.confirm(t('discardLocale'))) return;
     setBusy(true);
     setError(false);
     try {
@@ -38,7 +41,7 @@ export function LanguageSwitcher() {
       >
         {supportedLocales.map((value) => (
           <option key={value} value={value} lang={value}>
-            {localeNames[value]}
+            {localeName(value)}
           </option>
         ))}
       </select>

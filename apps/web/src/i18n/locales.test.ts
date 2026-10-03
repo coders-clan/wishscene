@@ -46,3 +46,52 @@ describe('locale foundation', () => {
     expect((await POST(request('{"locale":"he"}', 'https://other.test'))).status).toBe(403);
   });
 });
+
+import { mergeMessages } from './messages';
+import { catalogs } from './catalogs';
+import { localeName } from './locales';
+
+describe('catalog fallback and ICU', () => {
+  it('falls back per key and namespace, warning only for missing entries', () => {
+    const missing: string[] = [];
+    const messages = mergeMessages(
+      { common: { hello: 'Hello', goodbye: 'Goodbye' }, studio: { save: 'Save' } },
+      { common: { hello: 'שלום' } },
+      (ns, key) => missing.push(`${ns}.${key}`),
+    );
+    expect(messages).toEqual({
+      common: { hello: 'שלום', goodbye: 'Goodbye' },
+      studio: { save: 'Save' },
+    });
+    expect(missing).toEqual(['common.goodbye', 'studio.save']);
+  });
+  it('uses all six Arabic cardinal categories and locale numbers', () => {
+    const t = createTranslator({
+      locale: 'ar',
+      messages: {
+        count: '{n, plural, zero {zero} one {one} two {two} few {few} many {many} other {other}}',
+        number: '{n, number}',
+      },
+    });
+    expect([0, 1, 2, 3, 11, 100].map((n) => t('count', { n }))).toEqual([
+      'zero',
+      'one',
+      'two',
+      'few',
+      'many',
+      'other',
+    ]);
+    expect(t('number', { n: 1234.5 })).toBe(new Intl.NumberFormat('ar').format(1234.5));
+  });
+  it('preserves ICU arguments and plurals through both pseudo-locales', () => {
+    for (const locale of ['en-XA', 'ar-XB']) {
+      const t = createTranslator({ locale, messages: catalogs[locale] });
+      expect(t('studio.candidateCount', { count: 2 })).toContain('2');
+      expect(t('common.imagePosition', { current: 2, count: 4 })).toContain('4');
+      expect(t('studio.disclosure')).not.toBe(catalogs.en.studio.disclosure);
+    }
+    expect(localeDirection('ar-XB')).toBe('rtl');
+    expect(localeName('he')).toBe('עברית');
+    expect(localeName('en')).toBe('English');
+  });
+});

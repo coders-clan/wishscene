@@ -1,13 +1,31 @@
 export const localeCookie = 'wishscene_locale';
-export const supportedLocales = ['en', 'he'] as const;
+export const supportedLocales = ['en', 'he', 'en-XA', 'ar-XB'] as const;
 export type Locale = (typeof supportedLocales)[number];
-export const localeNames: Record<Locale, string> = { en: 'English', he: 'עברית' };
+/** Only explicitly partial locales may omit source keys. */
+export const partialLocales: readonly string[] = [];
+export function localeName(locale: string): string {
+  if (locale === 'en-XA') return 'Accented (test)';
+  if (locale === 'ar-XB') return 'العربية (اختبار)';
+  return new Intl.DisplayNames([locale], { type: 'language' }).of(locale) ?? locale;
+}
 
 export function matchLocale(value?: string): Locale | undefined {
   if (!value) return undefined;
   try {
-    const language = new Intl.Locale(value).language;
-    return supportedLocales.find((locale) => locale === language);
+    const canonical = new Intl.Locale(value).toString();
+    const exact = supportedLocales.find(
+      (locale) => locale.toLowerCase() === canonical.toLowerCase(),
+    );
+    if (exact) return exact;
+    const parts = canonical.split('-');
+    while (parts.length > 1) {
+      parts.pop();
+      const match = supportedLocales.find(
+        (locale) => locale.toLowerCase() === parts.join('-').toLowerCase(),
+      );
+      if (match) return match;
+    }
+    return undefined;
   } catch {
     return undefined;
   }

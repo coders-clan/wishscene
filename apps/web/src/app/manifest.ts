@@ -1,12 +1,18 @@
+import { getLocale, getTranslations } from 'next-intl/server';
+import { localeDirection } from '@/i18n/locales';
 import type { MetadataRoute } from 'next';
 
-export default function manifest(): MetadataRoute.Manifest {
+export const dynamic = 'force-dynamic';
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const t = await getTranslations('metadata');
+  const locale = await getLocale();
   return {
     id: '/',
-    name: 'wishscene',
-    short_name: 'wishscene',
-    description:
-      'Imagine an experience, shape a story, and make the scene. Your imagination, in frame.',
+    name: t('manifestName'),
+    short_name: t('manifestName'),
+    description: t('manifestDescription'),
+    lang: locale,
+    dir: localeDirection(locale),
     start_url: '/',
     scope: '/',
     display: 'standalone',

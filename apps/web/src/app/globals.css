@@ -19,6 +19,10 @@
     -apple-system,
     BlinkMacSystemFont,
     'Segoe UI',
+    'Noto Sans Hebrew',
+    'Noto Sans Arabic',
+    'Noto Sans CJK SC',
+    'Noto Sans Devanagari',
     sans-serif;
   color: var(--ink);
   background: var(--paper);
@@ -1468,7 +1472,7 @@ textarea {
 .toast {
   position: fixed;
   bottom: 24px;
-  left: calc(50% + 120px);
+  left: calc(50% + 120px); /* i18n-physical: centered element uses translateX(-50%). */
   transform: translateX(-50%);
   background: #282033;
   color: white;
@@ -2638,7 +2642,7 @@ textarea {
     padding: 0 24px;
   }
   .toast {
-    left: calc(50% + 36px);
+    left: calc(50% + 36px); /* i18n-physical: centered element uses translateX(-50%). */
   }
   .scene-grid {
     gap: 20px;
@@ -2805,7 +2809,7 @@ textarea {
     gap: 8px;
   }
   .toast {
-    left: 50%;
+    left: 50%; /* i18n-physical: centered element uses translateX(-50%). */
     bottom: 18px;
     width: max-content;
     padding: 10px 12px;
@@ -2910,11 +2914,11 @@ textarea {
   transform: scaleX(-1);
 }
 [dir='rtl'] .toast {
-  left: calc(50% - 120px);
+  left: calc(50% - 120px); /* i18n-physical: centered element uses translateX(-50%). */
 }
 @media (max-width: 1100px) {
   [dir='rtl'] .toast {
-    left: calc(50% - 36px);
+    left: calc(50% - 36px); /* i18n-physical: centered element uses translateX(-50%). */
   }
 }
 @media (max-width: 600px) {
@@ -2925,6 +2929,17 @@ textarea {
     padding: 12px;
   }
   [dir='rtl'] .toast {
-    left: 50%;
+    left: 50%; /* i18n-physical: centered element uses translateX(-50%). */
   }
+}
+
+.platform-preview-image,
+.crop-stage,
+.crop-position input,
+.wordmark,
+.mobile-brand {
+  direction: ltr;
+}
+.preview-disclosure {
+  direction: ltr;
 }

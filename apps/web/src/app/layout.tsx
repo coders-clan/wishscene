@@ -1,3 +1,4 @@
+import { UnsavedChangesProvider } from '@/i18n/unsaved';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { localeDirection } from '../i18n/locales';
@@ -32,9 +33,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       </head>
       <body>
         <NextIntlClientProvider>
-          {children}
-          <FeedbackLauncher />
-          <InstallApp />
+          <UnsavedChangesProvider>
+            {children}
+            <FeedbackLauncher />
+            <InstallApp />
+          </UnsavedChangesProvider>
         </NextIntlClientProvider>
       </body>
     </html>

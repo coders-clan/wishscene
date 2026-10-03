@@ -1,5 +1,8 @@
 'use client';
 
+import { ClientApiError } from '@/i18n/api-error';
+import { useUnsavedChanges } from '@/i18n/unsaved';
+import { useCopy } from '@/i18n/copy';
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
   ArrowDownToLine,
@@ -65,19 +68,11 @@ async function api<T>(path: string, method = 'GET', payload?: unknown): Promise<
     cache: 'no-store',
   });
   const value = await response.json();
-  if (!response.ok) throw new Error(value.error?.message ?? 'Something went wrong. Try again.');
+  if (!response.ok) throw new ClientApiError(value.error?.code ?? 'GENERIC');
   return value;
 }
 const moods: ExperienceInput['mood'][] = ['After hours', 'Slow living', 'Golden hour', 'Adventure'];
 const destinations: ExperienceInput['destination'][] = ['Tokyo', 'Kyoto', 'Amalfi', 'Iceland'];
-const statusLabels = {
-  approved: 'Approved',
-  review: 'Ready to review',
-  draft: 'Ready to create',
-  generating: 'Creating your scene',
-  failed: 'Try again',
-  stale: 'Story updated',
-};
 const activeJob = (status: string) => status === 'queued' || status === 'running';
 type Modal =
   | 'new'
@@ -98,6 +93,8 @@ function DemoLookFields({
   destination: ExperienceInput['destination'];
   initial?: Pick<ExperienceInput, 'outfit' | 'mood'>;
 }) {
+  const msg = useCopy('studio');
+  const demo = useCopy('demo');
   const preset = demoPresets[destination];
   const [outfit, setOutfit] = useState(initial?.outfit ?? preset.outfit);
   const [mood, setMood] = useState<ExperienceInput['mood']>(initial?.mood ?? preset.mood);
@@ -105,7 +102,7 @@ function DemoLookFields({
   return (
     <>
       <label>
-        Your look
+        {msg('mb70b4cb228')}
         <input
           name="outfit"
           value={outfit}
@@ -116,24 +113,22 @@ function DemoLookFields({
         />
       </label>
       <label>
-        The feeling
+        {msg('me4d2b11047')}
         <select
           name="mood"
           value={mood}
           onChange={(event) => setMood(event.target.value as ExperienceInput['mood'])}
         >
           {moods.map((value) => (
-            <option key={value}>{value}</option>
+            <option key={value} value={value}>
+              {demo(value.replaceAll(' ', '_'))}
+            </option>
           ))}
         </select>
       </label>
       <div className="preset-note" aria-live="polite">
-        <strong>{matched ? 'Photo preset matched' : 'Custom developer settings'}</strong>
-        <p>
-          {matched
-            ? `Four pre-generated ${destination} photos share this look and the same fictional man. Regenerating reuses these photos.`
-            : 'Custom settings use illustrated placeholders; they do not change the person’s clothes or lighting. Live AI generation is a future feature.'}
-        </p>
+        <strong>{matched ? msg('md2828392f0') : msg('m88f26ff67b')}</strong>
+        <p>{matched ? msg('m7b835a175f', { v0: destination }) : msg('m81ebc5142b')}</p>
         {!matched && (
           <button
             type="button"
@@ -143,7 +138,8 @@ function DemoLookFields({
               setMood(preset.mood);
             }}
           >
-            Use {destination} photo preset
+            {msg('m1d4d43cc6f')}
+            {destination} {msg('med35534087')}
           </button>
         )}
       </div>
@@ -164,6 +160,7 @@ function ModalFrame({
   children: ReactNode;
   wide?: boolean;
 }) {
+  const msg = useCopy('studio');
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const dialog = ref.current!;
@@ -194,7 +191,7 @@ function ModalFrame({
             {eyebrow && <p className="eyebrow">{eyebrow}</p>}
             <h2 id="modal-title">{title}</h2>
           </div>
-          <button className="icon-button" onClick={onClose} aria-label="Close dialog">
+          <button className="icon-button" onClick={onClose} aria-label={msg('m7b29020292')}>
             <X size={20} />
           </button>
         </div>
@@ -205,6 +202,8 @@ function ModalFrame({
 }
 
 export default function Studio() {
+  const msg = useCopy('studio');
+  const demo = useCopy('demo');
   const t = useTranslations('common');
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [experienceId, setExperienceId] = useState('tokyo-after-hours');
@@ -220,6 +219,8 @@ export default function Studio() {
   const [captionDirty, setCaptionDirty] = useState(false);
   const [socialDirty, setSocialDirty] = useState(false);
   const [packDirty, setPackDirty] = useState(false);
+  const [formDirty, setFormDirty] = useState(false);
+  useUnsavedChanges(captionDirty || socialDirty || packDirty || formDirty);
   const [packCover, setPackCover] = useState<PackCover | null>(null);
   const [socialSceneId, setSocialSceneId] = useState<string | null>(null);
   // Phones show one part of Posts at a time so each fits the screen; desktop shows all four.
@@ -240,7 +241,7 @@ export default function Studio() {
   }, []);
   useEffect(() => {
     mounted.current = true;
-    void refresh().catch((e) => setError(e.message));
+    void refresh().catch((e) => setError(msg.error(e)));
     return () => {
       mounted.current = false;
     };
@@ -249,7 +250,7 @@ export default function Studio() {
   useEffect(() => {
     if (!hasJobs) return;
     const timer = setInterval(() => {
-      void refresh().catch((e) => setError(e.message));
+      void refresh().catch((e) => setError(msg.error(e)));
     }, 650);
     return () => clearInterval(timer);
   }, [hasJobs, refresh]);
@@ -279,12 +280,15 @@ export default function Studio() {
       await action();
       await refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Please try again.');
+      setError(msg.error(e));
     } finally {
       setBusy(false);
     }
   };
-  const close = () => setModal(null);
+  const close = () => {
+    setFormDirty(false);
+    setModal(null);
+  };
   // Apply the returned sign-in state directly; a refresh can be skipped while a job poll is in flight.
   const demoAuth = (path: string, payload: unknown, message: string) =>
     run(async () => {
@@ -309,7 +313,7 @@ export default function Studio() {
         assetId: asset.id,
         expectedVersion: experience!.bibleVersion,
       });
-      setNotice('Scene approved. Looking good.');
+      setNotice(msg('m6b2fb75bdb'));
     });
   const exportPack = () =>
     run(async () => {
@@ -325,21 +329,33 @@ export default function Studio() {
       const zip = new JSZip();
       zip.file('manifest.json', JSON.stringify(manifest, null, 2));
       zip.file('caption.txt', manifest.caption);
-      zip.file(
-        'README.txt',
-        `${manifest.provenance}\n\nThese are bundled demo fixtures, not newly generated images.\nimages/ holds one post-ready JPEG per scene in carousel order (01 is the cover), cropped to its platform format at the pixel size recorded in manifest.json, with an AI-created label drawn on the image.\noriginals/ holds the unedited approved fixtures.\nposts/ holds each image's caption. Nothing was published to a social account.\n`,
-      );
+      zip.file('README.txt', msg('m84c5cffd52', { v0: manifest.provenance }));
       await Promise.all(
         manifest.assets.map(async (asset) => {
           const response = await fetch(asset.image);
-          if (!response.ok) throw new Error('Could not fetch a demo image.');
+          if (!response.ok) throw new Error(msg('md2d72af867'));
           zip.file(asset.filename, await response.arrayBuffer());
-          zip.file(asset.output.filename, await renderPostImage(asset, manifest.coverTitle));
+          zip.file(
+            asset.output.filename,
+            await renderPostImage(asset, manifest.coverTitle, msg('disclosure')),
+          );
           const { output, social } = asset;
           const stem = output.filename.slice(output.filename.lastIndexOf('/') + 1, -'.jpg'.length);
           zip.file(
             `posts/${stem}.txt`,
-            `${socialPlatforms[social.platform].label}\nScene: ${asset.title}\nImage: ${output.filename} (${output.width}×${output.height}, ${output.aspectRatio})\n\n${social.caption}\n\n${socialPlatforms[social.platform].vertical && social.overlayText ? `Text on image: ${social.overlayText}\n` : ''}AI-created fictional scene.\n`,
+            msg('mb64d5d8753', {
+              v0: msg(`platform_${social.platform}`),
+              v1: asset.title,
+              v2: output.filename,
+              v3: output.width,
+              v4: output.height,
+              v5: output.aspectRatio,
+              v6: social.caption,
+              v7:
+                socialPlatforms[social.platform].vertical && social.overlayText
+                  ? msg('exportOverlay', { text: social.overlayText })
+                  : '',
+            }),
           );
         }),
       );
@@ -349,12 +365,12 @@ export default function Studio() {
       link.download = `wishscene-${manifest.destination.toLowerCase()}-demo.zip`;
       link.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-      setNotice('Your demo image pack is ready.');
+      setNotice(msg('m8eab16f6d2'));
     });
   const submitExperience = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (socialDirty || packDirty) {
-      setError('Save your post drafts and carousel before creating an experience.');
+      setError(msg('m17453d4efa'));
       return;
     }
     const data = new FormData(e.currentTarget);
@@ -363,13 +379,13 @@ export default function Studio() {
       setExperienceId(created.id);
       setTab('storyboard');
       close();
-      setNotice('A new story, waiting to happen.');
+      setNotice(msg('m49022e1e94'));
     });
   };
   const submitStory = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (socialDirty) {
-      setError('Save your post drafts before changing the story.');
+      setError(msg('m1870958a4d'));
       return;
     }
     const data = new FormData(e.currentTarget);
@@ -379,12 +395,12 @@ export default function Studio() {
         expectedVersion: experience!.bibleVersion,
       });
       close();
-      setNotice('Story saved. Changed scenes are ready to regenerate.');
+      setNotice(msg('m579fee9ecb'));
     });
   };
   const selectExperience = (id: string) => {
     if ((socialDirty || packDirty) && id !== experienceId) {
-      setError('Save your post drafts and carousel before switching experiences.');
+      setError(msg('m2b1f80a10b'));
       return;
     }
     setExperienceId(id);
@@ -407,7 +423,8 @@ export default function Studio() {
           <span className="brand-icon">
             <Sparkles size={21} />
           </span>
-          wishscene<span className="brand-dot">.</span>
+          {msg('mff43274984')}
+          <span className="brand-dot">.</span>
         </a>
         <div className="workspace-label">{t('creativeSpace')}</div>
         <nav aria-label={t('navigation')}>
@@ -438,12 +455,14 @@ export default function Studio() {
         <div className="sidebar-note">
           <span className="small-spark">✳</span>
           <h3>
-            A little imagination.
-            <br />A whole new world.
+            {msg('mbeaab15203')}
+            <br />
+            {msg('m00e0448cb9')}
           </h3>
-          <p>Start with a place you wish you could be.</p>
+          <p>{msg('mdd216c3215')}</p>
           <button onClick={() => setModal('new')}>
-            Make a new scene <ArrowRight size={15} />
+            {msg('me9ae293dcc')}
+            <ArrowRight size={15} />
           </button>
         </div>
         <div className="sidebar-bottom">
@@ -456,9 +475,9 @@ export default function Studio() {
             {t('tour')}
           </button>
           <div className="profile">
-            <span className="avatar">A</span>
+            <span className="avatar">{msg('m6dcd4ce23d')}</span>
             <div>
-              <strong>Alex Morgan</strong>
+              <strong>{msg('mab9944bc64')}</strong>
               <span>{account?.email ?? t('demoWorkspace')}</span>
             </div>
             <span className="profile-dot" />
@@ -468,7 +487,8 @@ export default function Studio() {
       <div className="main-shell">
         <header className="topbar">
           <a className="mobile-brand" href="/" aria-label={t('home')}>
-            <Sparkles size={20} /> wishscene<span>.</span>
+            <Sparkles size={20} /> {msg('mff43274984')}
+            <span>.</span>
           </a>
           <div className="breadcrumb">
             {t('workspace')} <ChevronRight size={14} />
@@ -517,7 +537,7 @@ export default function Studio() {
           {error && (
             <div className="error-banner" role="alert">
               <span>{error}</span>
-              <button onClick={() => setError('')} aria-label="Dismiss error">
+              <button onClick={() => setError('')} aria-label={msg('m347aaa77ff')}>
                 <X size={16} />
               </button>
             </div>
@@ -525,14 +545,14 @@ export default function Studio() {
           {!experience ? (
             <section className="loading-state">
               <Sparkles size={40} />
-              <h2>{error ? 'Let’s reconnect your studio.' : 'Setting the scene…'}</h2>
-              <p>Your demo workspace is loading.</p>
+              <h2>{error ? msg('m322e7bf08d') : msg('mace3708c50')}</h2>
+              <p>{msg('m470a30a7bf')}</p>
               {error && (
                 <button
                   className="button"
-                  onClick={() => void refresh().catch((e) => setError(e.message))}
+                  onClick={() => void refresh().catch((e) => setError(msg.error(e)))}
                 >
-                  Retry
+                  {msg('m9f5cd8a2e8')}
                 </button>
               )}
             </section>
@@ -545,19 +565,21 @@ export default function Studio() {
                   </span>
                   <div>
                     <button className="title-button" onClick={() => setModal('library')}>
-                      <h2>{experience.title}</h2>
+                      <h2 dir="auto">{experience.title}</h2>
                       <ChevronDown size={19} />
                     </button>
                     <p>
                       <MapPin size={12} />
-                      {experience.destination} <span>·</span>4 scenes <span>·</span>Fictional
-                      experience
+                      {experience.destination} <span>·</span>
+                      {msg('m043f0bcaf0')}
+                      <span>·</span>
+                      {msg('m58129edb79')}
                     </p>
                   </div>
                 </div>
                 <button className="button subtle" onClick={() => setModal('story')}>
                   <Settings2 size={16} />
-                  Story settings
+                  {msg('m4ecc309963')}
                 </button>
               </section>
               <div
@@ -566,49 +588,47 @@ export default function Studio() {
               >
                 <button
                   className="story-title"
-                  aria-label="Story details"
+                  aria-label={msg('mac4205ae58')}
                   aria-expanded={storyExpanded}
                   onClick={() => setStoryExpanded((value) => !value)}
                 >
                   <BookOpen size={17} />
-                  <strong>Story Bible</strong>
-                  <span className="version">v{experience.bibleVersion}</span>
+                  <strong>{msg('m93dbf1b6fd')}</strong>
+                  <span className="version">
+                    {msg('version', { version: experience.bibleVersion })}
+                  </span>
                   <ChevronDown size={16} className="mobile-story-chevron" />
                 </button>
                 <div className="story-detail">
-                  <span>CAST</span>
-                  <strong>Alex Morgan</strong>
+                  <span>{msg('m274ad8f838')}</span>
+                  <strong>{msg('mab9944bc64')}</strong>
                 </div>
                 <div className="story-detail outfit">
-                  <span>LOOK</span>
+                  <span>{msg('mde42400c95')}</span>
                   <strong>{experience.outfit}</strong>
                 </div>
                 <div className="story-detail">
-                  <span>FEEL</span>
+                  <span>{msg('mfca272339c')}</span>
                   <strong>{experience.mood}</strong>
                 </div>
                 <span className="story-consistency">
                   <Check size={14} />
-                  One story, all scenes
+                  {msg('m72be53cd18')}
                 </span>
               </div>
               <div className={`demo-photo-note ${photoPreset ? '' : 'custom'}`}>
                 <ImageIcon size={15} />
-                <span>
-                  {photoPreset
-                    ? 'Photo preset · Same fictional Alex, matching look · Pre-generated AI images'
-                    : 'Custom settings · Illustrated placeholders do not render your outfit or mood'}
-                </span>
+                <span>{photoPreset ? msg('mee0e54992d') : msg('ma680ea9a63')}</span>
                 {!photoPreset && (
                   <button type="button" onClick={() => setModal('story')}>
-                    Choose photo preset
+                    {msg('m7479e1e9f8')}
                   </button>
                 )}
               </div>
               <div className="section-tabs">
                 <div
                   role="tablist"
-                  aria-label="Experience output"
+                  aria-label={msg('m249e09da7e')}
                   onKeyDown={(event) => {
                     const tabs = ['storyboard', 'social', 'motion'] as const;
                     const index = tabs.indexOf(tab);
@@ -639,7 +659,8 @@ export default function Studio() {
                     onClick={() => setTab('storyboard')}
                   >
                     <ImageIcon size={16} />
-                    Storyboard<span>04</span>
+                    {msg('m7c293d6707')}
+                    <span>04</span>
                   </button>
                   <button
                     role="tab"
@@ -651,7 +672,7 @@ export default function Studio() {
                     onClick={() => setTab('social')}
                   >
                     <Layers3 size={16} />
-                    Social pack
+                    {msg('m4341dbd9d9')}
                   </button>
                   <button
                     role="tab"
@@ -663,20 +684,21 @@ export default function Studio() {
                     onClick={() => setTab('motion')}
                   >
                     <Film size={16} />
-                    Motion<span className="soon">NEXT</span>
+                    {msg('me040db2b7f')}
+                    <span className="soon">{msg('m1992d5e8d5')}</span>
                   </button>
                 </div>
                 <span className="saved-state">
                   <span />
-                  In this demo session
+                  {msg('m7464109985')}
                 </span>
               </div>
               {tab === 'storyboard' && (
                 <section role="tabpanel" id="panel-storyboard" aria-labelledby="tab-storyboard">
                   <div className="board-heading">
                     <div>
-                      <h3>Four moments. One story.</h3>
-                      <p>Make each scene yours, then bring it all together.</p>
+                      <h3>{msg('m20e1bd8099')}</h3>
+                      <p>{msg('m724255b6b5')}</p>
                     </div>
                     <button
                       className="button"
@@ -692,15 +714,19 @@ export default function Studio() {
                             (s) => s.status !== 'approved' && s.status !== 'generating',
                           ))
                             await generate(item);
-                          setNotice('Your scenes are on their way.');
+                          setNotice(msg('m52991999ac'));
                         })
                       }
                     >
                       <WandSparkles size={16} />
-                      Generate remaining
+                      {msg('m4b37633aa3')}
                     </button>
                   </div>
-                  <MobileGallery key={experience.id} className="scene-grid" label="Scene gallery">
+                  <MobileGallery
+                    key={experience.id}
+                    className="scene-grid"
+                    label={msg('me1bc9251ce')}
+                  >
                     {experience.scenes.map((item, i) => {
                       const currentAssets = item.assets.filter(
                         (asset) => asset.bibleVersion === experience.bibleVersion,
@@ -718,19 +744,23 @@ export default function Studio() {
                           <button
                             className="scene-image-button"
                             onClick={() => openScene(item)}
-                            aria-label={`Review ${item.title}`}
+                            aria-label={msg('m82e982f8e8', { v0: item.title })}
                           >
                             {/* Bundled photo presets and labeled illustration fallbacks work offline. */}
                             <img
                               src={cover?.image ?? demoPreview(experience, item)}
-                              alt={`${photoPreset ? 'AI-created photo of fictional Alex' : 'Illustrated placeholder'}: ${item.title} in ${experience.destination}`}
+                              alt={msg('m1486f9f1a7', {
+                                v0: photoPreset ? msg('mf98858380a') : msg('mdb8257bad8'),
+                                v1: item.title,
+                                v2: experience.destination,
+                              })}
                               width={600}
                               height={800}
                             />
                             <span className="scene-number">0{i + 1}</span>
                             <span className={`scene-badge ${item.status}`}>
                               {item.status === 'approved' && <Check size={12} />}{' '}
-                              {statusLabels[item.status]}
+                              {msg(`status_${item.status}`)}
                             </span>
                             {item.status === 'draft' && (
                               <span className="draft-overlay">
@@ -738,44 +768,42 @@ export default function Studio() {
                                   <Sparkles size={28} />
                                 </span>
                                 <strong>
-                                  A moment waiting
+                                  {msg('m13f4e56575')}
                                   <br />
-                                  to happen.
+                                  {msg('m34494a6d67')}
                                 </strong>
-                                <span>Make the scene yours</span>
+                                <span>{msg('m499d9d4c42')}</span>
                               </span>
                             )}
                             {item.status === 'generating' && (
                               <span className="draft-overlay generating-overlay">
                                 <Loader2 className="spin" size={32} />
-                                <strong>Setting the scene…</strong>
+                                <strong>{msg('mace3708c50')}</strong>
                                 <span>
-                                  {scenario === 'slow'
-                                    ? 'Taking the scenic route'
-                                    : 'A little imagination at work'}
+                                  {scenario === 'slow' ? msg('mfb9bdd0ad9') : msg('m886bf448cb')}
                                 </span>
                               </span>
                             )}
                             {item.status === 'stale' && (
                               <span className="stale-overlay">
-                                Your story changed.
+                                {msg('m35560f855e')}
                                 <br />
-                                Let’s make it match.
+                                {msg('mc3129be234')}
                               </span>
                             )}
                             <span className="scene-time">
                               {item.time}{' '}
-                              <span>JOURNAL / {experience.destination.toUpperCase()}</span>
+                              <span>
+                                {msg('m94e09bb704')}
+                                {demo(experience.destination)}
+                              </span>
                             </span>
                           </button>
                           <div className="scene-caption">
                             <h4>{item.title}</h4>
                             <p>{item.shot}</p>
                             <div className="scene-actions">
-                              <span>
-                                {currentAssets.length}{' '}
-                                {currentAssets.length === 1 ? 'candidate' : 'candidates'}
-                              </span>
+                              <span>{msg('candidateCount', { count: currentAssets.length })}</span>
                               {job ? (
                                 <button
                                   disabled={busy}
@@ -785,7 +813,8 @@ export default function Studio() {
                                     })
                                   }
                                 >
-                                  Cancel <X size={13} />
+                                  {msg('m77dfd2135f')}
+                                  <X size={13} />
                                 </button>
                               ) : (
                                 <button
@@ -797,10 +826,10 @@ export default function Studio() {
                                   }
                                 >
                                   {item.status === 'approved'
-                                    ? 'View scene'
+                                    ? msg('m4254ee3b40')
                                     : item.status === 'review'
-                                      ? 'Review scene'
-                                      : 'Generate'}
+                                      ? msg('m94c39e1df2')
+                                      : msg('mfc45f9b7a9')}
                                   {['draft', 'stale', 'failed'].includes(item.status) ? (
                                     <Sparkles size={14} />
                                   ) : (
@@ -811,7 +840,7 @@ export default function Studio() {
                             </div>
                             <button
                               className="scene-compose-button"
-                              aria-label={`Create post for ${item.title}`}
+                              aria-label={msg('m054d3d2e94', { v0: item.title })}
                               onClick={() => {
                                 setSocialSceneId(item.id);
                                 setPostView('write');
@@ -823,7 +852,8 @@ export default function Studio() {
                                 );
                               }}
                             >
-                              <Layers3 size={18} /> Create post <ArrowRight size={16} />
+                              <Layers3 size={18} /> {msg('ma7cb26984a')}
+                              <ArrowRight size={16} />
                             </button>
                           </div>
                         </article>
@@ -833,11 +863,9 @@ export default function Studio() {
                   <div className="board-footer">
                     <span>
                       <span className="mock-dot" />
-                      {photoPreset
-                        ? 'Pre-generated photo presets · no live AI calls'
-                        : 'Illustrated developer fixtures · custom settings are not rendered'}
+                      {photoPreset ? msg('m22a1472bf3') : msg('mb341c1802c')}
                     </span>
-                    <span>Made for your imagination.</span>
+                    <span>{msg('m7ebada6bee')}</span>
                   </div>
                 </section>
               )}
@@ -848,13 +876,13 @@ export default function Studio() {
                 aria-labelledby="tab-social"
                 data-post-view={postView}
               >
-                <div className="mobile-post-views" role="group" aria-label="Post view">
+                <div className="mobile-post-views" role="group" aria-label={msg('m495b2d1016')}>
                   {(
                     [
-                      ['write', 'Write post'],
-                      ['preview', 'Preview'],
-                      ['carousel', 'Carousel'],
-                      ['caption', 'Pack caption'],
+                      ['write', msg('m79c92c107a')],
+                      ['preview', msg('mf1fbb2b43d')],
+                      ['carousel', msg('mf1f842e195')],
+                      ['caption', msg('m0dc93d0d2e')],
                     ] as const
                   ).map(([view, label]) => (
                     <button
@@ -905,13 +933,11 @@ export default function Studio() {
                 />
                 <section className="pack-caption">
                   <h3>
-                    Whole-pack caption <span>Optional</span>
+                    {msg('m71890eecb0')}
+                    <span>{msg('m0c6c4102d4')}</span>
                   </h3>
-                  <p>
-                    One extra caption for the complete story. Your per-image posts keep their own
-                    text.
-                  </p>
-                  <label htmlFor="caption">Your caption</label>
+                  <p>{msg('me754da2872')}</p>
+                  <label htmlFor="caption">{msg('m109d4e0b30')}</label>
                   <textarea
                     id="caption"
                     rows={6}
@@ -923,7 +949,7 @@ export default function Studio() {
                     }}
                   />
                   <div className="caption-actions">
-                    <span>{caption.length}/2200</span>
+                    <span>{msg('captionCount', { count: caption.length })}</span>
                     <button
                       className="button"
                       disabled={busy || !captionDirty}
@@ -931,18 +957,14 @@ export default function Studio() {
                         void run(async () => {
                           await api(`experiences/${experience.id}/caption`, 'PATCH', { caption });
                           setCaptionDirty(false);
-                          setNotice('Caption saved.');
+                          setNotice(msg('m3c83083a8c'));
                         })
                       }
                     >
-                      Save caption
+                      {msg('m86885b74be')}
                     </button>
                   </div>
-                  <p className="fine-print">
-                    The ZIP includes a post-ready crop of each image in carousel order, the
-                    originals, per-image post text, this caption, and a provenance manifest with
-                    exact image sizes. Direct posting is future work.
-                  </p>
+                  <p className="fine-print">{msg('m3e5d6a479e')}</p>
                 </section>
               </section>
               {tab === 'motion' && (
@@ -955,18 +977,15 @@ export default function Studio() {
                   <span className="motion-icon">
                     <Film size={40} />
                   </span>
-                  <p className="eyebrow">THE NEXT CHAPTER</p>
-                  <h3>Same story. A little more motion.</h3>
-                  <p>
-                    Short clips and a reel editor are planned for phase two. First, get the
-                    character and story right in your approved stills.
-                  </p>
+                  <p className="eyebrow">{msg('m689b855684')}</p>
+                  <h3>{msg('m886c3eaa0b')}</h3>
+                  <p>{msg('m3f5e58be94')}</p>
                   <div className="motion-steps">
-                    <span>01 · Approved keyframes</span>
+                    <span>{msg('m9447c490ee')}</span>
                     <ChevronRight size={15} />
-                    <span>02 · Short clips</span>
+                    <span>{msg('m83f11a8034')}</span>
                     <ChevronRight size={15} />
-                    <span>03 · Your reel</span>
+                    <span>{msg('m12b09aac35')}</span>
                   </div>
                   <a
                     className="button"
@@ -974,7 +993,8 @@ export default function Studio() {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Follow the video work <ArrowRight size={16} />
+                    {msg('mb0b704fb69')}
+                    <ArrowRight size={16} />
                   </a>
                 </section>
               )}
@@ -983,17 +1003,15 @@ export default function Studio() {
                   <FolderHeart size={24} />
                 </div>
                 <div className="export-copy">
-                  <h3>Your story, ready to go.</h3>
+                  <h3>{msg('mcdb5eff098')}</h3>
                   <p>
-                    {approved === 4
-                      ? 'All scenes approved. Your demo pack is ready.'
-                      : `${approved} of 4 scenes approved. A few more moments to make.`}
+                    {approved === 4 ? msg('m0d8b624b87') : msg('m4742996e91', { v0: approved })}
                   </p>
                 </div>
                 <div
                   className="progress-track"
                   role="progressbar"
-                  aria-label="Approved scenes"
+                  aria-label={msg('m7397c53ffc')}
                   aria-valuenow={approved}
                   aria-valuemin={0}
                   aria-valuemax={4}
@@ -1008,20 +1026,20 @@ export default function Studio() {
                   onClick={() => void exportPack()}
                 >
                   <ArrowDownToLine size={16} />
-                  {busy ? 'Working…' : 'Export demo pack'}
+                  {busy ? msg('m13b7bfcac4') : msg('md2caaa08c1')}
                 </button>
               </section>
-              {captionDirty && <p className="fine-print">Save your caption before exporting.</p>}
-              {socialDirty && (
-                <p className="fine-print">Save your per-image post drafts before exporting.</p>
-              )}
-              {packDirty && <p className="fine-print">Save your carousel before exporting.</p>}
+              {captionDirty && <p className="fine-print">{msg('me4cd7f4f2a')}</p>}
+              {socialDirty && <p className="fine-print">{msg('m6ef6d7ce07')}</p>}
+              {packDirty && <p className="fine-print">{msg('mf235d0d7f4')}</p>}
               <footer className="page-footer">
                 <span>
-                  wishscene <span className="footer-spark">✳</span> Imagine it. Make the scene.
+                  {msg('mff43274984')}
+                  <span className="footer-spark">✳</span> {msg('m77f885d996')}
                 </span>
                 <a href="https://github.com/coders-clan/wishscene" target="_blank" rel="noreferrer">
-                  Built by Coders Clan <ArrowRight size={12} />
+                  {msg('macd6c58a87')}
+                  <ArrowRight size={12} />
                 </a>
               </footer>
             </>
@@ -1067,7 +1085,7 @@ export default function Studio() {
         <div className="toast" role="status">
           <Check size={17} />
           {notice}
-          <button aria-label="Dismiss notification" onClick={() => setNotice('')}>
+          <button aria-label={msg('mdc83cd8031')} onClick={() => setNotice('')}>
             <X size={14} />
           </button>
         </div>
@@ -1077,35 +1095,38 @@ export default function Studio() {
           key={modal}
           title={
             modal === 'new'
-              ? 'Where do you wish you were?'
+              ? msg('m92693f2a30')
               : modal === 'story'
-                ? 'The details make the story.'
+                ? msg('mf2ce70b693')
                 : modal === 'developer'
-                  ? 'Make the mock work for you.'
+                  ? msg('m3ca85faa60')
                   : modal === 'identity'
-                    ? 'Meet your demo character.'
+                    ? msg('me89538f2bd')
                     : modal === 'library'
-                      ? 'A collection of what ifs.'
+                      ? msg('m84e7e92835')
                       : modal === 'review'
-                        ? (scene?.title ?? 'Review scene')
+                        ? (scene?.title ?? msg('m94c39e1df2'))
                         : modal === 'more'
-                          ? 'Your workspace'
+                          ? msg('m68d409a09c')
                           : modal === 'account'
                             ? account
-                              ? 'You’re signed in.'
-                              : 'Sign in with a magic link.'
-                            : 'A little tour of wishscene.'
+                              ? msg('m18d468fa41')
+                              : msg('m67bb3e8466')
+                            : msg('mfff0efb49a')
           }
           eyebrow={
             modal === 'review'
-              ? `SCENE ${scene ? scene.ordinal + 1 : ''} · STORY V${experience?.bibleVersion}`
+              ? msg('m2477ca6d81', {
+                  v0: scene ? scene.ordinal + 1 : 0,
+                  v1: experience?.bibleVersion ?? 1,
+                })
               : modal === 'developer'
-                ? 'DEVELOPER SANDBOX'
+                ? msg('m63054fb6ef')
                 : modal === 'identity'
-                  ? 'YOUR IDENTITY'
+                  ? msg('m508d10a3d2')
                   : modal === 'account'
-                    ? 'DEMO SIGN-IN'
-                    : 'WISHSCENE STUDIO'
+                    ? msg('m5f51afdd46')
+                    : msg('m71dcab04ff')
           }
           onClose={close}
           wide={modal === 'review' || modal === 'library'}
@@ -1122,7 +1143,8 @@ export default function Studio() {
                 >
                   <Download />
                   <span>
-                    Install app<small>Add wishscene to your home screen</small>
+                    {msg('me5f79aa13b')}
+                    <small>{msg('m566fedbd41')}</small>
                   </span>
                   <ChevronRight />
                 </button>
@@ -1131,7 +1153,7 @@ export default function Studio() {
                 <UserRound />
                 <span>
                   {account ? t('account') : t('signIn')}
-                  <small>{account ? account.email : 'Try the magic-link sign-in'}</small>
+                  <small>{account ? account.email : msg('m8b54a9b26b')}</small>
                 </span>
                 <ChevronRight />
               </button>
@@ -1139,7 +1161,7 @@ export default function Studio() {
                 <Layers3 />
                 <span>
                   {t('identity')}
-                  <small>Meet the demo character</small>
+                  <small>{msg('m5189be4b1b')}</small>
                 </span>
                 <ChevronRight />
               </button>
@@ -1147,7 +1169,7 @@ export default function Studio() {
                 <MessageSquarePlus />
                 <span>
                   {t('feedback')}
-                  <small>Read reports, reply, and vote</small>
+                  <small>{msg('m57b2b40a04')}</small>
                 </span>
                 <ChevronRight />
               </a>
@@ -1160,7 +1182,8 @@ export default function Studio() {
               >
                 <Film />
                 <span>
-                  Motion<small>Preview what’s coming next</small>
+                  {msg('me040db2b7f')}
+                  <small>{msg('m33005cded4')}</small>
                 </span>
                 <ChevronRight />
               </button>
@@ -1168,7 +1191,7 @@ export default function Studio() {
                 <CircleHelp />
                 <span>
                   {t('tour')}
-                  <small>How to create your story</small>
+                  <small>{msg('m4bdcf5226d')}</small>
                 </span>
                 <ChevronRight />
               </button>
@@ -1176,7 +1199,7 @@ export default function Studio() {
                 <Code2 />
                 <span>
                   {t('developer')}
-                  <small>Mock scenarios and workspace reset</small>
+                  <small>{msg('m332ed9ee55')}</small>
                 </span>
                 <ChevronRight />
               </button>
@@ -1188,24 +1211,25 @@ export default function Studio() {
             </p>
           )}
           {modal === 'new' && (
-            <form onSubmit={submitExperience} className="form-stack">
-              <p>
-                Choose a destination to load four realistic photos of the same fictional Alex. Each
-                destination has a matching outfit and mood preset.
-              </p>
+            <form
+              onChange={() => setFormDirty(true)}
+              onSubmit={submitExperience}
+              className="form-stack"
+            >
+              <p>{msg('m7c2eb2dbb5')}</p>
               <label>
-                Experience name
+                {msg('m092955fe30')}
                 <input
                   name="title"
                   minLength={3}
                   maxLength={64}
                   required
-                  placeholder="A weekend in another world"
+                  placeholder={msg('m975f8109ed')}
                   autoFocus
                 />
               </label>
               <label>
-                <span id="destination-label">Destination</span>
+                <span id="destination-label">{msg('md42713493c')}</span>
                 <select
                   name="destination"
                   aria-labelledby="destination-label"
@@ -1215,22 +1239,22 @@ export default function Studio() {
                   }
                 >
                   {destinations.map((x) => (
-                    <option key={x}>{x}</option>
+                    <option key={x} value={x}>
+                      {demo(x)}
+                    </option>
                   ))}
                 </select>
               </label>
               <DemoLookFields key={newDestination} destination={newDestination} />
               <button className="button primary" disabled={busy}>
-                Create experience <ArrowRight size={16} />
+                {msg('mde75da8950')}
+                <ArrowRight size={16} />
               </button>
             </form>
           )}
           {modal === 'story' && experience && (
-            <form className="form-stack" onSubmit={submitStory}>
-              <p>
-                These details stay shared across every scene. Changing them creates a new story
-                version and clears previous approvals.
-              </p>
+            <form onChange={() => setFormDirty(true)} className="form-stack" onSubmit={submitStory}>
+              <p>{msg('m88c36f173d')}</p>
               <DemoLookFields
                 key={`${experience.id}-${experience.bibleVersion}`}
                 destination={experience.destination}
@@ -1239,17 +1263,18 @@ export default function Studio() {
               <div className="info-box">
                 <BookOpen size={19} />
                 <p>
-                  Story v{experience.bibleVersion} · Your previous candidates are kept. Active jobs
-                  will be cancelled when the story changes.
+                  {msg('m51b7aafcae')}
+                  {experience.bibleVersion} {msg('m8de689aab9')}
                 </p>
               </div>
               <button className="button primary" disabled={busy}>
-                Save story <Check size={16} />
+                {msg('m7f618b6be1')}
+                <Check size={16} />
               </button>
             </form>
           )}
           {modal === 'library' && (
-            <MobileGallery className="library-grid" label="Experience gallery">
+            <MobileGallery className="library-grid" label={msg('m3ebd907945')}>
               {workspace?.experiences.map((item) => (
                 <button
                   className="library-card"
@@ -1258,20 +1283,22 @@ export default function Studio() {
                 >
                   <img
                     src={demoPreview(item, item.scenes[0])}
-                    alt={`Fictional Alex in ${item.destination}`}
+                    alt={msg('m4a15552761', { v0: item.destination })}
                     width={600}
                     height={800}
                   />
                   <div>
                     <h3>{item.title}</h3>
-                    <span>{item.destination} · 4 scenes</span>
+                    <span>
+                      {item.destination} {msg('m07a5491e03')}
+                    </span>
                   </div>
                   <ArrowRight size={18} />
                 </button>
               ))}
               <button className="library-new" onClick={() => setModal('new')}>
                 <Plus size={24} />
-                Make another wish
+                {msg('m879c9bff47')}
               </button>
             </MobileGallery>
           )}
@@ -1280,23 +1307,16 @@ export default function Studio() {
               <div className="identity-portrait">
                 <img
                   src="/demo/photos/tokyo-neon.jpg"
-                  alt="AI-created portrait of fictional Alex, the reference character for the demo photos"
+                  alt={msg('m2b91f16a27')}
                   width={600}
                   height={800}
                 />
               </div>
-              <h3>Alex Morgan</h3>
-              <p>
-                One fictional man, four destinations. These 16 AI-created photos were made using the
-                same character reference and bundled with the demo. Visual consistency was reviewed;
-                automated likeness verification is not implemented.
-              </p>
+              <h3>{msg('mab9944bc64')}</h3>
+              <p>{msg('mf626e6363d')}</p>
               <div className="info-box">
                 <Layers3 size={22} />
-                <p>
-                  No personal photos are uploaded. Identity consent, private storage, and likeness
-                  verification belong to the next implementation phase.
-                </p>
+                <p>{msg('m6c630a4ccb')}</p>
               </div>
               <a
                 className="button"
@@ -1304,39 +1324,41 @@ export default function Studio() {
                 target="_blank"
                 rel="noreferrer"
               >
-                Explore identity onboarding <ArrowRight size={16} />
+                {msg('m9fa329157f')}
+                <ArrowRight size={16} />
               </a>
             </div>
           )}
           {modal === 'developer' && (
             <div className="form-stack">
-              <p>
-                Exercise the real interface with a simulated provider. Your workspace lives in this
-                server process and expires after an hour without activity.
-              </p>
+              <p>{msg('m72f4704699')}</p>
               <label>
-                Generation scenario
+                {msg('m7f43611672')}
                 <select
                   value={scenario}
                   onChange={(e) => setScenario(e.target.value as GenerationInput['scenario'])}
                 >
-                  <option value="success">Success · about 2.4 seconds</option>
-                  <option value="slow">Slow provider · about 12 seconds</option>
-                  <option value="failure">Failure · retryable timeout</option>
+                  <option value="success">{msg('mb4a277874a')}</option>
+                  <option value="slow">{msg('m3a6704cd82')}</option>
+                  <option value="failure">{msg('m039fb5a350')}</option>
                 </select>
               </label>
               <div className="developer-facts">
                 <span>
-                  Provider <strong>Bundled photo presets + SVG fallbacks</strong>
+                  {msg('m7ceee3f361')}
+                  <strong>{msg('m4071dd31a2')}</strong>
                 </span>
                 <span>
-                  Database <strong>Per-session memory</strong>
+                  {msg('m61074f1c95')}
+                  <strong>{msg('mbbbabfd4dd')}</strong>
                 </span>
                 <span>
-                  Real API spend <strong>$0</strong>
+                  {msg('m5e490062f6')}
+                  <strong>$0</strong>
                 </span>
                 <span>
-                  Version <strong>Scaffold 0.1</strong>
+                  {msg('m2da600bf94')}
+                  <strong>{msg('md371e089ea')}</strong>
                 </span>
               </div>
               <button
@@ -1346,12 +1368,12 @@ export default function Studio() {
                     await navigator.clipboard.writeText(
                       `${window.location.origin}/api/v1/workspace`,
                     );
-                    setNotice('API URL copied.');
+                    setNotice(msg('me1988dd2e1'));
                   })
                 }
               >
                 <Copy size={15} />
-                Copy workspace API URL
+                {msg('mba73f11cbb')}
               </button>
               <button
                 className="button danger"
@@ -1365,51 +1387,32 @@ export default function Studio() {
                     setSocialDirty(false);
                     setWorkspaceReset((value) => value + 1);
                     close();
-                    setNotice('Fresh canvas. Demo workspace reset.');
+                    setNotice(msg('m11a08ec2e4'));
                   })
                 }
               >
                 <RotateCcw size={15} />
-                Reset demo workspace
+                {msg('m774f712256')}
               </button>
-              <p className="fine-print">
-                Reset replaces only your synthetic demo state. No API keys, database, or Docker
-                needed.
-              </p>
+              <p className="fine-print">{msg('m9c21c1853c')}</p>
             </div>
           )}
           {modal === 'account' && workspace && (
             <DemoSignIn
               auth={workspace.demoAuth}
               busy={busy}
-              onRequest={(email) =>
-                void demoAuth('magic-link', { email }, 'Sign-in link sent. Check the demo inbox.')
-              }
-              onVerify={(token) =>
-                void demoAuth('verify', { token }, 'Signed in with your magic link.')
-              }
-              onSignOut={() => void demoAuth('sign-out', {}, 'Signed out of the demo.')}
+              onRequest={(email) => void demoAuth('magic-link', { email }, msg('mfe6d5b7f6b'))}
+              onVerify={(token) => void demoAuth('verify', { token }, msg('m16e3dbfc1e'))}
+              onSignOut={() => void demoAuth('sign-out', {}, msg('m0cc3919878'))}
             />
           )}
           {modal === 'help' && (
             <div className="tour-list">
               {[
-                [
-                  'Pick your somewhere',
-                  'Start with Tokyo, try a sample experience, or create a new one.',
-                ],
-                [
-                  'Make the moments',
-                  'Load the photo preset for each scene and approve it. Custom developer settings use illustrated placeholders.',
-                ],
-                [
-                  'Keep the story together',
-                  'Edit the Story Bible to test versioning and regeneration.',
-                ],
-                [
-                  'Take it with you',
-                  'Approve all four scenes and export the photo pack with a caption and provenance manifest.',
-                ],
+                [msg('m7ec1f99361'), msg('m3f52a6c01d')],
+                [msg('m354351ff99'), msg('m51bed76eb0')],
+                [msg('mb2d8c8ae5c'), msg('mbbc9a6462e')],
+                [msg('me41df9fa48'), msg('ma85e83130a')],
               ].map(([title, copy], i) => (
                 <div key={title}>
                   <span>0{i + 1}</span>
@@ -1420,7 +1423,8 @@ export default function Studio() {
                 </div>
               ))}
               <button className="button primary" onClick={close}>
-                Let’s make a scene <Sparkles size={16} />
+                {msg('me3ff713a49')}
+                <Sparkles size={16} />
               </button>
             </div>
           )}
@@ -1429,20 +1433,14 @@ export default function Studio() {
               <p>
                 {scene.shot} · {scene.time} · {experience.outfit}
               </p>
-              {scene.status === 'failed' && (
-                <div className="modal-error">
-                  Simulated provider timeout. Choose Success in Developer tools to retry.
-                </div>
-              )}
+              {scene.status === 'failed' && <div className="modal-error">{msg('m5f95882d0d')}</div>}
               {scene.status === 'stale' && (
                 <div className="info-box">
                   <BookOpen size={18} />
-                  <p>
-                    These candidates belong to an earlier story. Generate new ones before approving.
-                  </p>
+                  <p>{msg('m7806d12ccb')}</p>
                 </div>
               )}
-              <MobileGallery key={scene.id} className="candidate-grid" label="Image choices">
+              <MobileGallery key={scene.id} className="candidate-grid" label={msg('m253e20f7ce')}>
                 {scene.assets
                   .filter((a) => a.bibleVersion === experience.bibleVersion)
                   .slice(photoPreset ? -1 : -2)
@@ -1452,8 +1450,11 @@ export default function Studio() {
                         src={asset.image}
                         alt={
                           asset.media === 'photo'
-                            ? `AI-created photo of fictional Alex: ${scene.title}`
-                            : `${asset.variant ? 'Warm' : 'Original'} illustrated candidate for ${scene.title}`
+                            ? msg('me0b26d2c87', { v0: scene.title })
+                            : msg('m8a9081b0e1', {
+                                v0: asset.variant ? msg('m63e49827e4') : msg('mc0a8060f3b'),
+                                v1: scene.title,
+                              })
                         }
                         width={600}
                         height={800}
@@ -1461,10 +1462,10 @@ export default function Studio() {
                       <div>
                         <span>
                           {asset.media === 'photo'
-                            ? '01 · Photo preset'
+                            ? msg('m85893569d8')
                             : asset.variant
-                              ? '02 · Warm illustration'
-                              : '01 · Original illustration'}
+                              ? msg('mc0c255591e')
+                              : msg('m90c6bba167')}
                         </span>
                         <button
                           className={`button ${scene.approvedAssetId === asset.id ? 'approved-button' : 'primary'}`}
@@ -1472,7 +1473,9 @@ export default function Studio() {
                           onClick={() => void approve(scene, asset)}
                         >
                           <Check size={15} />
-                          {scene.approvedAssetId === asset.id ? 'Approved' : 'Approve'}
+                          {scene.approvedAssetId === asset.id
+                            ? msg('m41b81eb8db')
+                            : msg('m7b2c7f146a')}
                         </button>
                       </div>
                     </div>
@@ -1481,23 +1484,13 @@ export default function Studio() {
               {!scene.assets.some((a) => a.bibleVersion === experience.bibleVersion) && (
                 <div className="empty-candidates">
                   <Sparkles size={35} />
-                  <h3>
-                    {scene.status === 'generating'
-                      ? 'Your scene is on its way.'
-                      : 'A fresh scene starts here.'}
-                  </h3>
-                  <p>
-                    {photoPreset
-                      ? 'Load the pre-generated photo for this scene.'
-                      : 'Generate two illustrated placeholders to test the review flow.'}
-                  </p>
+                  <h3>{scene.status === 'generating' ? msg('m54f4fe1c4b') : msg('md9e69bdaf3')}</h3>
+                  <p>{photoPreset ? msg('m273b3068f1') : msg('m3648936665')}</p>
                 </div>
               )}
               <div className="review-footer">
                 <span className="fine-print">
-                  {photoPreset
-                    ? 'Fixed photo preset · regenerating returns the same photo'
-                    : 'Illustrated placeholders · custom look not rendered'}
+                  {photoPreset ? msg('m12341f4cc0') : msg('mbbb30eda79')}
                 </span>
                 <button
                   className="button"
@@ -1505,7 +1498,7 @@ export default function Studio() {
                   onClick={() => void run(async () => generate(scene))}
                 >
                   <WandSparkles size={15} />
-                  {scene.status === 'generating' ? 'Generating…' : 'Generate candidates'}
+                  {scene.status === 'generating' ? msg('m11edad70c1') : msg('m2e49a7530b')}
                 </button>
               </div>
             </div>

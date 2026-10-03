@@ -95,7 +95,11 @@ function textBlock(
 }
 
 // hunch-why: Crop geometry comes from the server manifest (the same exportFrame the preview uses), so the file matches the recorded pixel size. Text stays inside the format's safe area, and every image carries a visible AI label because social platforms strip file metadata.
-export async function renderPostImage(asset: ExportAsset, coverTitle: string): Promise<Blob> {
+export async function renderPostImage(
+  asset: ExportAsset,
+  coverTitle: string,
+  label = disclosureLabel,
+): Promise<Blob> {
   const image = await loadSource(asset);
   // Draw at the recorded source size first so crop coordinates mean the same thing for photos
   // and illustrations, even if a fixture file is resampled later.
@@ -127,15 +131,15 @@ export async function renderPostImage(asset: ExportAsset, coverTitle: string): P
 
   const labelSize = Math.max(12, Math.round(unit * 2.6));
   context.font = `600 ${labelSize}px ${family}`;
-  context.direction = 'ltr';
+  context.direction = rtl.test(label) ? 'rtl' : 'ltr';
   const labelPad = Math.round(labelSize * 0.5);
-  const labelWidth = context.measureText(disclosureLabel).width + labelPad * 2;
+  const labelWidth = context.measureText(label).width + labelPad * 2;
   const labelHeight = labelSize + labelPad * 2;
   panel(context, box.left, box.bottom - labelHeight, labelWidth, labelHeight);
   context.fillStyle = '#ffffff';
   context.textAlign = 'left';
   context.textBaseline = 'middle';
-  context.fillText(disclosureLabel, box.left + labelPad, box.bottom - labelHeight / 2);
+  context.fillText(label, box.left + labelPad, box.bottom - labelHeight / 2);
   box = { ...box, bottom: box.bottom - labelHeight - Math.round(unit * 2) };
 
   if (preset.vertical && asset.social.overlayText.trim())

@@ -1,4 +1,6 @@
 {
   "title": "wishscene — Your imagination, in frame",
-  "description": "An interactive wishscene studio sandbox. Imagine an experience, shape a story, and make the scene."
+  "description": "An interactive wishscene studio sandbox. Imagine an experience, shape a story, and make the scene.",
+  "manifestName": "wishscene",
+  "manifestDescription": "Imagine an experience, shape a story, and make the scene. Your imagination, in frame."
 }

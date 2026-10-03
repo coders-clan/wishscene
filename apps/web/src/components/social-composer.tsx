@@ -1,5 +1,6 @@
 'use client';
 
+import { useCopy } from '@/i18n/copy';
 import { useEffect, useState, type CSSProperties } from 'react';
 import {
   ArrowRight,
@@ -51,6 +52,7 @@ export function SocialComposer({
   onDirtyChange,
   onSave,
 }: Props) {
+  const msg = useCopy('studio');
   const [edits, setEdits] = useState<Record<string, SocialDraft>>({});
   const [focusEdits, setFocusEdits] = useState<Record<string, SocialFocus>>({});
   const [choices, setChoices] = useState<Record<string, SocialPlatform>>({});
@@ -133,9 +135,9 @@ export function SocialComposer({
         delete next[scene.id];
         return next;
       });
-      setMessage(`${preset.label} saved for this image.`);
+      setMessage(msg('platformSaved', { platform: msg(`platform_${platform}`) }));
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Could not save this post. Try again.');
+      setError(msg.error(cause));
     } finally {
       setSaving(false);
     }
@@ -150,9 +152,9 @@ export function SocialComposer({
   let exportSize = '';
   try {
     const frame = exportFrame(source, platform, focus);
-    exportSize = `${frame.width} × ${frame.height} px`;
+    exportSize = msg('m5b9ef7b946', { v0: frame.width, v1: frame.height });
   } catch {
-    exportSize = 'too small to export';
+    exportSize = msg('m2e4c32a617');
   }
   // object-fit: cover at the focus, then scaled from that same point, shows exportFrame's crop.
   const imageStyle: CSSProperties = {
@@ -171,25 +173,25 @@ export function SocialComposer({
   } as CSSProperties;
 
   return (
-    <section className="social-composer" aria-label="Per-image social composer">
+    <section className="social-composer" aria-label={msg('mb02cd80b2f')}>
       <div className="composer-intro">
         <div>
-          <p className="eyebrow">ONE IMAGE. YOUR KIND OF POST.</p>
-          <h3>Make it fit the feed.</h3>
-          <p>Choose an image, pick a platform, and make the words your own.</p>
+          <p className="eyebrow">{msg('mf857b0423a')}</p>
+          <h3>{msg('m79ca1c9f20')}</h3>
+          <p>{msg('m602b7c4af2')}</p>
         </div>
         <span className="composer-save-state">
-          {hasEdits ? 'Unsaved post drafts' : 'Posts saved in this demo session'}
+          {hasEdits ? msg('m8a555420cf') : msg('m1e9da12960')}
         </span>
       </div>
-      <div className="composer-scenes" role="group" aria-label="Choose an image">
+      <div className="composer-scenes" role="group" aria-label={msg('m6bcf0747c1')}>
         {experience.scenes.map((item) => (
           <button
             type="button"
             className={`composer-scene ${item.id === scene.id ? 'selected' : ''}`}
             key={item.id}
             aria-pressed={item.id === scene.id}
-            aria-label={`Compose post for ${item.title}`}
+            aria-label={msg('mfe1f6f755d', { v0: item.title })}
             disabled={saving}
             onClick={() => {
               onSelectScene(item.id);
@@ -205,7 +207,7 @@ export function SocialComposer({
                     asset.bibleVersion === experience.bibleVersion,
                 )?.image ?? demoPreview(experience, item)
               }
-              alt=""
+              alt={' '}
               width={60}
               height={80}
             />
@@ -214,8 +216,8 @@ export function SocialComposer({
                 {String(item.ordinal + 1).padStart(2, '0')} · {item.title}
               </strong>
               <span>
-                {socialPlatforms[choices[item.id] ?? baseFor(item.id, item.social).platform].label}
-                {isSceneDirty(item) && ' · Unsaved'}
+                {msg(`platform_${choices[item.id] ?? baseFor(item.id, item.social).platform}`)}
+                {isSceneDirty(item) && msg('m83bdaa0cc6')}
               </span>
             </span>
             {item.id === scene.id && <Check size={18} />}
@@ -232,10 +234,10 @@ export function SocialComposer({
         >
           <div className="composer-step">
             <span>01</span>
-            <h4>Shape this post</h4>
+            <h4>{msg('m742af78e50')}</h4>
           </div>
           <label htmlFor="post-platform">
-            Platform & format
+            {msg('m9a533b31d5')}
             <select
               id="post-platform"
               value={platform}
@@ -252,19 +254,19 @@ export function SocialComposer({
             >
               {socialPlatformSchema.options.map((value) => (
                 <option key={value} value={value}>
-                  {socialPlatforms[value].label}
+                  {msg(`platform_${value}`)}
                   {edits[`${scene.id}:${value}`] &&
                   JSON.stringify(edits[`${scene.id}:${value}`]) !==
                     JSON.stringify(social.drafts[value])
-                    ? ' (unsaved)'
+                    ? msg('m391bea5bf7')
                     : ''}
                 </option>
               ))}
             </select>
           </label>
-          <p className="platform-guidance">{preset.hint}</p>
+          <p className="platform-guidance">{msg(`hint_${platform}`)}</p>
           <label htmlFor="post-tone">
-            Writing tone
+            {msg('mb7971e6580')}
             <select
               id="post-tone"
               value={draft.tone}
@@ -273,7 +275,7 @@ export function SocialComposer({
             >
               {socialToneSchema.options.map((value) => (
                 <option key={value} value={value}>
-                  {value[0].toUpperCase() + value.slice(1)}
+                  {msg(`tone_${value}`)}
                 </option>
               ))}
             </select>
@@ -285,14 +287,12 @@ export function SocialComposer({
               disabled={saving}
               onClick={() => update(suggestSocialCopy(experience, scene, platform, draft.tone))}
             >
-              <Sparkles size={18} /> Use suggested text
+              <Sparkles size={18} /> {msg('me4bf423b96')}
             </button>
-            <span className="fine-print">
-              Demo templates. Replaces this platform’s caption and overlay.
-            </span>
+            <span className="fine-print">{msg('m732b10f6b8')}</span>
           </div>
           <div className="composer-text-field">
-            <label htmlFor="post-caption">Post text</label>
+            <label htmlFor="post-caption">{msg('m582c915c53')}</label>
             <textarea
               id="post-caption"
               dir="auto"
@@ -310,13 +310,13 @@ export function SocialComposer({
             className={`caption-budget ${overBudget ? 'over-budget' : ''}`}
             aria-live="polite"
           >
-            {draft.caption.length} / {preset.draftLimit} draft characters
-            {overBudget ? ' · Shorten the text to save.' : ''}
+            {msg('charCount', { count: draft.caption.length, limit: preset.draftLimit })}
+            {overBudget ? msg('m71c0a6e34c') : ''}
           </p>
           {preset.vertical && (
             <div className="composer-text-field">
-              <label htmlFor="post-overlay">Text on image</label>
-              <span className="fine-print">Optional · up to 80 characters</span>
+              <label htmlFor="post-overlay">{msg('m402103ebfc')}</label>
+              <span className="fine-print">{msg('mc5c339ffbc')}</span>
               <textarea
                 id="post-overlay"
                 dir="auto"
@@ -335,55 +335,55 @@ export function SocialComposer({
           )}
           <div className="composer-actions">
             <button className="button primary" disabled={saving || !changed || overBudget}>
-              {saving ? 'Saving…' : 'Save post'} <Check size={18} />
+              {saving ? msg('m56a2285c5b') : msg('mc9906dfac5')} <Check size={18} />
             </button>
             <button
               type="button"
               className="button"
               onClick={() => {
                 void navigator.clipboard.writeText(draft.caption).then(
-                  () => setMessage('Post text copied.'),
-                  () => setError('Clipboard unavailable. Select and copy the post text above.'),
+                  () => setMessage(msg('m067b52346c')),
+                  () => setError(msg('m8a2b6128ae')),
                 );
               }}
             >
-              <Copy size={18} /> Copy text
+              <Copy size={18} /> {msg('m06a76cc6ee')}
             </button>
           </div>
           <a className="composer-preview-link" href="#post-preview">
-            View preview <ArrowRight size={18} />
+            {msg('m6b964d227a')}
+            <ArrowRight size={18} />
           </a>
           <p className="composer-message" role="status">
-            {message ||
-              (changed
-                ? 'Previewing your unsaved changes.'
-                : 'Each image keeps its own platform and text.')}
+            {message || (changed ? msg('mfb9dae5eda') : msg('m1ce57a132f'))}
           </p>
         </form>
         <div className="composer-preview-column" id="post-preview">
           <div className="composer-preview-heading">
             <div className="composer-step">
               <span>02</span>
-              <h4>Preview your post</h4>
+              <h4>{msg('m64e85d5749')}</h4>
             </div>
             <span className="preview-format">{preset.ratioLabel}</span>
           </div>
           <p className="preview-description">
-            {preset.label} · {preset.format}
+            {msg(`platform_${platform}`)} · {msg(`format_${preset.format.replaceAll(' ', '_')}`)}
           </p>
           <article
             className={`platform-preview platform-${platform} ${preset.vertical ? 'vertical-preview' : ''}`}
-            aria-label={`${preset.label} preview`}
+            aria-label={msg('m80bd28e4c3', { v0: msg(`platform_${platform}`) })}
           >
             <div className="platform-preview-header">
-              <span className="avatar">A</span>
+              <span className="avatar">{msg('m6dcd4ce23d')}</span>
               <div>
                 <strong>
                   {platform === 'linkedin' || platform === 'facebook'
-                    ? 'Alex Morgan'
+                    ? msg('mab9944bc64')
                     : 'alex.imagines'}
                 </strong>
-                <span>{preset.network} · Preview</span>
+                <span>
+                  {preset.network} {msg('m003ed63aa8')}
+                </span>
               </div>
               <span className="preview-menu" aria-hidden="true">
                 ···
@@ -391,18 +391,22 @@ export function SocialComposer({
             </div>
             {(platform === 'linkedin' || platform === 'x' || platform === 'facebook') && (
               <p className="preview-caption" dir="auto">
-                {draft.caption || 'Your text will appear here.'}
+                {draft.caption || msg('m7124f1e43d')}
               </p>
             )}
             <div className="platform-preview-image" style={{ aspectRatio: preset.ratio }}>
               <img
                 src={image}
-                alt={`Post preview: ${scene.title}`}
+                alt={msg('m94ce4e3116', { v0: scene.title })}
                 width={600}
                 height={800}
                 style={imageStyle}
               />
-              {preset.vertical && <span className="preview-story-label">{preset.format}</span>}
+              {preset.vertical && (
+                <span className="preview-story-label">
+                  {msg(`format_${preset.format.replaceAll(' ', '_')}`)}
+                </span>
+              )}
               {/* Text sits inside the format's safe area, as it does in the exported image. */}
               <div className="preview-safe-zone" style={safeZoneStyle}>
                 {coverTitle && (
@@ -415,7 +419,7 @@ export function SocialComposer({
                     {draft.overlayText}
                   </p>
                 )}
-                <span className="preview-disclosure">AI-created · Fictional scene</span>
+                <span className="preview-disclosure">{msg('disclosure')}</span>
               </div>
             </div>
             <div className="preview-social-icons" aria-hidden="true">
@@ -426,7 +430,7 @@ export function SocialComposer({
             </div>
             {platform !== 'linkedin' && platform !== 'x' && platform !== 'facebook' && (
               <p className="preview-caption" dir="auto">
-                {draft.caption || 'Your text will appear here.'}
+                {draft.caption || msg('m7124f1e43d')}
               </p>
             )}
           </article>
@@ -439,16 +443,16 @@ export function SocialComposer({
               aria-describedby="post-crop-state"
               onClick={() => setCropping(true)}
             >
-              <Crop size={18} /> Adjust crop
+              <Crop size={18} /> {msg('mab5c626179')}
             </button>
             <p id="post-crop-state" className="fine-print">
-              Zoom {Math.round(focus.zoom * 100)}% · exports {exportSize}
+              {msg('cropState', { zoom: Math.round(focus.zoom * 100), size: exportSize })}
             </p>
           </div>
           {cropping && (
             <CropEditor
               image={image}
-              alt={`Crop for ${scene.title}`}
+              alt={msg('m90d8a836ae', { v0: scene.title })}
               source={source}
               platform={platform}
               focus={focus}
@@ -456,27 +460,19 @@ export function SocialComposer({
                 setCropping(false);
                 if (sameFocus(next, focus)) return;
                 updateFocus(next);
-                setMessage('Crop updated. Save the post to keep it.');
+                setMessage(msg('med33948fb4'));
               }}
               onClose={() => setCropping(false)}
             />
           )}
           <p className="preview-note">
-            The dashed line marks a suggested safe area for text. The export draws this crop, its
-            text and the AI label into a {preset.ratioLabel} JPEG; the original image is included
-            too.
+            {msg('meb9f4dbb64')}
+            {preset.ratioLabel} {msg('mc18e8b20be')}
           </p>
-          {scene.status !== 'approved' && (
-            <p className="preview-note">
-              You can plan this post now. Approve the scene before exporting.
-            </p>
-          )}
+          {scene.status !== 'approved' && <p className="preview-note">{msg('me9b7f1a085')}</p>}
           <div className="composer-next">
             <ArrowRight size={18} />
-            <p>
-              Save each image’s post, then export the pack below. Nothing is published to a social
-              account.
-            </p>
+            <p>{msg('m34f61e6151')}</p>
           </div>
         </div>
       </div>

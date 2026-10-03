@@ -1,4 +1,7 @@
 'use client';
+
+import { useUnsavedChanges } from '@/i18n/unsaved';
+import { useCopy } from '@/i18n/copy';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { MessageSquarePlus, MousePointer2, Scan, List, X, Send, Copy, Check } from 'lucide-react';
@@ -16,6 +19,7 @@ import { FeedbackDialog } from './dialog';
 import { fetchAuthSession, feedbackRequest, readName, saveName, signOut } from './client';
 
 export function FeedbackLauncher() {
+  const msg = useCopy('feedback');
   const pathname = usePathname();
   const [menu, setMenu] = useState(false);
   const [mode, setMode] = useState<'element' | 'region' | null>(null);
@@ -38,6 +42,7 @@ export function FeedbackLauncher() {
   } | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  useUnsavedChanges(Boolean(target && (title || description || marks.length)));
   const [category, setCategory] = useState<FeedbackCreate['category']>('bug');
   const [priority, setPriority] = useState<FeedbackCreate['priority']>('normal');
   const [copyNote, setCopyNote] = useState('');
@@ -66,16 +71,13 @@ export function FeedbackLauncher() {
             el.scrollIntoView({ block: 'center', behavior: 'smooth' });
             el.classList.add('feedback-located');
             setTimeout(() => el.classList.remove('feedback-located'), 8000);
-            setContextNote('Reported element highlighted.');
+            setContextNote(msg('mb457c74efb'));
           } else if (++tries < 15) setTimeout(locate, 300);
-          else
-            setContextNote(
-              'This element has moved or belongs to another demo workspace. Check the report screenshot.',
-            );
+          else setContextNote(msg('m33da2fd992'));
         };
         locate();
       } catch {
-        setContextNote('Could not locate the reported element. Check the screenshot.');
+        setContextNote(msg('m8db2c44e45'));
       }
     }
     reveal();
@@ -103,9 +105,7 @@ export function FeedbackLauncher() {
       const image = await screenshotSection(next);
       setSource(image);
     } catch (e) {
-      setError(
-        e instanceof Error ? e.message : 'Screenshot unavailable. You can still send feedback.',
-      );
+      setError(msg.error(e));
     }
     setTarget(next);
     setBusy(false);
@@ -158,8 +158,7 @@ export function FeedbackLauncher() {
     };
   }, [mode, capture]);
   function close() {
-    if ((title || description || marks.length) && !window.confirm('Discard this unsent feedback?'))
-      return;
+    if ((title || description || marks.length) && !window.confirm(msg('mea910928be'))) return;
     setTarget(null);
     setTitle('');
     setDescription('');
@@ -185,7 +184,7 @@ export function FeedbackLauncher() {
           category,
           priority,
           target: marks.some((mark) => mark.tool === 'redact')
-            ? { ...target, excerpt: '', label: 'Redacted selection' }
+            ? { ...target, excerpt: '', label: msg('m334af88301') }
             : target,
           screenshot,
           annotations: marks,
@@ -198,7 +197,7 @@ export function FeedbackLauncher() {
       setSource(null);
       setMarks([]);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not send feedback.');
+      setError(msg.error(e));
     } finally {
       setBusy(false);
     }
@@ -211,12 +210,12 @@ export function FeedbackLauncher() {
           <div className="feedback-launch-menu">
             <div className="feedback-launch-menu-heading">
               <div>
-                <strong>Make wishscene better</strong>
-                <span>Sign in before adding feedback, replying or voting.</span>
+                <strong>{msg('mca8d3f4bfd')}</strong>
+                <span>{msg('m03ee365725')}</span>
               </div>
               <button
                 className="icon-button"
-                aria-label="Close feedback menu"
+                aria-label={msg('mab0a8062f2')}
                 onClick={() => setMenu(false)}
               >
                 <X size={18} />
@@ -228,15 +227,15 @@ export function FeedbackLauncher() {
             >
               <GithubIcon size={18} />
               <span>
-                <strong>Sign in with GitHub</strong>
-                <small>Use your verified identity</small>
+                <strong>{msg('m103d26d100')}</strong>
+                <small>{msg('mbf4aa9b896')}</small>
               </span>
             </a>
             <a className="button feedback-menu-action" href="/feedback">
               <List />
               <span>
-                <strong>View shared feedback</strong>
-                <small>Read every report and reply</small>
+                <strong>{msg('m4aab865977')}</strong>
+                <small>{msg('m067bb60db7')}</small>
               </span>
             </a>
           </div>
@@ -247,7 +246,7 @@ export function FeedbackLauncher() {
           onClick={() => setMenu(!menu)}
         >
           <MessageSquarePlus size={20} />
-          Feedback
+          {msg('mc8d7677e19')}
         </button>
       </div>
     );
@@ -259,12 +258,12 @@ export function FeedbackLauncher() {
             <div className="feedback-launch-menu">
               <div className="feedback-launch-menu-heading">
                 <div>
-                  <strong>Make wishscene better</strong>
-                  <span>Pick something. Tell the team.</span>
+                  <strong>{msg('mca8d3f4bfd')}</strong>
+                  <span>{msg('m369f56e231')}</span>
                 </div>
                 <button
                   className="icon-button"
-                  aria-label="Close feedback menu"
+                  aria-label={msg('mab0a8062f2')}
                   onClick={() => setMenu(false)}
                 >
                   <X size={18} />
@@ -272,7 +271,7 @@ export function FeedbackLauncher() {
               </div>
               <button
                 className="button feedback-menu-action"
-                aria-label="Select an element"
+                aria-label={msg('md188ad5eab')}
                 onClick={() => {
                   setMode('element');
                   setMenu(false);
@@ -280,13 +279,13 @@ export function FeedbackLauncher() {
               >
                 <MousePointer2 />
                 <span>
-                  <strong>Select an element</strong>
-                  <small>Pin feedback to one control</small>
+                  <strong>{msg('md188ad5eab')}</strong>
+                  <small>{msg('m33908fe53b')}</small>
                 </span>
               </button>
               <button
                 className="button feedback-menu-action"
-                aria-label="Capture a section"
+                aria-label={msg('mb572419865')}
                 onClick={() => {
                   setMode('region');
                   setMenu(false);
@@ -294,13 +293,13 @@ export function FeedbackLauncher() {
               >
                 <Scan />
                 <span>
-                  <strong>Capture a section</strong>
-                  <small>Drag around an area</small>
+                  <strong>{msg('mb572419865')}</strong>
+                  <small>{msg('m6c4feee2b8')}</small>
                 </span>
               </button>
               <button
                 className="button feedback-menu-action"
-                aria-label="Write a general note"
+                aria-label={msg('m198b915ae5')}
                 onClick={() => {
                   requestId.current = crypto.randomUUID();
                   setTarget(pageTarget());
@@ -310,20 +309,20 @@ export function FeedbackLauncher() {
               >
                 <MessageSquarePlus />
                 <span>
-                  <strong>Write a general note</strong>
-                  <small>Share an idea without a screenshot</small>
+                  <strong>{msg('m198b915ae5')}</strong>
+                  <small>{msg('mdbac5d143c')}</small>
                 </span>
               </button>
               <a className="button feedback-menu-action" href="/feedback">
                 <List />
                 <span>
-                  <strong>View shared feedback</strong>
-                  <small>Read, vote, and reply</small>
+                  <strong>{msg('m4aab865977')}</strong>
+                  <small>{msg('m6d12b2e3e0')}</small>
                 </span>
               </a>
               {authUser && (
                 <button className="button feedback-sign-out" onClick={() => void signOut()}>
-                  Sign out
+                  {msg('mdc1649a16c')}
                 </button>
               )}
             </div>
@@ -337,24 +336,20 @@ export function FeedbackLauncher() {
             }}
           >
             <MessageSquarePlus size={20} />
-            Feedback
+            {msg('mc8d7677e19')}
           </button>
         </div>
       )}
       {busy && !target && (
         <div className="feedback-capture-bar" role="status">
-          Capturing your selection…
+          {msg('mb1db7f9aa3')}
         </div>
       )}
       {mode && (
         <>
           <div className="feedback-capture-bar" role="status">
             <MousePointer2 size={20} />
-            <span>
-              {mode === 'element'
-                ? 'Select an element to comment on. Tab + Enter also works.'
-                : 'Drag around the section you want to capture.'}
-            </span>
+            <span>{mode === 'element' ? msg('m42b31a6183') : msg('m01c9a0aeef')}</span>
             <button
               className="button"
               onClick={() => {
@@ -363,13 +358,13 @@ export function FeedbackLauncher() {
               }}
             >
               <X size={18} />
-              Cancel
+              {msg('m77dfd2135f')}
             </button>
           </div>
           {mode === 'region' && (
             <div
               className="feedback-region-overlay"
-              aria-label="Select screen region"
+              aria-label={msg('m929de59c20')}
               onPointerDown={(e) => {
                 e.currentTarget.setPointerCapture(e.pointerId);
                 start.current = { x: e.clientX, y: e.clientY };
@@ -393,7 +388,8 @@ export function FeedbackLauncher() {
                   height: Math.abs(e.clientY - start.current.y),
                 };
                 start.current = null;
-                if (r.width >= 10 && r.height >= 10) void capture(targetFor('region', r));
+                if (r.width >= 10 && r.height >= 10)
+                  void capture(targetFor('region', r, undefined, msg('selectedRegion')));
                 else setRect(null);
               }}
               onPointerCancel={() => {
@@ -412,22 +408,20 @@ export function FeedbackLauncher() {
       )}
       {target && (
         <FeedbackDialog
-          title="Leave your mark"
+          title={msg('me88e941c49')}
           onClose={() => {
             if (!busy) close();
           }}
           wide
         >
-          <p className="feedback-intro">
-            Your report, screenshot and comments will be visible to everyone using this board.
-          </p>
+          <p className="feedback-intro">{msg('m2ab4877338')}</p>
           <form ref={formRef} onSubmit={submit} className="feedback-report-form">
             <div className="feedback-capture-column">
               <div className="feedback-form-section-heading">
                 <span>1</span>
                 <div>
-                  <strong>Review the context</strong>
-                  <small>Annotate the capture or remove it.</small>
+                  <strong>{msg('m15f3ba0045')}</strong>
+                  <small>{msg('mff9573c8d5')}</small>
                 </div>
               </div>
               <div className="feedback-context">
@@ -448,19 +442,19 @@ export function FeedbackLauncher() {
                       setMarks([]);
                     }}
                   >
-                    Remove screenshot
+                    {msg('m05315c08fe')}
                   </button>
                 </>
               ) : (
                 <div className="feedback-no-capture">
                   <MessageSquarePlus />
-                  <p>A clear description works too.</p>
-                  <span>No screenshot attached.</span>
+                  <p>{msg('m4744733efb')}</p>
+                  <span>{msg('m1473755a25')}</span>
                 </div>
               )}
               {target.excerpt && (
                 <div className="feedback-excerpt">
-                  <small>Selected section text</small>
+                  <small>{msg('m91a67da45a')}</small>
                   <p dir="auto">{target.excerpt}</p>
                   <button
                     type="button"
@@ -468,14 +462,12 @@ export function FeedbackLauncher() {
                     onClick={() => {
                       void navigator.clipboard
                         .writeText(target.excerpt)
-                        .then(() => setCopyNote('Section text copied.'))
-                        .catch(() =>
-                          setCopyNote('Copy unavailable. Select and copy the text above.'),
-                        );
+                        .then(() => setCopyNote(msg('mda7b6b2f30')))
+                        .catch(() => setCopyNote(msg('m9bda45d44e')));
                     }}
                   >
                     <Copy size={16} />
-                    Copy section text
+                    {msg('m9f81b0e99c')}
                   </button>
                   <span role="status">{copyNote}</span>
                 </div>
@@ -485,38 +477,41 @@ export function FeedbackLauncher() {
               <div className="feedback-form-section-heading">
                 <span>2</span>
                 <div>
-                  <strong>Describe what you noticed</strong>
-                  <small>Give the team enough detail to act.</small>
+                  <strong>{msg('m12d332dbae')}</strong>
+                  <small>{msg('m4d88ecedea')}</small>
                 </div>
               </div>
               {authUser ? (
-                <p className="feedback-hint">Posting as @{authUser.login}</p>
+                <p className="feedback-hint">
+                  {msg('md0b05348c0')}
+                  {authUser.login}
+                </p>
               ) : (
                 <label>
-                  Your name
+                  {msg('mab42293e29')}
                   <input
                     required
                     maxLength={60}
                     autoComplete="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="How should the team know you?"
+                    placeholder={msg('meb4596af70')}
                   />
                 </label>
               )}
               <label>
-                Short title
+                {msg('md1c3c0e37d')}
                 <input
                   required
                   minLength={3}
                   maxLength={120}
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="What should we fix or improve?"
+                  placeholder={msg('ma92a216075')}
                 />
               </label>
               <label>
-                Comment
+                {msg('m153d7a58b3')}
                 <textarea
                   required
                   minLength={3}
@@ -524,41 +519,42 @@ export function FeedbackLauncher() {
                   rows={6}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="What happened? What did you expect? Include steps if this is a bug."
+                  placeholder={msg('m878586a474')}
                   dir="auto"
                 />
               </label>
               <div className="feedback-field-row">
                 <label>
-                  Type
+                  {msg('m3deb745651')}
                   <select
-                    aria-label="Type"
+                    aria-label={msg('m3deb745651')}
                     value={category}
                     onChange={(e) => setCategory(e.target.value as FeedbackCreate['category'])}
                   >
                     {feedbackCategories.map((x) => (
-                      <option key={x}>{x}</option>
+                      <option key={x} value={x}>
+                        {msg(`enum_${x}`)}
+                      </option>
                     ))}
                   </select>
                 </label>
                 <label>
-                  Priority
+                  {msg('m886cbff9d9')}
                   <select
-                    aria-label="Priority"
+                    aria-label={msg('m886cbff9d9')}
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as FeedbackCreate['priority'])}
                   >
                     {feedbackPriorities.map((x) => (
-                      <option key={x}>{x}</option>
+                      <option key={x} value={x}>
+                        {msg(`enum_${x}`)}
+                      </option>
                     ))}
                   </select>
                 </label>
               </div>
               <p className="feedback-hint">
-                Preview before sending. Use Hide area for anything private.{' '}
-                {authUser
-                  ? 'Your GitHub identity will be shown with this report.'
-                  : 'Names are display names, not verified accounts.'}
+                {msg('me385ee1daa')} {authUser ? msg('m80b1cf5a51') : msg('m86175321f3')}
               </p>
               {error && (
                 <p className="feedback-error" role="alert">
@@ -568,10 +564,10 @@ export function FeedbackLauncher() {
               <div className="feedback-form-actions">
                 <button className="button primary" disabled={busy}>
                   <Send size={18} />
-                  {busy ? 'Sending…' : 'Send to shared board'}
+                  {busy ? msg('mcf765512cc') : msg('m7670a8c998')}
                 </button>
                 <button type="button" className="button" disabled={busy} onClick={close}>
-                  Cancel
+                  {msg('m77dfd2135f')}
                 </button>
               </div>
             </div>
@@ -581,11 +577,11 @@ export function FeedbackLauncher() {
       {success && (
         <div className="feedback-toast" role="status">
           <Check />
-          <span>Feedback shared with the team.</span>
-          <a href={`/feedback?item=${success}`}>Open report</a>
+          <span>{msg('mdfe49144c7')}</span>
+          <a href={`/feedback?item=${success}`}>{msg('m44f83158c9')}</a>
           <button
             className="icon-button"
-            aria-label="Dismiss confirmation"
+            aria-label={msg('m80b6c55bfc')}
             onClick={() => setSuccess(null)}
           >
             <X />
@@ -597,7 +593,7 @@ export function FeedbackLauncher() {
           <span>{contextNote}</span>
           <button
             className="icon-button"
-            aria-label="Dismiss context message"
+            aria-label={msg('mcba571da23')}
             onClick={() => setContextNote('')}
           >
             <X />

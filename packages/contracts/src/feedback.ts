@@ -88,6 +88,8 @@ export interface FeedbackComment {
   text: string;
   createdAt: string;
   kind: 'comment' | 'activity';
+  /** Structured activity permits localization without translating user comments. */
+  changes?: { field: 'status' | 'priority' | 'assignee'; from: string; to: string }[];
 }
 export interface FeedbackRecord extends Omit<FeedbackCreate, 'requestId' | 'screenshot'> {
   id: string;

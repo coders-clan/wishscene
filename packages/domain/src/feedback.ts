@@ -1,4 +1,5 @@
 import type {
+  FeedbackComment,
   FeedbackCreate,
   FeedbackPatch,
   FeedbackRecord,
@@ -48,6 +49,9 @@ export function triageFeedback(
   ]
     .filter(Boolean)
     .join(' · ');
+  const activity: NonNullable<FeedbackComment['changes']> = [];
+  for (const field of ['status', 'priority', 'assignee'] as const)
+    if (item[field] !== input[field]) activity.push({ field, from: item[field], to: input[field] });
   return {
     ...item,
     status: input.status,
@@ -61,6 +65,7 @@ export function triageFeedback(
         id: `${item.id}-${item.revision + 1}`,
         kind: 'activity',
         text: changes,
+        changes: activity,
         author: input.author,
         createdAt: now,
       },

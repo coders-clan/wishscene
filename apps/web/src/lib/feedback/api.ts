@@ -195,14 +195,12 @@ export async function feedbackDispatch(
     }
     throw new DomainError(404, 'NOT_FOUND', 'Feedback route not found.');
   } catch (error) {
-    if (error instanceof DomainError)
-      return respond({ error: { code: error.code, message: error.message } }, error.status);
+    if (error instanceof DomainError) return respond({ error: { code: error.code } }, error.status);
     if (error instanceof z.ZodError)
       return respond(
         {
           error: {
             code: 'VALIDATION',
-            message: error.issues.map((x) => `${x.path.join('.')}: ${x.message}`).join('; '),
           },
         },
         400,
@@ -215,8 +213,6 @@ export async function feedbackDispatch(
       {
         error: {
           code: 'STORAGE',
-          message:
-            'Feedback could not be saved or loaded. Your draft is still here; please try again.',
         },
       },
       503,

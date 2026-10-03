@@ -13,6 +13,7 @@ export default async function LoginPage({
   searchParams: Promise<{ next?: string; error?: string }>;
 }) {
   const t = await getTranslations('auth');
+  const metadata = await getTranslations('metadata');
   const mode = authMode();
   if (mode.mode === 'open') redirect('/');
   const { next: rawNext, error } = await searchParams;
@@ -24,7 +25,8 @@ export default async function LoginPage({
     <main className="login">
       <div className="login-card">
         <span className="wordmark">
-          wishscene<span className="brand-dot">.</span>
+          {metadata('manifestName')}
+          <span className="brand-dot">.</span>
         </span>
         <LanguageSwitcher />
         <p>{t('introduction')}</p>

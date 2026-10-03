@@ -34,6 +34,7 @@ export function targetFor(
   kind: FeedbackTarget['kind'],
   rect: { x: number; y: number; width: number; height: number },
   element?: HTMLElement,
+  regionLabel = '',
 ): FeedbackTarget {
   return {
     kind,
@@ -46,7 +47,7 @@ export function targetFor(
           element.tagName.toLowerCase()
         ).slice(0, 120)
       : kind === 'region'
-        ? 'Selected section'
+        ? regionLabel
         : document.title.slice(0, 120),
     excerpt: element ? safeText(element) : '',
     viewport: { width: innerWidth, height: innerHeight, dpr: Math.min(devicePixelRatio, 10) },

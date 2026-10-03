@@ -1,4 +1,8 @@
 'use client';
+
+import { useFormatter } from 'next-intl';
+import { useUnsavedChanges } from '@/i18n/unsaved';
+import { useCopy } from '@/i18n/copy';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
@@ -31,18 +35,9 @@ import {
   fetchAuthSession,
   feedbackRequest,
   readName,
-  readable,
   saveName,
   signOut,
 } from './client';
-function timestamp(value: string) {
-  return new Date(value).toLocaleString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
 type AuthUser = { login: string; name: string | null; avatarUrl: string };
 function FeedbackDetail({
   id,
@@ -57,6 +52,15 @@ function FeedbackDetail({
   onClose: () => void;
   onChange: () => void;
 }) {
+  const msg = useCopy('feedback');
+  const format = useFormatter();
+  const timestamp = (value: string) =>
+    format.dateTime(new Date(value), {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   const canContribute = !authRequired || !!authUser;
   const loginHref = `/api/auth/github?next=${encodeURIComponent(`/feedback?item=${id}`)}`;
   const [item, setItem] = useState<FeedbackItem | null>(null);
@@ -65,6 +69,16 @@ function FeedbackDetail({
   const [author, setAuthor] = useState('');
   const effectiveAuthor = authUser ? authUser.login : author;
   const [reply, setReply] = useState('');
+  useUnsavedChanges(
+    Boolean(
+      reply ||
+        (item &&
+          draft &&
+          (item.status !== draft.status ||
+            item.priority !== draft.priority ||
+            item.assignee !== draft.assignee)),
+    ),
+  );
   const replyId = useRef('');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
@@ -102,7 +116,7 @@ function FeedbackDetail({
             });
         }
       } catch (e) {
-        if (active) setError((e as Error).message);
+        if (active) setError(msg.error(e));
       }
     };
     void load();
@@ -131,7 +145,7 @@ function FeedbackDetail({
       setItem((old) => (old && old.revision > value.revision ? old : value));
       onChange();
     } catch (e) {
-      setError((e as Error).message);
+      setError(msg.error(e));
     } finally {
       setBusy(false);
     }
@@ -143,7 +157,7 @@ function FeedbackDetail({
     }
     if (!item || !reply.trim()) return;
     if (!authUser && !author.trim()) {
-      setError('Add your name before posting.');
+      setError(msg('md722c2baff'));
       return;
     }
     setBusy(true);
@@ -165,7 +179,7 @@ function FeedbackDetail({
       replyId.current = '';
       onChange();
     } catch (e) {
-      setError((e as Error).message);
+      setError(msg.error(e));
     } finally {
       setBusy(false);
     }
@@ -188,10 +202,10 @@ function FeedbackDetail({
         assignee: value.assignee,
       });
       triageDirty.current = false;
-      setNotice('Your report was updated.');
+      setNotice(msg('md14f3f9faa'));
       onChange();
     } catch (e) {
-      setError((e as Error).message);
+      setError(msg.error(e));
     } finally {
       setBusy(false);
     }
@@ -201,37 +215,33 @@ function FeedbackDetail({
       await navigator.clipboard.writeText(value);
       setNotice(label);
     } catch {
-      setError('Clipboard unavailable. Use Export report instead.');
+      setError(msg('m0370cf6f31'));
     }
   }
   return (
     <FeedbackDialog
-      title={item?.title || 'Feedback report'}
+      title={item?.title || msg('m0c3c51dbac')}
       onClose={() => {
         if (busy) return;
-        if (
-          (reply.trim() || triageDirty.current) &&
-          !window.confirm('Discard your unsaved reply or report changes?')
-        )
-          return;
+        if ((reply.trim() || triageDirty.current) && !window.confirm(msg('m43f6f65733'))) return;
         onClose();
       }}
       wide
     >
       {!item ? (
-        <p role="status">{error || 'Loading report…'}</p>
+        <p role="status">{error || msg('m53284c7e03')}</p>
       ) : (
         <div className="feedback-detail-grid">
           <div>
             <div className="feedback-tools">
-              <span className={`feedback-status ${item.status}`}>{readable(item.status)}</span>
-              <span className={`feedback-chip priority-${item.priority}`}>{item.priority}</span>
-              <span className="feedback-chip">{item.category}</span>
+              <span className={`feedback-status ${item.status}`}>{msg(`enum_${item.status}`)}</span>
+              <span className={`feedback-chip priority-${item.priority}`}>
+                {msg(`enum_${item.priority}`)}
+              </span>
+              <span className="feedback-chip">{msg(`enum_${item.category}`)}</span>
             </div>
             <p className="feedback-permission-note">
-              {item.canEdit
-                ? 'You created this report. You can edit its status, priority, and assignee.'
-                : `You can vote and reply. Only ${item.author} can edit this report.`}
+              {item.canEdit ? msg('md7a01b4ac8') : msg('md77313f028', { v0: item.author })}
             </p>
             <p className="feedback-description" dir="auto">
               {item.description}
@@ -248,24 +258,24 @@ function FeedbackDetail({
               >
                 <img
                   src={`/api/feedback/${id}/image`}
-                  alt={`Annotated screenshot: ${item.title}`}
+                  alt={msg('m4b3cf350b6', { v0: item.title })}
                 />
                 <span>
                   <ExternalLink size={16} />
-                  Open full screenshot
+                  {msg('m344a46bb2f')}
                 </span>
               </a>
             ) : (
               <div className="feedback-no-capture">
                 <MessageSquarePlus />
-                <p>Text report · no screenshot</p>
+                <p>{msg('m1fc115984a')}</p>
               </div>
             )}
             <div className="feedback-context">
               <strong>{item.target.label}</strong>
               <small>
                 {item.target.path} · {item.target.viewport.width} × {item.target.viewport.height} ·{' '}
-                {item.target.kind}
+                {msg(`enum_${item.target.kind}`)}
               </small>
               {item.target.excerpt && <p dir="auto">{item.target.excerpt}</p>}
               {item.target.selector && <code>{item.target.selector}</code>}
@@ -280,16 +290,16 @@ function FeedbackDetail({
                 }
               >
                 <ExternalLink size={17} />
-                Open page context
+                {msg('m467308aa2f')}
               </a>
               <button
                 className="button"
                 onClick={() =>
-                  void copy(`${location.origin}/feedback?item=${id}`, 'Report link copied.')
+                  void copy(`${location.origin}/feedback?item=${id}`, msg('mc64a763709'))
                 }
               >
                 <Copy size={17} />
-                Copy link
+                {msg('m2f84eea5d4')}
               </button>
               <button
                 className="button"
@@ -298,7 +308,7 @@ function FeedbackDetail({
                 }
               >
                 <Download size={17} />
-                Export report
+                {msg('m0ddb744236')}
               </button>
               {item.hasScreenshot && (
                 <a
@@ -306,7 +316,7 @@ function FeedbackDetail({
                   href={`/api/feedback/${id}/image`}
                   download={`wishscene-feedback-${id}.jpg`}
                 >
-                  Download image
+                  {msg('md6f34a97a5')}
                 </a>
               )}
             </div>
@@ -316,14 +326,14 @@ function FeedbackDetail({
               <div className="feedback-triage">
                 <h3>
                   <SlidersHorizontal size={18} />
-                  Edit your report
+                  {msg('m78a5f6f839')}
                 </h3>
-                <p className="feedback-hint">Only the report creator can change these fields.</p>
+                <p className="feedback-hint">{msg('m1f53079887')}</p>
                 <div className="feedback-field-row">
                   <label>
-                    Status
+                    {msg('mbae7d5be70')}
                     <select
-                      aria-label="Status"
+                      aria-label={msg('mbae7d5be70')}
                       value={draft.status}
                       onChange={(e) => {
                         triageDirty.current = true;
@@ -332,15 +342,15 @@ function FeedbackDetail({
                     >
                       {feedbackStatuses.map((value) => (
                         <option key={value} value={value}>
-                          {readable(value)}
+                          {msg(`enum_${value}`)}
                         </option>
                       ))}
                     </select>
                   </label>
                   <label>
-                    Priority
+                    {msg('m886cbff9d9')}
                     <select
-                      aria-label="Priority"
+                      aria-label={msg('m886cbff9d9')}
                       value={draft.priority}
                       onChange={(e) => {
                         triageDirty.current = true;
@@ -351,16 +361,18 @@ function FeedbackDetail({
                       }}
                     >
                       {feedbackPriorities.map((value) => (
-                        <option key={value}>{value}</option>
+                        <option key={value} value={value}>
+                          {msg(`enum_${value}`)}
+                        </option>
                       ))}
                     </select>
                   </label>
                 </div>
                 <label>
-                  Assignee
+                  {msg('m049e3ce547')}
                   <input
                     maxLength={60}
-                    placeholder="Anyone on the team"
+                    placeholder={msg('m6a1ced9529')}
                     value={draft.assignee}
                     onChange={(e) => {
                       triageDirty.current = true;
@@ -374,38 +386,36 @@ function FeedbackDetail({
                     disabled={busy || !triageDirty.current}
                     onClick={() => void saveTriage()}
                   >
-                    Save changes
+                    {msg('m179359b39e')}
                   </button>
                   <button
                     className="button"
                     disabled={busy}
                     onClick={() =>
                       void refresh(true)
-                        .then(() => setNotice('Latest report loaded.'))
-                        .catch((e) => setError(e.message))
+                        .then(() => setNotice(msg('m40a85d467b')))
+                        .catch((e) => setError(msg.error(e)))
                     }
                   >
                     <RefreshCw size={16} />
-                    Reload latest
+                    {msg('m33af4d0999')}
                   </button>
                 </div>
               </div>
             )}
             <div className="feedback-triage">
-              <h3>Vote</h3>
+              <h3>{msg('m64f8729141')}</h3>
               {!canContribute ? (
                 <div className="feedback-sign-in-card">
-                  <p>Sign in with GitHub to vote or reply.</p>
+                  <p>{msg('m95b80460d5')}</p>
                   <a className="button primary" href={loginHref}>
                     <GithubIcon size={18} />
-                    Sign in with GitHub
+                    {msg('m103d26d100')}
                   </a>
                 </div>
               ) : (
                 <p className="feedback-hint">
-                  {authUser
-                    ? `Voting as @${authUser.login}`
-                    : 'Your vote is stored in this browser.'}
+                  {authUser ? msg('m0d3561d21f', { v0: authUser.login }) : msg('m0d2d86507b')}
                 </p>
               )}
               {canContribute && (
@@ -416,18 +426,19 @@ function FeedbackDetail({
                   onClick={() => void vote()}
                 >
                   <ArrowUp size={18} />
-                  {item.votes} · {item.voted ? 'You also noticed this' : 'I noticed this too'}
+                  {format.number(item.votes)} ·{' '}
+                  {item.voted ? msg('mcddc250275') : msg('m2a99dfc1fa')}
                 </button>
               )}
             </div>
             <h3>
               <MessageCircle size={18} />
-              Replies & activity
+              {msg('m85f0801073')}
             </h3>
             <div className="feedback-comments" aria-live="polite">
               {!item.comments.length && (
                 <p className="feedback-hint">
-                  {canContribute ? 'Start the conversation.' : 'No replies yet.'}
+                  {canContribute ? msg('m739a892c06') : msg('m8ad254e9d6')}
                 </p>
               )}
               {item.comments.map((comment) => (
@@ -436,7 +447,24 @@ function FeedbackDetail({
                     <strong>{comment.author}</strong>
                     <time>{timestamp(comment.createdAt)}</time>
                   </div>
-                  <p dir="auto">{comment.text}</p>
+                  <p dir="auto">
+                    {comment.kind === 'activity' && comment.changes
+                      ? comment.changes
+                          .map((change) =>
+                            msg(`activity_${change.field}`, {
+                              from:
+                                change.field === 'assignee'
+                                  ? change.from
+                                  : msg(`enum_${change.from}`),
+                              to:
+                                change.field === 'assignee'
+                                  ? change.to || msg('nobody')
+                                  : msg(`enum_${change.to}`),
+                            }),
+                          )
+                          .join(' · ')
+                      : comment.text}
+                  </p>
                 </article>
               ))}
             </div>
@@ -450,17 +478,17 @@ function FeedbackDetail({
               >
                 {!authUser && (
                   <label>
-                    Your name
+                    {msg('mab42293e29')}
                     <input
                       maxLength={60}
                       value={author}
                       onChange={(e) => setAuthor(e.target.value)}
-                      placeholder="Display name"
+                      placeholder={msg('mc7874aaa0f')}
                     />
                   </label>
                 )}
                 <label>
-                  Reply
+                  {msg('m6c2bb735a4')}
                   <textarea
                     value={reply}
                     rows={3}
@@ -470,12 +498,12 @@ function FeedbackDetail({
                       setReply(e.target.value);
                       replyId.current = '';
                     }}
-                    placeholder="Add details, a workaround, or an update…"
+                    placeholder={msg('m94e2b9e111')}
                     dir="auto"
                   />
                 </label>
                 <button className="button primary" disabled={busy}>
-                  Post reply
+                  {msg('mcbb410663a')}
                 </button>
               </form>
             )}
@@ -484,12 +512,12 @@ function FeedbackDetail({
               disabled={busy}
               onClick={() =>
                 void refresh()
-                  .then(() => setNotice('Latest activity loaded.'))
-                  .catch((e) => setError(e.message))
+                  .then(() => setNotice(msg('medeaec5326')))
+                  .catch((e) => setError(msg.error(e)))
               }
             >
               <RefreshCw size={16} />
-              Reload latest
+              {msg('m33af4d0999')}
             </button>
             {error && (
               <p className="feedback-error" role="alert">
@@ -504,6 +532,15 @@ function FeedbackDetail({
   );
 }
 export function FeedbackBoard() {
+  const msg = useCopy('feedback');
+  const format = useFormatter();
+  const timestamp = (value: string) =>
+    format.dateTime(new Date(value), {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   const [list, setList] = useState<FeedbackList | null>(null);
   const [search, setSearch] = useState(''),
     [status, setStatus] = useState('all'),
@@ -542,7 +579,7 @@ export function FeedbackBoard() {
         setList(result);
         setError('');
       } catch (e) {
-        if (!controller.signal.aborted) setError((e as Error).message);
+        if (!controller.signal.aborted) setError(msg.error(e));
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -577,59 +614,64 @@ export function FeedbackBoard() {
     <main className="feedback-board" id="main">
       <header className="feedback-board-header">
         <a className="wordmark" href="/">
-          wishscene<span className="brand-dot">.</span>
+          {msg('mff43274984')}
+          <span className="brand-dot">.</span>
         </a>
         <div className="feedback-tools">
           {authLoaded && authUser ? (
             <button className="button" onClick={() => void signOut()}>
               <GithubIcon size={18} />
-              <span>Sign out @{authUser.login}</span>
+              <span>
+                {msg('m7317e100df')}
+                {authUser.login}
+              </span>
             </button>
           ) : authLoaded && authRequired ? (
             <a className="button primary" href="/api/auth/github?next=%2Ffeedback">
               <GithubIcon size={18} />
-              <span>Sign in with GitHub</span>
+              <span>{msg('m103d26d100')}</span>
             </a>
           ) : null}
           <a className="button" href="/">
             <ArrowLeft size={18} />
-            <span>Back to studio</span>
+            <span>{msg('ma4de9ec764')}</span>
           </a>
         </div>
       </header>
       <section className="feedback-board-intro">
         <div>
-          <p className="eyebrow">WISHSCENE · BUILD TOGETHER</p>
+          <p className="eyebrow">{msg('mcaa060f59c')}</p>
           <h1>
-            Team feedback <span className="feedback-count">{list?.total ?? '…'}</span>
+            {msg('mc0ef46e686')}
+            <span className="feedback-count">{list?.total ?? '…'}</span>
           </h1>
-          <p>Report what you see, add context, and keep the conversation in one place.</p>
+          <p>{msg('m4c72b18bbc')}</p>
         </div>
         <a className="button primary feedback-new-button" href="/">
           <Plus size={18} />
-          Add feedback in the studio
+          {msg('m755b07bfae')}
         </a>
       </section>
       <div className="feedback-board-heading">
         <div>
-          <h2>Reports</h2>
+          <h2>{msg('m88bc3fe3da')}</h2>
           <p>
             <span className="feedback-live-dot" />
-            {error ? 'Connection needs attention' : 'Shared board · refreshes every 10 seconds'}
+            {error ? msg('m2690770bb8') : msg('m4216a9fad4')}
           </p>
         </div>
         <button className="button" onClick={() => setTick((x) => x + 1)}>
           <RefreshCw size={17} />
-          Refresh
+          {msg('m56e3badc4e')}
         </button>
       </div>
-      <section className="feedback-filters" aria-label="Filter feedback">
+      <section className="feedback-filters" aria-label={msg('m86841772f5')}>
         <div className="feedback-filter-top">
           <label className="feedback-search">
             <Search size={19} />
             <input
-              aria-label="Search feedback"
-              placeholder="Search reports, people or elements…"
+              aria-label={msg('mbf5f259bae')}
+              placeholder={msg('mcfaaebd5ff')}
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -645,7 +687,8 @@ export function FeedbackBoard() {
             onClick={() => setFiltersOpen((value) => !value)}
           >
             <Filter size={17} />
-            Filters{activeFilterCount ? ` (${activeFilterCount})` : ''}
+            {msg('m96e578211a')}
+            {activeFilterCount ? ` (${activeFilterCount})` : ''}
           </button>
         </div>
         <div
@@ -653,72 +696,76 @@ export function FeedbackBoard() {
           className={`feedback-filter-controls ${filtersOpen ? 'is-open' : ''}`}
         >
           <label>
-            Status
+            {msg('mbae7d5be70')}
             <select
-              aria-label="Filter by status"
+              aria-label={msg('mf43653d7fa')}
               value={status}
               onChange={(e) => {
                 setStatus(e.target.value);
                 setOffset(0);
               }}
             >
-              <option value="all">All statuses</option>
+              <option value="all">{msg('m6405179d24')}</option>
               {feedbackStatuses.map((x) => (
                 <option key={x} value={x}>
-                  {readable(x)}
+                  {msg(`enum_${x}`)}
                 </option>
               ))}
             </select>
           </label>
           <label>
-            Type
+            {msg('m3deb745651')}
             <select
-              aria-label="Filter by type"
+              aria-label={msg('me55aa1d9ec')}
               value={category}
               onChange={(e) => {
                 setCategory(e.target.value);
                 setOffset(0);
               }}
             >
-              <option value="all">All types</option>
+              <option value="all">{msg('m30c8a0fc9c')}</option>
               {feedbackCategories.map((x) => (
-                <option key={x}>{x}</option>
+                <option key={x} value={x}>
+                  {msg(`enum_${x}`)}
+                </option>
               ))}
             </select>
           </label>
           <label>
-            Priority
+            {msg('m886cbff9d9')}
             <select
-              aria-label="Filter by priority"
+              aria-label={msg('m870c2d046e')}
               value={priority}
               onChange={(e) => {
                 setPriority(e.target.value);
                 setOffset(0);
               }}
             >
-              <option value="all">All priorities</option>
+              <option value="all">{msg('mbc6ba0d1bb')}</option>
               {feedbackPriorities.map((x) => (
-                <option key={x}>{x}</option>
+                <option key={x} value={x}>
+                  {msg(`enum_${x}`)}
+                </option>
               ))}
             </select>
           </label>
           <label>
-            Sort
+            {msg('madc4e96a47')}
             <select
-              aria-label="Sort feedback"
+              aria-label={msg('ma08eec9a7b')}
               value={sort}
               onChange={(e) => {
                 setSort(e.target.value);
                 setOffset(0);
               }}
             >
-              <option value="newest">Newest first</option>
-              <option value="votes">Most noticed</option>
+              <option value="newest">{msg('mf5ec7772ca')}</option>
+              <option value="votes">{msg('m5ee9a509a1')}</option>
             </select>
           </label>
           {(search || activeFilterCount || sort !== 'newest') && (
             <button type="button" className="button feedback-clear-filters" onClick={clearFilters}>
-              Clear
+              {msg('m719ea396ad')}
             </button>
           )}
         </div>
@@ -727,24 +774,20 @@ export function FeedbackBoard() {
         <p className="feedback-error" role="alert">
           {error}{' '}
           <button className="button" onClick={() => setTick((x) => x + 1)}>
-            Retry
+            {msg('m9f5cd8a2e8')}
           </button>
         </p>
       )}
-      {loading && !list && <p role="status">Loading the shared board…</p>}
+      {loading && !list && <p role="status">{msg('m50042f3366')}</p>}
       {list && !list.items.length && !error && (
         <section className="feedback-empty">
           <CheckCircle2 size={42} />
           <h3>
             {search || status !== 'all' || category !== 'all' || priority !== 'all'
-              ? 'No matching feedback'
-              : 'A fresh pair of eyes changes everything.'}
+              ? msg('m6b0fe63b58')
+              : msg('me269e99440')}
           </h3>
-          <p>
-            {list.total === 0
-              ? 'Use the Feedback button to send a note, capture a section or select an element.'
-              : 'Try a different filter.'}
-          </p>
+          <p>{list.total === 0 ? msg('mff021663d7') : msg('mbe367ba498')}</p>
         </section>
       )}
       <div className="feedback-list" aria-busy={loading}>
@@ -755,9 +798,13 @@ export function FeedbackBoard() {
             </div>
             <div className="feedback-list-content">
               <div className="feedback-tools">
-                <span className={`feedback-status ${item.status}`}>{readable(item.status)}</span>
-                <span className={`feedback-chip priority-${item.priority}`}>{item.priority}</span>
-                <span className="feedback-category">{item.category}</span>
+                <span className={`feedback-status ${item.status}`}>
+                  {msg(`enum_${item.status}`)}
+                </span>
+                <span className={`feedback-chip priority-${item.priority}`}>
+                  {msg(`enum_${item.priority}`)}
+                </span>
+                <span className="feedback-category">{msg(`enum_${item.category}`)}</span>
               </div>
               <h3 dir="auto">{item.title}</h3>
               <p dir="auto">{item.description}</p>
@@ -766,7 +813,7 @@ export function FeedbackBoard() {
                   {item.author} · {timestamp(item.createdAt)}
                 </span>
                 <span>
-                  {item.target.kind} · {item.target.label.slice(0, 55)}
+                  {msg(`enum_${item.target.kind}`)} · {item.target.label.slice(0, 55)}
                 </span>
                 {item.assignee && <span>→ {item.assignee}</span>}
               </div>
@@ -774,13 +821,15 @@ export function FeedbackBoard() {
             <div className="feedback-list-stats">
               <span>
                 <ArrowUp size={17} />
-                {item.votes}
+                {format.number(item.votes)}
               </span>
               <span>
                 <MessageCircle size={17} />
-                {item.commentCount}
+                {format.number(item.commentCount)}
               </span>
-              {item.hasScreenshot && <span className="feedback-image-badge">Screenshot</span>}
+              {item.hasScreenshot && (
+                <span className="feedback-image-badge">{msg('m60c152d92d')}</span>
+              )}
               <ChevronRight className="feedback-list-chevron" aria-hidden="true" />
             </div>
           </button>
@@ -793,24 +842,25 @@ export function FeedbackBoard() {
             disabled={!offset}
             onClick={() => setOffset(Math.max(0, offset - 30))}
           >
-            Previous
+            {msg('m50f94286ba')}
           </button>
           <span>
-            {offset + 1}–{Math.min(offset + 30, list.total)} of {list.total}
+            {msg('pageCount', {
+              start: offset + 1,
+              end: Math.min(offset + 30, list.total),
+              total: list.total,
+            })}
           </span>
           <button
             className="button"
             disabled={offset + 30 >= list.total}
             onClick={() => setOffset(offset + 30)}
           >
-            Next
+            {msg('mbc981983e7')}
           </button>
         </div>
       )}
-      <p className="feedback-board-footer">
-        Shared with everyone on this deployment. Contributors use verified GitHub identities when
-        sign-in is enabled. Preview captures before sharing.
-      </p>
+      <p className="feedback-board-footer">{msg('m013c4dc576')}</p>
       {selected && (
         <FeedbackDetail
           id={selected}

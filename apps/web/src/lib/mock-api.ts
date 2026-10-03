@@ -22,17 +22,13 @@ export async function dispatch(request: NextRequest, path: string[]) {
       {
         error: {
           code: 'MOCK_DISABLED',
-          message: 'Demo API disabled. Set WISHSCENE_MOCK=1 for a local production preview.',
         },
       },
       { status: 503 },
     );
   // hunch-why: Next can construct an internal URL with the bind address (0.0.0.0). Compare browser Origin against the request Host and protocol, or valid local mutations are incorrectly rejected. Do not trust forwarded-host headers here.
   if (request.method !== 'GET' && !isSameOriginWrite(request))
-    return NextResponse.json(
-      { error: { code: 'ORIGIN', message: 'Cross-origin writes are disabled.' } },
-      { status: 403 },
-    );
+    return NextResponse.json({ error: { code: 'ORIGIN' } }, { status: 403 });
   try {
     const saved = await withWorkspace(request.cookies.get(COOKIE)?.value, (studio) =>
       route(request, path, studio),
@@ -154,12 +150,11 @@ async function route(request: NextRequest, path: string[], studio: MockStudio) {
       result = {
         error: {
           code: 'VALIDATION',
-          message: error.issues.map((x) => `${x.path.join('.')}: ${x.message}`).join('; '),
         },
       };
     } else if (error instanceof DomainError) {
       status = error.status;
-      result = { error: { code: error.code, message: error.message } };
+      result = { error: { code: error.code } };
     } else {
       status = 500;
       result = {
