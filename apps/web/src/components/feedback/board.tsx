@@ -451,8 +451,8 @@ function FeedbackDetail({
                   </div>
                   <p dir="auto">
                     {comment.kind === 'activity' && comment.changes
-                      ? comment.changes
-                          .map((change) =>
+                      ? format.list(
+                          comment.changes.map((change) =>
                             msg(`activity_${change.field}`, {
                               from:
                                 change.field === 'assignee'
@@ -463,8 +463,9 @@ function FeedbackDetail({
                                   ? change.to || msg('nobody')
                                   : msg(`enum_${change.to}`),
                             }),
-                          )
-                          .join(' · ')
+                          ),
+                          { type: 'unit', style: 'short' },
+                        )
                       : comment.text}
                   </p>
                 </article>
@@ -623,10 +624,7 @@ export function FeedbackBoard() {
           {authLoaded && authUser ? (
             <button className="button" onClick={() => void signOut()}>
               <GithubIcon size={18} />
-              <span>
-                {msg('m7317e100df')}
-                {authUser.login}
-              </span>
+              <span>{msg('signedOutAccount', { name: authUser.login })}</span>
             </button>
           ) : authLoaded && authRequired ? (
             <a className="button primary" href="/api/auth/github?next=%2Ffeedback">
@@ -689,8 +687,7 @@ export function FeedbackBoard() {
             onClick={() => setFiltersOpen((value) => !value)}
           >
             <Filter size={17} />
-            {msg('m96e578211a')}
-            {activeFilterCount ? ` (${activeFilterCount})` : ''}
+            {msg('filterCount', { count: activeFilterCount })}
           </button>
         </div>
         <div

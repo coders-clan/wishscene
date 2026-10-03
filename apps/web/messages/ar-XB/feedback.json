@@ -55,7 +55,6 @@
   "mcbb410663a": "‮Post reply‬",
   "medeaec5326": "‮Latest activity loaded.‬",
   "mff43274984": "‮wishscene‬",
-  "m7317e100df": "‮Sign out @‬",
   "ma4de9ec764": "‮Back to studio‬",
   "mcaa060f59c": "‮WISHSCENE · BUILD TOGETHER‬",
   "mc0ef46e686": "‮Team feedback‬",
@@ -68,7 +67,6 @@
   "m86841772f5": "‮Filter feedback‬",
   "mbf5f259bae": "‮Search feedback‬",
   "mcfaaebd5ff": "‮Search reports, people or elements…‬",
-  "m96e578211a": "‮Filters‬",
   "mf43653d7fa": "‮Filter by status‬",
   "m6405179d24": "‮All statuses‬",
   "m3deb745651": "‮Type‬",
@@ -131,7 +129,6 @@
   "m9f81b0e99c": "‮Copy section text‬",
   "m12d332dbae": "‮Describe what you noticed‬",
   "m4d88ecedea": "‮Give the team enough detail to act.‬",
-  "md0b05348c0": "‮Posting as @‬",
   "meb4596af70": "‮How should the team know you?‬",
   "md1c3c0e37d": "‮Short title‬",
   "ma92a216075": "‮What should we fix or improve?‬",
@@ -172,5 +169,8 @@
   "enum_element": "‮Element‬",
   "pageCount": "{start, number}‮–‬{end, number}‮ of ‬{total, number}",
   "nobody": "‮Nobody‬",
-  "selectedRegion": "‮Selected section‬"
+  "selectedRegion": "‮Selected section‬",
+  "signedOutAccount": "‮Sign out @‬{name}",
+  "postingAccount": "‮Posting as @‬{name}",
+  "filterCount": "‮Filters‬{count, plural, =0 {} other {‮ (‬#‮)‬}}"
 }

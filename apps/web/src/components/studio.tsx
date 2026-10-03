@@ -571,10 +571,10 @@ export default function Studio() {
                     </button>
                     <p>
                       <MapPin size={12} />
-                      {experience.destination} <span>·</span>
-                      {msg('m043f0bcaf0')}
-                      <span>·</span>
-                      {msg('m58129edb79')}
+                      {msg('experienceSummary', {
+                        destination: demo(experience.destination),
+                        count: experience.scenes.length,
+                      })}
                     </p>
                   </div>
                 </div>
@@ -797,8 +797,7 @@ export default function Studio() {
                             <span className="scene-time">
                               {item.time}{' '}
                               <span>
-                                {msg('m94e09bb704')}
-                                {demo(experience.destination)}
+                                {msg('journal', { destination: demo(experience.destination) })}
                               </span>
                             </span>
                           </button>

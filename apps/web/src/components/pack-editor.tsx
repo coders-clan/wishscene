@@ -1,6 +1,7 @@
 'use client';
 
 import { useCopy } from '@/i18n/copy';
+import { useFormatter } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { ArrowDown, ArrowUp, Check } from 'lucide-react';
 import {
@@ -26,6 +27,7 @@ type Draft = { order: string[]; coverTitle: string; baseRevision: number };
 // hunch-why: Carousel edits stay local until Save, like post drafts. The save carries the revision the edit started from, so another tab's newer carousel is reported instead of overwritten.
 export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }: Props) {
   const msg = useCopy('studio');
+  const format = useFormatter();
   const [draft, setDraft] = useState<Draft | null>(null);
   const [saved, setSaved] = useState<SocialPack | null>(null);
   const [saving, setSaving] = useState(false);
@@ -39,12 +41,6 @@ export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }:
   const dirty =
     !!draft && (draft.coverTitle !== pack.coverTitle || draft.order.join() !== pack.order.join());
   useEffect(() => onDirtyChange(dirty), [dirty, onDirtyChange]);
-  useEffect(() => {
-    if (!dirty) return;
-    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
-    window.addEventListener('beforeunload', warn);
-    return () => window.removeEventListener('beforeunload', warn);
-  }, [dirty]);
   const coverSceneId = order[0];
   useEffect(
     () => onCoverChange({ experienceId: experience.id, sceneId: coverSceneId, title: coverTitle }),
@@ -141,7 +137,7 @@ export function PackEditor({ experience, onDirtyChange, onCoverChange, onSave }:
               <img src={image} alt={' '} width={45} height={60} />
               <span className="pack-order-title">
                 <strong>
-                  {String(index + 1).padStart(2, '0')} · {scene.title}
+                  {format.number(index + 1, { minimumIntegerDigits: 2 })} · {scene.title}
                 </strong>
                 {index === 0 && <span className="pack-cover-badge">{msg('m8b656a5dd9')}</span>}
               </span>

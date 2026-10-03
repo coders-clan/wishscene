@@ -55,7 +55,6 @@
   "mcbb410663a": "Pöst rëply~~~~",
   "medeaec5326": "Látëst áctïvïty löádëd.~~~~~~~~~",
   "mff43274984": "wïshscënë~~~~",
-  "m7317e100df": "Sïgn öüt @~~~~",
   "ma4de9ec764": "Báck tö stüdïö~~~~~",
   "mcaa060f59c": "WÏSHSCËNË · BÜÏLD TÖGËTHËR~~~~~~~~~~",
   "mc0ef46e686": "Tëám fëëdbáck~~~~~",
@@ -68,7 +67,6 @@
   "m86841772f5": "Fïltër fëëdbáck~~~~~~",
   "mbf5f259bae": "Sëárch fëëdbáck~~~~~~",
   "mcfaaebd5ff": "Sëárch rëpörts, pëöplë ör ëlëmënts…~~~~~~~~~~~~~",
-  "m96e578211a": "Fïltërs~~~",
   "mf43653d7fa": "Fïltër by státüs~~~~~~",
   "m6405179d24": "Áll státüsës~~~~~",
   "m3deb745651": "Typë~~",
@@ -131,7 +129,6 @@
   "m9f81b0e99c": "Cöpy sëctïön tëxt~~~~~~",
   "m12d332dbae": "Dëscrïbë whát yöü nötïcëd~~~~~~~~~",
   "m4d88ecedea": "Gïvë thë tëám ënöügh dëtáïl tö áct.~~~~~~~~~~~~~",
-  "md0b05348c0": "Pöstïng ás @~~~~~",
   "meb4596af70": "Höw shöüld thë tëám knöw yöü?~~~~~~~~~~~",
   "md1c3c0e37d": "Shört tïtlë~~~~",
   "ma92a216075": "Whát shöüld wë fïx ör ïmprövë?~~~~~~~~~~~",
@@ -172,5 +169,8 @@
   "enum_element": "Ëlëmënt~~~",
   "pageCount": "{start, number}–~{end, number} öf ~~{total, number}",
   "nobody": "Nöbödy~~~",
-  "selectedRegion": "Sëlëctëd sëctïön~~~~~~"
+  "selectedRegion": "Sëlëctëd sëctïön~~~~~~",
+  "signedOutAccount": "Sïgn öüt @~~~~{name}",
+  "postingAccount": "Pöstïng ás @~~~~~{name}",
+  "filterCount": "Fïltërs~~~{count, plural, =0 {} other { (~#)~}}"
 }

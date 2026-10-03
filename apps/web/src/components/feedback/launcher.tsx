@@ -474,10 +474,7 @@ export function FeedbackLauncher() {
                 </div>
               </div>
               {authUser ? (
-                <p className="feedback-hint">
-                  {msg('md0b05348c0')}
-                  {authUser.login}
-                </p>
+                <p className="feedback-hint">{msg('postingAccount', { name: authUser.login })}</p>
               ) : (
                 <label>
                   {msg('mab42293e29')}

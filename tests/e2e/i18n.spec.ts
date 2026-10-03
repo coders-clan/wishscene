@@ -2,9 +2,12 @@ import { test, expect } from '@playwright/test';
 import { catalogs } from '../../apps/web/src/i18n/catalogs';
 
 const copy = (locale: string, namespace: string, english: string) => {
-  const key = Object.entries(catalogs.en[namespace]).find(([, value]) => value === english)?.[0];
+  const key = Object.entries(catalogs.en[namespace]).find(
+    ([, value]) => value === english || value.startsWith(english + '{count, plural,'),
+  )?.[0];
   if (!key) throw new Error(`Uncatalogued test label: ${namespace}: ${english}`);
-  return catalogs[locale][namespace][key];
+  const translated = catalogs[locale][namespace][key];
+  return key === 'filterCount' ? translated.split('{count, plural,')[0] : translated;
 };
 
 for (const locale of ['en', 'he', 'en-XA', 'ar-XB']) {
@@ -113,52 +116,58 @@ for (const locale of ['en', 'he', 'en-XA', 'ar-XB']) {
   });
 }
 
-test('language change asks before discarding a post draft and persists accepted choice', async ({
-  page,
-  context,
-  isMobile,
-}) => {
-  await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Tokyo, after hours' })).toBeVisible();
-  if (isMobile)
-    await page
-      .getByRole('navigation', { name: 'Mobile navigation' })
-      .getByRole('button', { name: 'Posts', exact: true })
-      .click();
-  else await page.getByRole('tab', { name: 'Social pack', exact: true }).click();
-  await page.getByLabel('Post text', { exact: true }).fill('Keep this unsaved draft');
-  if (isMobile) await page.getByRole('button', { name: 'More', exact: true }).click();
-  let prompted = 0;
-  page.once('dialog', async (dialog) => {
-    prompted++;
-    await dialog.dismiss();
-  });
-  await page.getByLabel('Language', { exact: true }).filter({ visible: true }).selectOption('he');
-  expect(prompted).toBe(1);
-  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  expect((await context.cookies()).find((c) => c.name === 'wishscene_locale')).toBeUndefined();
-  if (isMobile) {
-    await page.getByRole('button', { name: 'Close dialog', exact: true }).click();
-    await expect(page.getByLabel('Post text', { exact: true })).toHaveValue(
-      'Keep this unsaved draft',
+for (const [draft, label, view] of [
+  ['post', 'Post text', 'Write post'],
+  ['carousel', 'Cover title', 'Carousel'],
+  ['caption', 'Your caption', 'Pack caption'],
+] as const) {
+  test(`language change protects the ${draft} draft and persists accepted choice`, async ({
+    page,
+    context,
+    isMobile,
+  }) => {
+    await page.goto('/');
+    await expect(page.getByRole('heading', { name: 'Tokyo, after hours' })).toBeVisible();
+    if (isMobile)
+      await page
+        .getByRole('navigation', { name: 'Mobile navigation' })
+        .getByRole('button', { name: 'Posts', exact: true })
+        .click();
+    else await page.getByRole('tab', { name: 'Social pack', exact: true }).click();
+    if (isMobile && view !== 'Write post')
+      await page.getByRole('button', { name: view, exact: true }).click();
+    await page.getByLabel(label, { exact: true }).fill('Keep this unsaved draft');
+    if (isMobile) await page.getByRole('button', { name: 'More', exact: true }).click();
+    let prompted = 0;
+    page.once('dialog', async (dialog) => {
+      prompted++;
+      await dialog.dismiss();
+    });
+    await page.getByLabel('Language', { exact: true }).filter({ visible: true }).selectOption('he');
+    expect(prompted).toBe(1);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    expect((await context.cookies()).find((c) => c.name === 'wishscene_locale')).toBeUndefined();
+    if (isMobile) {
+      await page.getByRole('button', { name: 'Close dialog', exact: true }).click();
+      await expect(page.getByLabel(label, { exact: true })).toHaveValue('Keep this unsaved draft');
+      await page.getByRole('button', { name: 'More', exact: true }).click();
+    } else
+      await expect(page.getByLabel(label, { exact: true })).toHaveValue('Keep this unsaved draft');
+    page.once('dialog', async (dialog) => {
+      prompted++;
+      await dialog.accept();
+    });
+    await page.getByLabel('Language', { exact: true }).filter({ visible: true }).selectOption('he');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'he');
+    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+    expect(prompted).toBe(2);
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'he');
+    expect((await context.cookies()).find((c) => c.name === 'wishscene_locale')?.httpOnly).toBe(
+      true,
     );
-    await page.getByRole('button', { name: 'More', exact: true }).click();
-  } else
-    await expect(page.getByLabel('Post text', { exact: true })).toHaveValue(
-      'Keep this unsaved draft',
-    );
-  page.once('dialog', async (dialog) => {
-    prompted++;
-    await dialog.accept();
   });
-  await page.getByLabel('Language', { exact: true }).filter({ visible: true }).selectOption('he');
-  await expect(page.locator('html')).toHaveAttribute('lang', 'he');
-  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
-  expect(prompted).toBe(2);
-  await page.reload();
-  await expect(page.locator('html')).toHaveAttribute('lang', 'he');
-  expect((await context.cookies()).find((c) => c.name === 'wishscene_locale')?.httpOnly).toBe(true);
-});
+}
 
 test.describe('Hebrew gallery', () => {
   test.use({ locale: 'he-IL' });

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCopy } from '@/i18n/copy';
+import { useFormatter } from 'next-intl';
 import { useEffect, useState, type CSSProperties } from 'react';
 import {
   ArrowRight,
@@ -53,6 +54,7 @@ export function SocialComposer({
   onSave,
 }: Props) {
   const msg = useCopy('studio');
+  const format = useFormatter();
   const [edits, setEdits] = useState<Record<string, SocialDraft>>({});
   const [focusEdits, setFocusEdits] = useState<Record<string, SocialFocus>>({});
   const [choices, setChoices] = useState<Record<string, SocialPlatform>>({});
@@ -207,11 +209,16 @@ export function SocialComposer({
             />
             <span>
               <strong>
-                {String(item.ordinal + 1).padStart(2, '0')} · {item.title}
+                {format.number(item.ordinal + 1, { minimumIntegerDigits: 2 })} · {item.title}
               </strong>
               <span>
-                {msg(`platform_${choices[item.id] ?? baseFor(item.id, item.social).platform}`)}
-                {isSceneDirty(item) && msg('m83bdaa0cc6')}
+                {isSceneDirty(item)
+                  ? msg('platformUnsaved', {
+                      platform: msg(
+                        `platform_${choices[item.id] ?? baseFor(item.id, item.social).platform}`,
+                      ),
+                    })
+                  : msg(`platform_${choices[item.id] ?? baseFor(item.id, item.social).platform}`)}
               </span>
             </span>
             {item.id === scene.id && <Check size={18} />}
@@ -248,12 +255,11 @@ export function SocialComposer({
             >
               {socialPlatformSchema.options.map((value) => (
                 <option key={value} value={value}>
-                  {msg(`platform_${value}`)}
                   {edits[`${scene.id}:${value}`] &&
                   JSON.stringify(edits[`${scene.id}:${value}`]) !==
                     JSON.stringify(social.drafts[value])
-                    ? msg('m391bea5bf7')
-                    : ''}
+                    ? msg('platformDraft', { platform: msg(`platform_${value}`) })
+                    : msg(`platform_${value}`)}
                 </option>
               ))}
             </select>
@@ -304,8 +310,11 @@ export function SocialComposer({
             className={`caption-budget ${overBudget ? 'over-budget' : ''}`}
             aria-live="polite"
           >
-            {msg('charCount', { count: draft.caption.length, limit: preset.draftLimit })}
-            {overBudget ? msg('m71c0a6e34c') : ''}
+            {msg('captionBudget', {
+              count: draft.caption.length,
+              limit: preset.draftLimit,
+              over: overBudget ? 1 : 0,
+            })}
           </p>
           {preset.vertical && (
             <div className="composer-text-field">
@@ -459,10 +468,7 @@ export function SocialComposer({
               onClose={() => setCropping(false)}
             />
           )}
-          <p className="preview-note">
-            {msg('meb9f4dbb64')}
-            {preset.ratioLabel} {msg('mc18e8b20be')}
-          </p>
+          <p className="preview-note">{msg('previewNote', { ratio: preset.ratioLabel })}</p>
           {scene.status !== 'approved' && <p className="preview-note">{msg('me9b7f1a085')}</p>}
           <div className="composer-next">
             <ArrowRight size={18} />

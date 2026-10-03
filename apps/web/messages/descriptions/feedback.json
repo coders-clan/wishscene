@@ -55,7 +55,6 @@
   "mcbb410663a": "board.tsx: jsx text",
   "medeaec5326": "board.tsx: literal text",
   "mff43274984": "board.tsx: jsx text",
-  "m7317e100df": "board.tsx: jsx text",
   "ma4de9ec764": "board.tsx: jsx text",
   "mcaa060f59c": "dialog.tsx: jsx text",
   "mc0ef46e686": "board.tsx: jsx text",
@@ -68,7 +67,6 @@
   "m86841772f5": "board.tsx: attr text",
   "mbf5f259bae": "board.tsx: attr text",
   "mcfaaebd5ff": "board.tsx: attr text",
-  "m96e578211a": "board.tsx: jsx text",
   "mf43653d7fa": "board.tsx: attr text",
   "m6405179d24": "board.tsx: jsx text",
   "m3deb745651": "launcher.tsx: attr text",
@@ -131,7 +129,6 @@
   "m9f81b0e99c": "launcher.tsx: jsx text",
   "m12d332dbae": "launcher.tsx: jsx text",
   "m4d88ecedea": "launcher.tsx: jsx text",
-  "md0b05348c0": "launcher.tsx: jsx text",
   "meb4596af70": "launcher.tsx: attr text",
   "md1c3c0e37d": "launcher.tsx: jsx text",
   "ma92a216075": "launcher.tsx: attr text",
@@ -172,5 +169,8 @@
   "enum_element": "feedback: Element",
   "pageCount": "feedback: {start, number}–{end, number} of {total, number}",
   "nobody": "feedback: Nobody",
-  "selectedRegion": "feedback: Selected section"
+  "selectedRegion": "feedback: Selected section",
+  "signedOutAccount": "feedback: Sign out @{name}",
+  "postingAccount": "feedback: Posting as @{name}",
+  "filterCount": "feedback: Filters{count, plural, =0 {} other { (#)}}"
 }
