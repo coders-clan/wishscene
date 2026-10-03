@@ -8,7 +8,11 @@ test('Hebrew first paint, saved choice, and RTL gallery', async ({ page, context
   expect(html).toMatch(/<html[^>]*lang="he"[^>]*dir="rtl"/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'he');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
-  await expect(page.getByRole('heading', { name: 'הדמיון שלכם, בתמונה.' })).toBeVisible();
+  if (isMobile) {
+    await expect(page.getByRole('navigation', { name: 'ניווט בנייד' })).toBeVisible();
+  } else {
+    await expect(page.getByRole('heading', { name: 'הדמיון שלכם, בתמונה.' })).toBeVisible();
+  }
   await expect
     .poll(async () =>
       page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
