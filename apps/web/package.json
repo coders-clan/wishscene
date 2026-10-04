@@ -30,7 +30,7 @@
     "@types/pg": "8.15.5",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "tailwindcss": "4.1.18"
+    "tailwindcss": "4.3.3"
   },
   "engines": {
     "node": ">=24 <25"
